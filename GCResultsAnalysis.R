@@ -72,7 +72,7 @@ Files.csv.1<-Files.List[grep(".csv",Files.List)] ;
 Files.csv<-Files.csv.1[which(Files.csv.1 != "Standby_1.csv")]
 
 
-i=1
+#i=1
 
 ###############################################################################################################
 #                           Read all the  excel files 
@@ -121,13 +121,80 @@ for (i in (seq(1, length(Files.csv)))) {
 #
 ###############################################################################################################
 
+str(PeakArea.results)
 
 
+### Organizing the data according to Treatments
+
+grep("STD",PeakArea.results$Sample.Name)
+
+PeakArea.results$Treatment<-c("NONE");
+
+PeakArea.results[grep("STD",PeakArea.results$Sample.Name), c("Treatment")]<-c("STANDARD");
+
+PeakArea.results[grep("AT",PeakArea.results$Sample.Name), c("Treatment")]<-c("A");
+
+PeakArea.results[grep("BT",PeakArea.results$Sample.Name), c("Treatment")]<-c("B");
+
+PeakArea.results[grep("CT",PeakArea.results$Sample.Name), c("Treatment")]<-c("C");
+
+PeakArea.results[grep("DT",PeakArea.results$Sample.Name), c("Treatment")]<-c("D");
+
+### Check if there was any treatment left with "NONE" label
+
+PeakArea.results[which(PeakArea.results$Treatment=="NONE"),];
+
+PeakArea.results[81,c("Treatment")]<-c("C");
 
 
+### Organizing the data according to Blocks
+
+grep("B1",PeakArea.results$Sample.Name)
+
+PeakArea.results$BLOCK<-c(9999);
+
+PeakArea.results[grep("B1",PeakArea.results$Sample.Name), c("BLOCK")]<-c(1);
+
+PeakArea.results[grep("B2",PeakArea.results$Sample.Name), c("BLOCK")]<-c(2);
+
+PeakArea.results[grep("B3",PeakArea.results$Sample.Name), c("BLOCK")]<-c(3);
+
+PeakArea.results[grep("B4",PeakArea.results$Sample.Name), c("BLOCK")]<-c(4);
 
 
+### Organizing the data according to CoverCrop
 
+grep("3Spp",PeakArea.results$Sample.Name)
+
+PeakArea.results$CoverCrop<-c("NONE");
+
+PeakArea.results[grep("3Spp",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("3Spp");
+
+PeakArea.results[grep("Clover",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("Clover");
+
+PeakArea.results[grep("Trit",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("Trit");
+
+
+### Organizing the data according to Sampling Time Order
+
+grep("T0",PeakArea.results$Sample.Name)
+
+PeakArea.results$Sampling.Time<-c(9999);
+
+PeakArea.results[grep("T0",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(0);
+
+PeakArea.results[grep("T15",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(15);
+
+PeakArea.results[grep("T30",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(30);
+
+PeakArea.results[grep("T45",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(45);
+
+
+### Check if there was any Sampling.Time left with "NONE" label
+
+PeakArea.results[which(PeakArea.results$Sampling.Time==9999),];
+
+PeakArea.results[81,c("Sampling.Time")]<-c(30);
 
 
 
