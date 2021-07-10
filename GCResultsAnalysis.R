@@ -197,6 +197,31 @@ PeakArea.results[which(PeakArea.results$Sampling.Time==9999),];
 PeakArea.results[81,c("Sampling.Time")]<-c(30);
 
 
+### Converting experimental designations into factors
+
+PeakArea.results$Treatment.F<-as.factor(PeakArea.results$Treatment) ;
+
+PeakArea.results$BLOCK.F<-as.factor(PeakArea.results$BLOCK) ;
+
+PeakArea.results$CoverCrop.F<-as.factor(PeakArea.results$CoverCrop) ;
+
+
+###############################################################################################################
+#                           
+#                               Exploratory Data visualization
+#
+###############################################################################################################
+
+str(PeakArea.results)
+
+xyplot(CH4.Area + N2O.Area + CO2.Area ~ Sampling.Time | Treatment.F * BLOCK.F * CoverCrop.F, data=PeakArea.results[!PeakArea.results$Treatment.F == "STANDARD",],xlim=c(0,45), type="o", auto.key = T);
+
+Standards.Plot<-PeakArea.results[PeakArea.results$Treatment.F == "STANDARD",] ;
+
+Standards.Plot$Concentration<-as.numeric(gsub(pattern = "PerSTD_1", x=Standards.Plot$Sample.Name, replacement = ""));
+str(Standards.Plot)
+
+xyplot(CH4.Area + N2O.Area + CO2.Area ~ Concentration, data=Standards.Plot, auto.key = T) ;
 
 
 ###############################################################################################################
