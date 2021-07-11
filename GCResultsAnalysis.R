@@ -218,22 +218,51 @@ xyplot(CH4.Area + N2O.Area + CO2.Area ~ Sampling.Time | Treatment.F * BLOCK.F * 
 
 Standards.Plot<-PeakArea.results[PeakArea.results$Treatment.F == "STANDARD",] ;
 
-Standards.Plot$Concentration<-as.numeric(gsub(pattern = "PerSTD_1", x=Standards.Plot$Sample.Name, replacement = ""));
-str(Standards.Plot)
+Standards.Plot$Percent.Standart<-as.numeric(gsub(pattern = "PerSTD_1", x=Standards.Plot$Sample.Name, replacement = ""));
+str(Standards.Plot) ; names(Standards.Plot) ;
 
-xyplot(CH4.Area + N2O.Area + CO2.Area ~ Concentration, data=Standards.Plot, auto.key = T) ;
+
+GC.Standards<-data.frame(NAME=c("25PerSTD_1", "50PerSTD_1", "75PerSTD_1", "100PerSTD_1"), UNITS=c("uL/Lgas"), CH4.Conc=c(1.25, 2.5, 3.75, 5), CO2.Conc=c(125, 25, 375, 500), N2O.Conc=c(0.25, 0.5, 0.75, 1) );
+
+str(GC.Standards) ; names(GC.Standards);
+
+
+All.Standards<-merge(Standards.Plot, GC.Standards, by.x=c('Sample.Name'), by.y=c('NAME'), all.x = T);
+
+plot(CH4.Conc ~ CH4.Area , data=All.Standards, col='BLUE', pch=19, cex=2) ;
+
+CH4.Conc.Reg<-lm(CH4.Conc ~ CH4.Area, data=All.Standards); summary(CH4.Conc.Reg) ;
+
+predict.lm(CH4.Conc.Reg)
+
+points(All.Standards$CH4.Area, predict.lm(CH4.Conc.Reg), col="RED", type="o")
+
+
+
+
+plot(CO2.Area ~ CO2.Conc, data=All.Standards, col='GREEN', pch=19 , cex=2 ) ;
+
+
+
+plot(N2O.Conc ~ N2O.Area , data=All.Standards, col='RED', pch=19 , cex=2) ;
+
+N2O.Conc.Reg<-lm(N2O.Conc ~ N2O.Area, data=All.Standards); summary(N2O.Conc.Reg) ;
+
+predict.lm(N2O.Conc.Reg)
+
+points(All.Standards$N2O.Area, predict.lm(N2O.Conc.Reg), col="BLUE", type="o")
 
 
 ###############################################################################################################
 #                          Calculations of gas emission rates base on GraceNet Protocols
 #
-#  All the reference data was taking from Allison Kohele's Calculations Excell Files
+#  All the reference data was taking from Allison Kohele's Calculations Excel Files
 #
 ###############################################################################################################
 
 
 
-GC.Standards<-data.frame(NAME=c("25perSTD", "50perSTD", "75perSTD", "100perSTD"), UNITS=c("uL/Lgas"), CH4.Conc=c(1.25, 2.5, 3.75, 5), CO2.Conc=c(125, 25, 375, 500), N2O.Conc=c(0.25, 0.5, 0.75, 1) );
+
 
 Chamber.Dimensions<-data.frame(DIMENSION=c("Length", "Width" , "Height", "Volume" , "Surface.Area"),UNITS=c("m"), VALUE=c(0.52705, 0.32385, 0.1016, 9999, 9999));
 
@@ -245,6 +274,18 @@ Chamber.Dimensions[Chamber.Dimensions$DIMENSION =="Surface.Area", c("VALUE")]<-C
 Molar.Mass<-data.frame(GAS=c("CH4" , "CO2" , "N2O"), UNITS=c("g/mol"), VALUE=c(16.04, 44.01, 44.013));
 
 Gas.Law<-data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K-Mol", "m3-atm/K-Mol"), VALUE=c(0.08205736, 8.314462,8.314462, 8.314462, 8.205736e-5 ));
+
+
+###############################################################################################################
+#                          
+#            Calculation of concentration based on the Standard gas concentrations
+#  
+#
+###############################################################################################################
+
+
+Standards.Plot
+
 
 
 
