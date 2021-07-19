@@ -30,11 +30,11 @@
 
 #      set the working directory
 
-# readClipboard()
-
-#setwd("C:\\Felipe\\Willow_Project\\Willow_Experiments\\Willow Rock Spring\\SkyCap_SelectionTrial\\DataCollection") ;   # 
+# readClipboard()Willow Rock Spring\\SkyCap_SelectionTrial\\DataCollection") ;   # 
 
 "https://pennstateoffice365.sharepoint.com/:f:/s/StrategicTillageAndN2O/Ehl9Lh_gza5FiOtKIyDD7MQBOKFdFk6h_k4EEYEktWJUYw?e=uYLqL0"
+
+#setwd("C:\\Felipe\\Willow_Project\\Willow_Experiments\\
 
 ###############################################################################################################
 #                            Install the packages that are needed                       
@@ -60,12 +60,64 @@ library(lattice)
 ###############################################################################################################
 ### Read the Directories where the GC data are stored
 
-Directory.List<-list.files("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults");
+Directory.List<-list.files("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults")[-c(2,7,8)];
+
 
 
 ###############################################################################################################
-#                           Do a large loop throughout all of the directories and collect the data in the files
+#                           
+# Directories, subdirectories and files are not always consistent, and some files and directories have no data 
+# Therefore A catalog with objects with valid data will be build and that will be the information base to
+#extract the data
+#
 ###############################################################################################################
+
+# j=1
+# k=1
+
+
+
+####initialize the dataframe to collect all the directories, subdirectories and file names
+
+File.Catalog.0<-data.frame( File.Name=character(), Subdirectory= character(), Directory=character());
+
+#### Do a loop throughout the directories, subdirectories and collect all the file names
+
+
+for (j in seq(1, length(Directory.List))){
+  
+  Sub.Directory.List<-list.files(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\",Directory.List[j]))
+  
+  for (k in seq(1,length(Sub.Directory.List))) {
+    
+    Files.List<-list.files(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\", Directory.List[j], "\\",Sub.Directory.List[k] ) ) ;
+    
+    ## Select files that are ".csv" only
+    
+    Files.csv.1<-Files.List[grep(".csv",Files.List)] ;
+    
+    ## Get rid of the Standby_1.csv file
+    
+    Files.csv.2<-Files.csv.1[which(Files.csv.1 != "Standby_1.csv")] ;
+    
+    
+    
+    File.Catalog.1<-data.frame( File.Name=Files.csv.2)
+    
+    File.Catalog.1$Subdirectory<-Sub.Directory.List[k]
+    
+    File.Catalog.1$Directory<-Directory.List[j]
+    
+    File.Catalog<-rbind(File.Catalog.0,File.Catalog.1 ) ;
+    
+    File.Catalog.0<-File.Catalog ;
+    
+    
+  }
+  
+  
+}
+
 
 
 ## initialize the dataframe to collect all the data together
@@ -75,14 +127,18 @@ GC.All.Data.1<-data.frame(Sample.Name = character(),    DateOfAnalysis = charact
 
 
 
-##### Read the directories in GCResults folder
+##### Read the data in the files on the File catalog
 
 
 for (j in seq(1, length(Directory.List))){
   
-  #j=1
+  #j=2
   
-  Sub.Directory.List<-list.files(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\",Directory.List[j]))
+  if (j==2)  Sub.Directory.List<-c("B1B2Sample1-24")  else  Sub.Directory.List<-list.files(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\",Directory.List[j])) ;
+  
+  if (j==3)  Sub.Directory.List<-c("8890 Greenhouse Gas GC-2021-06-15 vial1,2,3" , "8890 Greenhouse Gas GC-2021-06-15 vial1,2,3", "B3B4");
+ 
+  if (j==4)  Sub.Directory.List<-c("8890 Greenhouse Gas GC-2021-06-29 08-35-36-04-00.rslt" , "8890 Greenhouse Gas GC-2021-06-30 11-01-31-04-00.rslt", "8890 Greenhouse Gas GC-2021-07-01 07-33-35-04-00.rslt");
   
   #### Read the subdirectories in the Directories
   
@@ -100,10 +156,23 @@ for (j in seq(1, length(Directory.List))){
     
     ## Get rid of the Standby_1.csv file
     
-    Files.csv<-Files.csv.1[which(Files.csv.1 != "Standby_1.csv")]
+    Files.csv.2<-Files.csv.1[which(Files.csv.1 != "Standby_1.csv")] ;
+    
+    ## Get Rid of files that have no data or defective data
+    
+    Files.csv<-Files.csv.2;
+    
+    if (j==3 & k==2) Files.csv<- Files.csv.2[-c(73, 26)] ;
+    
+    if (j==3 & k==2) Files.csv<- Files.csv.2[-26];
+    
+    if (j==3 & k==3) Files.csv<- Files.csv.2[-26];
+    
+    if (j==4 & k==2) Files.csv<- Files.csv.2[-16];
     
     
-    #i=1
+    
+  
     
     ###############################################################################################################
     #                           Read all the  files in the directory
@@ -114,9 +183,11 @@ for (j in seq(1, length(Directory.List))){
     
     PeakArea.results<-data.frame(Sample.Name = "SampleName", DateOfAnalysis="2021-06-25 08:26:16-04:00", CH4.Area =9999, CO2.Area =9999, N2O.Area =9999 );
     
+    
+    
     for (i in (seq(1, length(Files.csv)))) {
-      
-      #i=1
+     
+       #i=1
       
       
       ## Read the files and get the variable names and the correct structure
@@ -145,96 +216,6 @@ for (j in seq(1, length(Directory.List))){
       
       
       
-      ###############################################################################################################
-      #                           
-      #                               Organizing the data for visualization
-      #
-      ###############################################################################################################
-      
-      str(PeakArea.results)
-      
-      
-      ### Organizing the data according to Treatments
-      
-      grep("STD",PeakArea.results$Sample.Name)
-      
-      PeakArea.results$Treatment<-c("NONE");
-      
-      PeakArea.results[grep("STD",PeakArea.results$Sample.Name), c("Treatment")]<-c("STANDARD");
-      
-      PeakArea.results[grep("AT",PeakArea.results$Sample.Name), c("Treatment")]<-c("A");
-      
-      PeakArea.results[grep("BT",PeakArea.results$Sample.Name), c("Treatment")]<-c("B");
-      
-      PeakArea.results[grep("CT",PeakArea.results$Sample.Name), c("Treatment")]<-c("C");
-      
-      PeakArea.results[grep("DT",PeakArea.results$Sample.Name), c("Treatment")]<-c("D");
-      
-      ### Check if there was any treatment left with "NONE" label
-      
-      PeakArea.results[which(PeakArea.results$Treatment=="NONE"),];
-      
-      PeakArea.results[81,c("Treatment")]<-c("C");
-      
-      
-      ### Organizing the data according to Blocks
-      
-      grep("B1",PeakArea.results$Sample.Name)
-      
-      PeakArea.results$BLOCK<-c(9999);
-      
-      PeakArea.results[grep("B1",PeakArea.results$Sample.Name), c("BLOCK")]<-c(1);
-      
-      PeakArea.results[grep("B2",PeakArea.results$Sample.Name), c("BLOCK")]<-c(2);
-      
-      PeakArea.results[grep("B3",PeakArea.results$Sample.Name), c("BLOCK")]<-c(3);
-      
-      PeakArea.results[grep("B4",PeakArea.results$Sample.Name), c("BLOCK")]<-c(4);
-      
-      
-      ### Organizing the data according to CoverCrop
-      
-      grep("3Spp",PeakArea.results$Sample.Name)
-      
-      PeakArea.results$CoverCrop<-c("NONE");
-      
-      PeakArea.results[grep("3Spp",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("3Spp");
-      
-      PeakArea.results[grep("Clover",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("Clover");
-      
-      PeakArea.results[grep("Trit",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("Trit");
-      
-      
-      ### Organizing the data according to Sampling Time Order
-      
-      grep("T0",PeakArea.results$Sample.Name)
-      
-      PeakArea.results$Sampling.Time<-c(9999);
-      
-      PeakArea.results[grep("T0",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(0);
-      
-      PeakArea.results[grep("T15",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(15);
-      
-      PeakArea.results[grep("T30",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(30);
-      
-      PeakArea.results[grep("T45",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(45);
-      
-      
-      ### Check if there was any Sampling.Time left with "NONE" label
-      
-      PeakArea.results[which(PeakArea.results$Sampling.Time==9999),];
-      
-      PeakArea.results[81,c("Sampling.Time")]<-c(30);
-      
-      
-      ### Converting experimental designations into factors
-      
-      PeakArea.results$Treatment.F<-as.factor(PeakArea.results$Treatment) ;
-      
-      PeakArea.results$BLOCK.F<-as.factor(PeakArea.results$BLOCK) ;
-      
-      PeakArea.results$CoverCrop.F<-as.factor(PeakArea.results$CoverCrop) ;
-      
       
       ###############################################################################################################
       #                           
@@ -245,6 +226,8 @@ for (j in seq(1, length(Directory.List))){
       
       GC.All.Data<-rbind(GC.All.Data.1,PeakArea.results ) ;
       
+      
+      GC.All.Data.1<-GC.All.Data ;
       
       
       
@@ -264,6 +247,96 @@ for (j in seq(1, length(Directory.List))){
 }
 
 
+
+###############################################################################################################
+#                           
+#                               Organizing the data for visualization
+#
+###############################################################################################################
+
+str(PeakArea.results)
+
+
+### Organizing the data according to Treatments
+
+grep("STD",PeakArea.results$Sample.Name)
+
+PeakArea.results$Treatment<-c("NONE");
+
+PeakArea.results[grep("STD",PeakArea.results$Sample.Name), c("Treatment")]<-c("STANDARD");
+
+PeakArea.results[grep("AT",PeakArea.results$Sample.Name), c("Treatment")]<-c("A");
+
+PeakArea.results[grep("BT",PeakArea.results$Sample.Name), c("Treatment")]<-c("B");
+
+PeakArea.results[grep("CT",PeakArea.results$Sample.Name), c("Treatment")]<-c("C");
+
+PeakArea.results[grep("DT",PeakArea.results$Sample.Name), c("Treatment")]<-c("D");
+
+### Check if there was any treatment left with "NONE" label
+
+PeakArea.results[which(PeakArea.results$Treatment=="NONE"),];
+
+PeakArea.results[81,c("Treatment")]<-c("C");
+
+
+### Organizing the data according to Blocks
+
+grep("B1",PeakArea.results$Sample.Name)
+
+PeakArea.results$BLOCK<-c(9999);
+
+PeakArea.results[grep("B1",PeakArea.results$Sample.Name), c("BLOCK")]<-c(1);
+
+PeakArea.results[grep("B2",PeakArea.results$Sample.Name), c("BLOCK")]<-c(2);
+
+PeakArea.results[grep("B3",PeakArea.results$Sample.Name), c("BLOCK")]<-c(3);
+
+PeakArea.results[grep("B4",PeakArea.results$Sample.Name), c("BLOCK")]<-c(4);
+
+
+### Organizing the data according to CoverCrop
+
+grep("3Spp",PeakArea.results$Sample.Name)
+
+PeakArea.results$CoverCrop<-c("NONE");
+
+PeakArea.results[grep("3Spp",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("3Spp");
+
+PeakArea.results[grep("Clover",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("Clover");
+
+PeakArea.results[grep("Trit",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("Trit");
+
+
+### Organizing the data according to Sampling Time Order
+
+grep("T0",PeakArea.results$Sample.Name)
+
+PeakArea.results$Sampling.Time<-c(9999);
+
+PeakArea.results[grep("T0",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(0);
+
+PeakArea.results[grep("T15",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(15);
+
+PeakArea.results[grep("T30",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(30);
+
+PeakArea.results[grep("T45",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(45);
+
+
+### Check if there was any Sampling.Time left with "NONE" label
+
+PeakArea.results[which(PeakArea.results$Sampling.Time==9999),];
+
+PeakArea.results[81,c("Sampling.Time")]<-c(30);
+
+
+### Converting experimental designations into factors
+
+PeakArea.results$Treatment.F<-as.factor(PeakArea.results$Treatment) ;
+
+PeakArea.results$BLOCK.F<-as.factor(PeakArea.results$BLOCK) ;
+
+PeakArea.results$CoverCrop.F<-as.factor(PeakArea.results$CoverCrop) ;
 
 
 
