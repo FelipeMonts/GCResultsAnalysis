@@ -124,56 +124,7 @@ for (j in seq(1, length(Directory.List))){
 
 GC.All.Data.1<-data.frame(Sample.Name = character(),    DateOfAnalysis = character(),  CH4.Area = double(), CO2.Area = double(),       N2O.Area = double(), Treatment = character() , BLOCK = integer(), CoverCrop = character(), Sampling.Time = integer(),  Treatment.F = factor(), BLOCK.F = factor(), CoverCrop.F = factor()) ;   
 
-
-
-
-##### Read the data in the files on the File catalog
-
-
-for (j in seq(1, length(Directory.List))){
-  
-  #j=2
-  
-  if (j==2)  Sub.Directory.List<-c("B1B2Sample1-24")  else  Sub.Directory.List<-list.files(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\",Directory.List[j])) ;
-  
-  if (j==3)  Sub.Directory.List<-c("8890 Greenhouse Gas GC-2021-06-15 vial1,2,3" , "8890 Greenhouse Gas GC-2021-06-15 vial1,2,3", "B3B4");
- 
-  if (j==4)  Sub.Directory.List<-c("8890 Greenhouse Gas GC-2021-06-29 08-35-36-04-00.rslt" , "8890 Greenhouse Gas GC-2021-06-30 11-01-31-04-00.rslt", "8890 Greenhouse Gas GC-2021-07-01 07-33-35-04-00.rslt");
-  
-  #### Read the subdirectories in the Directories
-  
-  for (k in seq(1,length(Sub.Directory.List))) {
-    
-    #k=1
-    
-    ## Read which files are available in the directory
-    
-    Files.List<-list.files(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\", Directory.List[j], "\\",Sub.Directory.List[k] ) ) ;
-    
-    ## Select files that are ".csv" only
-    
-    Files.csv.1<-Files.List[grep(".csv",Files.List)] ;
-    
-    ## Get rid of the Standby_1.csv file
-    
-    Files.csv.2<-Files.csv.1[which(Files.csv.1 != "Standby_1.csv")] ;
-    
-    ## Get Rid of files that have no data or defective data
-    
-    Files.csv<-Files.csv.2;
-    
-    if (j==3 & k==2) Files.csv<- Files.csv.2[-c(73, 26)] ;
-    
-    if (j==3 & k==2) Files.csv<- Files.csv.2[-26];
-    
-    if (j==3 & k==3) Files.csv<- Files.csv.2[-26];
-    
-    if (j==4 & k==2) Files.csv<- Files.csv.2[-16];
-    
-    
-    
-  
-    
+   
     ###############################################################################################################
     #                           Read all the  files in the directory
     ###############################################################################################################
