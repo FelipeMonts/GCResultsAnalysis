@@ -30,7 +30,7 @@
 
 #      set the working directory
 
-# readClipboard()Willow Rock Spring\\SkyCap_SelectionTrial\\DataCollection") ;   # 
+# readClipboard() Willow Rock Spring\\SkyCap_SelectionTrial\\DataCollection") ;   # 
 
 "https://pennstateoffice365.sharepoint.com/:f:/s/StrategicTillageAndN2O/Ehl9Lh_gza5FiOtKIyDD7MQBOKFdFk6h_k4EEYEktWJUYw?e=uYLqL0"
 
@@ -60,7 +60,9 @@ library(lattice)
 ###############################################################################################################
 ### Read the Directories where the GC data are stored
 
-Directory.List<-list.files("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults")[-c(2,7,8)];
+
+
+Directory.List<-list.files("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\SummaryReport");
 
 
 
