@@ -41,6 +41,8 @@
 ###############################################################################################################
 
 
+#install.packages("tabulizer", "tabulizerjars" , dependencies = T)
+
 
 
 ###############################################################################################################
@@ -50,6 +52,9 @@
 library(openxlsx)
 
 library(lattice)
+
+
+library(tabulizer)
 
 
 
@@ -81,123 +86,73 @@ Directory.List<-list.files("C:\\Users\\frm10\\The Pennsylvania State University\
 
 ####initialize the dataframe to collect all the directories, subdirectories and file names
 
-File.Catalog.0<-data.frame( File.Name=character(), Subdirectory= character(), Directory=character());
+File.Catalog.0<-data.frame( File.Name=character(), Directory=character());
 
-#### Do a loop throughout the directories, subdirectories and collect all the file names
+#### Do a loop throughout the directories and collect all the file names
 
 
 for (j in seq(1, length(Directory.List))){
   
-  Sub.Directory.List<-list.files(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\",Directory.List[j]))
-  
-  for (k in seq(1,length(Sub.Directory.List))) {
-    
-    Files.List<-list.files(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\", Directory.List[j], "\\",Sub.Directory.List[k] ) ) ;
+    Files.List<-list.files(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\SummaryReport\\", Directory.List[j]) ) ;
     
     ## Select files that are ".csv" only
     
-    Files.csv.1<-Files.List[grep(".csv",Files.List)] ;
+   SummaryFile<-Files.List[grep("summaryreport.xlsx",Files.List)] ;
+   PeakareaFile<-Files.List[grep("peakareas.xlsx",Files.List)] ;
     
-    ## Get rid of the Standby_1.csv file
+    File.Catalog.1<-data.frame(File.Name=SummaryFile) ;
+    File.Catalog.2<-data.frame(File.Name=PeakareaFile) ;
     
-    Files.csv.2<-Files.csv.1[which(Files.csv.1 != "Standby_1.csv")] ;
+    File.Catalog.3<-rbind(File.Catalog.1,File.Catalog.2);
     
     
-    
-    File.Catalog.1<-data.frame( File.Name=Files.csv.2)
-    
-    File.Catalog.1$Subdirectory<-Sub.Directory.List[k]
-    
-    File.Catalog.1$Directory<-Directory.List[j]
-    
-    File.Catalog<-rbind(File.Catalog.0,File.Catalog.1 ) ;
-    
+    File.Catalog.3$Directory<-Directory.List[j]
+
+    File.Catalog<-rbind(File.Catalog.0,File.Catalog.3 ) ;
+
     File.Catalog.0<-File.Catalog ;
+
     
-    
-  }
-  
-  
 }
-
-
+  
 
 ## initialize the dataframe to collect all the data together
 
-GC.All.Data.1<-data.frame(Sample.Name = character(),    DateOfAnalysis = character(),  CH4.Area = double(), CO2.Area = double(),       N2O.Area = double(), Treatment = character() , BLOCK = integer(), CoverCrop = character(), Sampling.Time = integer(),  Treatment.F = factor(), BLOCK.F = factor(), CoverCrop.F = factor()) ;   
+GC.All.Data.1<-data.frame(Sample.Name = character(),  Vial.number= integer(),  DateOfAnalysis = character(),  CH4.Area = double(), CO2.Area = double(),       N2O.Area = double(), Treatment = character() , BLOCK = integer(), CoverCrop = character(), Sampling.Time = integer(),  Treatment.F = factor(), BLOCK.F = factor(), CoverCrop.F = factor()) ;   
 
    
     ###############################################################################################################
-    #                           Read all the  files in the directory
+    #                           Read all the   excel files in the directory
     ###############################################################################################################
     
     
     ## initialize the dataframe to collect all the data in the directory files
     
-    PeakArea.results<-data.frame(Sample.Name = "SampleName", DateOfAnalysis="2021-06-25 08:26:16-04:00", CH4.Area =9999, CO2.Area =9999, N2O.Area =9999 );
+    PeakArea.results.0<-data.frame(Sample.Name = character(), Vial.number = integer(), CH4.Area = double(), CO2.Area = double(), N2O.Area = double(), DateOfAnalysis = character(), AnalysisName = character() );
     
     
     
-    for (i in (seq(1, length(Files.csv)))) {
-     
-       #i=1
+    for (i in (seq(1, dim.data.frame(File.Catalog)[1]))) {
+  #i=24    
+      
+      PeakArea.results.1<-read.xlsx(paste0("C:\\Users\\frm10\\Downloads\\SummaryReport\\", File.Catalog[i,c("Directory")], "\\", File.Catalog[i,c("File.Name")] ), sheet=1, startRow=3, colNames=F, cols= c(1,2,4:6) );
+      
+      names(PeakArea.results.1)<-c('Sample.Name' , 'Vial.number' , 'CH4.Area' , 'CO2.Area', 'N2O.Area' );
       
       
-      ## Read the files and get the variable names and the correct structure
+      PeakArea.results.1$DateOfAnalysis<-File.Catalog[i,c("Directory")] ;
       
-      Analysis.date<-read.csv(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\", Directory.List[j], "\\",Sub.Directory.List[k], "\\", Files.csv[i]), header=F, skip=2, nrows=1);
+      PeakArea.results.1$AnalysisName<-File.Catalog[i,c("File.Name")] ;
       
-      CH4.Data<-read.csv(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\", Directory.List[j], "\\",Sub.Directory.List[k], "\\", Files.csv[i]), header=T, skip=28, nrows=1);
-      
-      CO2.Data<-read.csv(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\", Directory.List[j], "\\",Sub.Directory.List[k], "\\", Files.csv[i]), header=T, skip=34, nrows=1);
-      
-      N2O.Data<-read.csv(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\", Directory.List[j], "\\",Sub.Directory.List[k], "\\", Files.csv[i]), header=T, skip=40, nrows=1);
-      
-      PeakArea.results[i,c('Sample.Name')]<-sub(Files.csv[i], pattern="*.csv",replacement="") ;
+      PeakArea.results<-rbind(PeakArea.results.0,PeakArea.results.1 );
       
       
-      PeakArea.results[i,c('DateOfAnalysis')]<-Analysis.date[2] ;
-      
-      PeakArea.results[i, c('CH4.Area')]<-CH4.Data$Area ;
-      
-      PeakArea.results[i, c('CO2.Area')]<-CO2.Data$Area ;
-      
-      PeakArea.results[i, c('N2O.Area')]<-N2O.Data$Area ;
-      
-      
-      
-      
-      
-      
-      
-      ###############################################################################################################
-      #                           
-      #                               Collecting all the data in one dataframe
-      #
-      ###############################################################################################################
-      
-      
-      GC.All.Data<-rbind(GC.All.Data.1,PeakArea.results ) ;
-      
-      
-      GC.All.Data.1<-GC.All.Data ;
-      
+      PeakArea.results.0<-PeakArea.results ;
       
       
     }
-      
-      
 
-  
     
-  }
-    
-    
-  
-  
-  
-  
-}
 
 
 
@@ -228,9 +183,9 @@ PeakArea.results[grep("DT",PeakArea.results$Sample.Name), c("Treatment")]<-c("D"
 
 ### Check if there was any treatment left with "NONE" label
 
-PeakArea.results[which(PeakArea.results$Treatment=="NONE"),];
+PeakArea.results[which(PeakArea.results$Treatment=="NONE"), ];
 
-PeakArea.results[81,c("Treatment")]<-c("C");
+PeakArea.results[51,c("Treatment")]<-c("C");
 
 
 ### Organizing the data according to Blocks
@@ -280,7 +235,7 @@ PeakArea.results[grep("T45",PeakArea.results$Sample.Name), c("Sampling.Time")]<-
 
 PeakArea.results[which(PeakArea.results$Sampling.Time==9999),];
 
-PeakArea.results[81,c("Sampling.Time")]<-c(30);
+PeakArea.results[51,c("Sampling.Time")]<-c(30);
 
 
 ### Converting experimental designations into factors
@@ -330,6 +285,8 @@ str(GC.Standards) ; names(GC.Standards);
 
 
 All.Standards<-merge(Standards.Plot, GC.Standards, by.x=c('Sample.Name'), by.y=c('NAME'), all.x = T);
+
+str(All.Standards)
 
 plot(CH4.Conc ~ CH4.Area , data=All.Standards, col='BLUE', pch=19, cex=2) ;
 
