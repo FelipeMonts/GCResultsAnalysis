@@ -34,7 +34,7 @@
 
 "https://pennstateoffice365.sharepoint.com/:f:/s/StrategicTillageAndN2O/Ehl9Lh_gza5FiOtKIyDD7MQBOKFdFk6h_k4EEYEktWJUYw?e=uYLqL0"
 
-#setwd("C:\\Felipe\\Willow_Project\\Willow_Experiments\\
+setwd("C:\\Users\\frm10\\Downloads\\SummaryReport")
 
 ###############################################################################################################
 #                            Install the packages that are needed                       
@@ -54,12 +54,6 @@ library(openxlsx)
 library(lattice)
 
 
-library(tabulizer)
-
-
-
-
-
 ###############################################################################################################
 #                           Explore the files and directory and files with the data
 ###############################################################################################################
@@ -67,7 +61,7 @@ library(tabulizer)
 
 
 
-Directory.List<-list.files("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\SummaryReport");
+Directory.List<-list.files("C:\\Users\\frm10\\Downloads\\SummaryReport");
 
 
 
@@ -89,11 +83,11 @@ Directory.List<-list.files("C:\\Users\\frm10\\The Pennsylvania State University\
 File.Catalog.0<-data.frame( File.Name=character(), Directory=character());
 
 #### Do a loop throughout the directories and collect all the file names
-
+# j=10
 
 for (j in seq(1, length(Directory.List))){
   
-    Files.List<-list.files(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\SummaryReport\\", Directory.List[j]) ) ;
+    Files.List<-list.files(paste0("C:\\Users\\frm10\\Downloads\\SummaryReport\\", Directory.List[j]) ) ;
     
     ## Select files that are ".csv" only
     
@@ -130,12 +124,25 @@ GC.All.Data.1<-data.frame(Sample.Name = character(),  Vial.number= integer(),  D
     
     PeakArea.results.0<-data.frame(Sample.Name = character(), Vial.number = integer(), CH4.Area = double(), CO2.Area = double(), N2O.Area = double(), DateOfAnalysis = character(), AnalysisName = character() );
     
-    
-    
-    for (i in (seq(1, dim.data.frame(File.Catalog)[1]))) {
-  #i=24    
-      
-      PeakArea.results.1<-read.xlsx(paste0("C:\\Users\\frm10\\Downloads\\SummaryReport\\", File.Catalog[i,c("Directory")], "\\", File.Catalog[i,c("File.Name")] ), sheet=1, startRow=3, colNames=F, cols= c(1,2,4:6) );
+
+### There are some files missing or difficult to read, therefore a manual list is created
+  #i=1    
+ 
+Numbered.File.List.1<-(seq(1, dim.data.frame(File.Catalog)[1]));
+
+### Files that are difficult to read
+
+Numbered.Difficult.Files<-c()
+
+
+### File list numbered without the difficult files
+
+Numbered.File.List<-Numbered.File.List.1[! Numbered.File.List.1 %in% Numbered.Difficult.Files ]
+
+    for (i in Numbered.File.List) {
+  
+                       
+      PeakArea.results.1<-read.xlsx(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\SummaryReport\\", File.Catalog[i,c("Directory")], "\\", File.Catalog[i,c("File.Name")] ), sheet=1, startRow=3, colNames=F, cols= c(1,2,4:6) );
       
       names(PeakArea.results.1)<-c('Sample.Name' , 'Vial.number' , 'CH4.Area' , 'CO2.Area', 'N2O.Area' );
       
