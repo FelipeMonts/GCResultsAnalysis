@@ -32,16 +32,15 @@
 
 # readClipboard() Willow Rock Spring\\SkyCap_SelectionTrial\\DataCollection") ;   # 
 
-"https://pennstateoffice365.sharepoint.com/:f:/s/StrategicTillageAndN2O/Ehl9Lh_gza5FiOtKIyDD7MQBOKFdFk6h_k4EEYEktWJUYw?e=uYLqL0"
 
-setwd("C:\\Users\\frm10\\Downloads\\SummaryReport")
+setwd("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\SummaryReport")
 
 ###############################################################################################################
 #                            Install the packages that are needed                       
 ###############################################################################################################
 
 
-#install.packages("tabulizer", "tabulizerjars" , dependencies = T)
+#install.packages("tabulizer",  dependencies = T, lib="C:/Felipe/SotwareANDCoding/R_Library/library")
 
 
 
@@ -61,7 +60,7 @@ library(lattice)
 
 
 
-Directory.List<-list.files("C:\\Users\\frm10\\Downloads\\SummaryReport");
+Directory.List<-list.files(); length(Directory.List) 
 
 
 
@@ -78,78 +77,95 @@ Directory.List<-list.files("C:\\Users\\frm10\\Downloads\\SummaryReport");
 
 
 
-####initialize the dataframe to collect all the directories, subdirectories and file names
+#### Looking at the structure of the directories and the files, some dates have the peak areas in files named sumaryreport ("20210528" "20210601" "20210604" "20210614" ); The rest have peak the peak areas in files named peak areas ("20210616" "20210621" "20210623" "20210629" "20210702" "20210707" "20210715" "20210720" "20210730" "20210805" "20210812" "20210819" "20210902" "20210917" "20210929").
 
-File.Catalog.0<-data.frame( File.Name=character(), Directory=character());
+# Let's get the data from the files that have the peak areas in sumaryreport
+
+#initialize the dataframe to collect all the directories, subdirectories and file names
+
+File.Catalog.sumaryreport<-data.frame( File.Name=character(), Directory=character());
 
 #### Do a loop throughout the directories and collect all the file names
-# j=10
+# i=1
 
-for (j in seq(1, length(Directory.List))){
+
+for (i in seq(1, 4)){
   
-    Files.List<-list.files(paste0("C:\\Users\\frm10\\Downloads\\SummaryReport\\", Directory.List[j]) ) ;
-    
-    ## Select files that are ".csv" only
-    
-   SummaryFile<-Files.List[grep("summaryreport.xlsx",Files.List)] ;
-   PeakareaFile<-Files.List[grep("peakareas.xlsx",Files.List)] ;
-    
-    File.Catalog.1<-data.frame(File.Name=SummaryFile) ;
-    File.Catalog.2<-data.frame(File.Name=PeakareaFile) ;
-    
-    File.Catalog.3<-rbind(File.Catalog.1,File.Catalog.2);
-    
-    
-    File.Catalog.3$Directory<-Directory.List[j]
-
-    File.Catalog<-rbind(File.Catalog.0,File.Catalog.3 ) ;
-
-    File.Catalog.0<-File.Catalog ;
-
-    
-}
+  Files.List<-list.files(paste0(".\\", Directory.List[i]) ) ;
   
-
-## initialize the dataframe to collect all the data together
-
-GC.All.Data.1<-data.frame(Sample.Name = character(),  Vial.number= integer(),  DateOfAnalysis = character(),  CH4.Area = double(), CO2.Area = double(),       N2O.Area = double(), Treatment = character() , BLOCK = integer(), CoverCrop = character(), Sampling.Time = integer(),  Treatment.F = factor(), BLOCK.F = factor(), CoverCrop.F = factor()) ;   
-
-   
-    ###############################################################################################################
-    #                           Read all the   excel files in the directory
-    ###############################################################################################################
-    
-    
-    ## initialize the dataframe to collect all the data in the directory files
-    
-    PeakArea.results.0<-data.frame(Sample.Name = character(), Vial.number = integer(), CH4.Area = double(), CO2.Area = double(), N2O.Area = double(), DateOfAnalysis = character(), AnalysisName = character() );
-    
-
-### There are some files missing or difficult to read, therefore a manual list is created
-  #i=1    
+  SummaryReportFiles<-Files.List[grep("[Ss]ummary[Rr]eport.xlsx",Files.List)] ;
+  
+  
+  File.Catalog.1<-data.frame(File.Name=SummaryReportFiles) ;
  
-Numbered.File.List.1<-(seq(1, dim.data.frame(File.Catalog)[1]));
+  File.Catalog.1$Directory<-Directory.List[i]
+  
+  File.Catalog<-rbind(File.Catalog.sumaryreport,File.Catalog.1 ) ;
+  
+  File.Catalog.sumaryreport<-File.Catalog ;
+  
+  
+  
+}
 
-### Files that are difficult to read
+rm(File.Catalog.1, File.Catalog,Files.List,SummaryReportFiles,i)
 
-Numbered.Difficult.Files<-c()
+# Let's get the data from the files that have the peak areas in peakareas
 
 
-### File list numbered without the difficult files
+#initialize the dataframe to collect all the directories, subdirectories and file names
 
-Numbered.File.List<-Numbered.File.List.1[! Numbered.File.List.1 %in% Numbered.Difficult.Files ]
+File.Catalog.peakareas<-data.frame( File.Name=character(), Directory=character());
 
-    for (i in Numbered.File.List) {
+#### Do a loop throughout the directories and collect all the file names
+# j=19
+
+
+for (j in seq(5, length(Directory.List))){
+  
+  Files.List<-list.files(paste0(".\\", Directory.List[j]) ) ;
+  
+  PeakareaFiles<-Files.List[grep("peakareas.xls|peakareas.\\.xlsx",Files.List)] ;
+  
+  File.Catalog.1<-data.frame(File.Name=PeakareaFiles) ;
+ 
+  File.Catalog.1$Directory<-Directory.List[j]
+  
+  File.Catalog<-rbind(File.Catalog.peakareas,File.Catalog.1 ) ;
+  
+  File.Catalog.peakareas<-File.Catalog ;
+  
+  
+}
+
+rm(File.Catalog.1, File.Catalog,Files.List, PeakareaFiles,j)
+
+
+###############################################################################################################
+#                           Read all the  excel files in the file catalog
+###############################################################################################################
+
+
+
+## initialize the dataframe to collect all the data in the directory files in the File.Catalog.sumaryreport
+    
+
+    
+PeakArea.results.0<-data.frame(Sample.Name = character(), Vial.number = integer(), CH4.Area = double(), CO2.Area = double(), N2O.Area = double(), DateOfAnalysis = character(), AnalysisName = character() );
+
+#i=7 
+   
+for (i in seq(1,dim(File.Catalog.sumaryreport)[1])) {
   
                        
-      PeakArea.results.1<-read.xlsx(paste0("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\SummaryReport\\", File.Catalog[i,c("Directory")], "\\", File.Catalog[i,c("File.Name")] ), sheet=1, startRow=3, colNames=F, cols= c(1,2,4:6) );
+      PeakArea.results.1<-read.xlsx(paste0(".\\", File.Catalog.sumaryreport[i,c("Directory")], "\\", File.Catalog.sumaryreport[i,c("File.Name")] ), sheet=1, startRow=3, colNames=F, cols= c(1,2,4:6) );
       
       names(PeakArea.results.1)<-c('Sample.Name' , 'Vial.number' , 'CH4.Area' , 'CO2.Area', 'N2O.Area' );
       
       
-      PeakArea.results.1$DateOfAnalysis<-File.Catalog[i,c("Directory")] ;
+      PeakArea.results.1$DateOfAnalysis<-File.Catalog.sumaryreport[i,c("Directory")] ;
       
-      PeakArea.results.1$AnalysisName<-File.Catalog[i,c("File.Name")] ;
+      PeakArea.results.1$AnalysisName<-File.Catalog.sumaryreport[i,c("File.Name")] ;
       
       PeakArea.results<-rbind(PeakArea.results.0,PeakArea.results.1 );
       
@@ -159,7 +175,271 @@ Numbered.File.List<-Numbered.File.List.1[! Numbered.File.List.1 %in% Numbered.Di
       
     }
 
-    
+# Delete objects and files that are nbot longer needed
+
+   rm(PeakArea.results.1, i)
+###############################################################################################################
+   
+
+
+##  !!!!!  on 20210812 there is some GC data called ~$20210812B1B2peakareas.xlsx , ~$20210812B3B4peakareas.xlsx , and ~$20210812B3B4peakareas2.xlsx   that has not been read !!!!!
+
+#these files appear to be corrupt, therefore lets get them out of the File.Catalog.peakareas
+  
+  BadFiles.Catalog.peakareas<-File.Catalog.peakareas[grep("~",File.Catalog.peakareas$File.Name),] ;
+   
+   File.Catalog.peakareas.Rev<-File.Catalog.peakareas[!File.Catalog.peakareas$File.Name %in% BadFiles.Catalog.peakareas$File.Name, ] ; 
+   
+## initialize the dataframe to collect all the data in the directory files in the File.Catalog.peakareas
+   
+   
+PeakArea.results.2<-data.frame(Sample.Name = character(), Vial.number = integer(), CH4.Area = double(), CO2.Area = double(), N2O.Area = double(), DateOfAnalysis = character(), AnalysisName = character() );
+
+
+
+for (i in seq(1,dim(File.Catalog.peakareas.Rev)[1])) {
+  
+  
+  PeakArea.results.1<-read.xlsx(paste0(".\\", File.Catalog.peakareas.Rev[i,c("Directory")], "\\", File.Catalog.peakareas.Rev[i,c("File.Name")] ), sheet=1, startRow=3, colNames=F, cols= c(1,2,4:6) );
+  
+  names(PeakArea.results.1)<-c('Sample.Name' , 'Vial.number' , 'CH4.Area' , 'CO2.Area', 'N2O.Area' );
+  
+  
+  PeakArea.results.1$DateOfAnalysis<-File.Catalog.peakareas[i,c("Directory")] ;
+  
+  PeakArea.results.1$AnalysisName<-File.Catalog.peakareas[i,c("File.Name")] ;
+  
+  PeakArea.results<-rbind(PeakArea.results.2,PeakArea.results.1 );
+  
+  
+  PeakArea.results.2<-PeakArea.results ;
+  
+  
+}
+
+   # Delete objects and files that are nbot longer needed
+   
+   rm(PeakArea.results.1, i)
+
+# !!!!!  on 20210702 there is some GC data called 20210702B3B4peakareasFIDISSUES that has not been read !!!!!
+
+# !!!!!  on 20210812 there is some GC data called ~$20210812B1B2peakareas.xlsx , ~$20210812B3B4peakareas.xlsx , and ~$20210812B3B4peakareas2.xlsx   that has not been read !!!!!
+
+################################################################################################################     #                      Put all the data together
+###############################################################################################################
+
+
+GC.All.Data<-rbind(PeakArea.results.0,PeakArea.results.2)  ; 
+   
+
+   
+
+###############################################################################################################
+#                           
+#                               Working with standards
+#
+###############################################################################################################
+
+str(GC.All.Data)
+   
+GC.All.Data$CH4.Area<-as.numeric(GC.All.Data$CH4.Area) ;
+
+GC.All.Data$CO2.Area<-as.numeric(GC.All.Data$CO2.Area) ;
+
+GC.All.Data$N2O.Area<-as.numeric(GC.All.Data$N2O.Area) ;
+
+
+# getting the GC samples with standards together
+   
+
+GC.standards<-GC.All.Data[grep("STD",GC.All.Data$Sample.Name),] ;
+
+GC.standards$CH4.ppm<-NA
+  
+GC.standards$CO2.ppm<-NA
+
+GC.standards$N2O.ppm<-NA
+
+#Values of the standards 
+#CH4	CO2	N2O
+# 0 perSTD	ppm 	uL/Lgas	0	0	0
+# 25 perSTDA	ppm 	uL/Lgas	1.25	125	0.25
+# 50 perSTDA	ppm 	uL/Lgas	2.5	250	0.5
+# 75 perSTDA	ppm 	uL/Lgas	3.75	375	0.75
+# 100 perSTDA	ppm 	uL/Lgas	5	500	1
+# 50 PerSTD	ppm 	uL/Lgas	25	2500	25
+# 100 PerSTD	ppm 	uL/Lgas	50	5000	50
+
+
+
+head(GC.standards);
+
+GC.standards[GC.standards$Sample.Name == '100PerSTDA',c('CH4.ppm')]<-5 ;
+GC.standards[GC.standards$Sample.Name == '100PerSTDA',c('CO2.ppm')]<-500 ;
+GC.standards[GC.standards$Sample.Name == '100PerSTDA',c('N2O.ppm')]<-1 ;
+
+
+GC.standards[GC.standards$Sample.Name == '100PerSTD',c('CH4.ppm')]<-50 ;
+GC.standards[GC.standards$Sample.Name == '100PerSTD',c('CO2.ppm')]<-5000 ;
+GC.standards[GC.standards$Sample.Name == '100PerSTD',c('N2O.ppm')]<-50 ;    
+             
+
+GC.standards[GC.standards$Sample.Name == '50PerSTDA',c('CH4.ppm')]<-2.5  ;
+GC.standards[GC.standards$Sample.Name == '50PerSTDA',c('CO2.ppm')]<-250  ;
+GC.standards[GC.standards$Sample.Name == '50PerSTDA',c('N2O.ppm')]<-0.5  ;
+
+
+GC.standards[GC.standards$Sample.Name == '50PerSTD',c('CH4.ppm')]<-25 ;
+GC.standards[GC.standards$Sample.Name == '50PerSTD',c('CO2.ppm')]<-2500 ;
+GC.standards[GC.standards$Sample.Name == '50PerSTD',c('N2O.ppm')]<-25;
+
+
+GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('CH4.ppm')]<-3.75 ;
+GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('CO2.ppm')]<-375  ;
+GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('N2O.ppm')]<-0.75 ;
+
+
+GC.standards[GC.standards$Sample.Name == '25PerSTDA',c('CH4.ppm')]<-1.25 ;
+GC.standards[GC.standards$Sample.Name == '25PerSTDA',c('CO2.ppm')]<-125  ;
+GC.standards[GC.standards$Sample.Name == '25PerSTDA',c('N2O.ppm')]<-0.25  ;
+
+
+GC.standards[GC.standards$Sample.Name == '0PerSTDA',c('CH4.ppm', 'CO2.ppm', 'N2O.ppm')]<-1e-5 ;
+
+GC.standards[GC.standards$Sample.Name == '0PerSTD',c('CH4.ppm', 'CO2.ppm', 'N2O.ppm')]<-1e-5  ;
+
+# There are some that are different 
+
+GC.standards[is.na(GC.standards$CO2.ppm),c("Sample.Name")] ;
+
+
+GC.standards[GC.standards$Sample.Name == '25PerSTD',c('CH4.ppm')]<-1.25 ;
+GC.standards[GC.standards$Sample.Name == '25PerSTD',c('CO2.ppm')]<-125  ;
+GC.standards[GC.standards$Sample.Name == '25PerSTD',c('N2O.ppm')]<-0.25  ;
+
+GC.standards[GC.standards$Sample.Name == '25perSTD',c('CH4.ppm')]<-1.25 ;
+GC.standards[GC.standards$Sample.Name == '25perSTD',c('CO2.ppm')]<-125  ;
+GC.standards[GC.standards$Sample.Name == '25perSTD',c('N2O.ppm')]<-0.25  ;
+
+  
+GC.standards[GC.standards$Sample.Name == '75PerSTD',c('CH4.ppm')]<-3.75 ;
+GC.standards[GC.standards$Sample.Name == '75PerSTD',c('CO2.ppm')]<-375 ;
+GC.standards[GC.standards$Sample.Name == '75PerSTD',c('N2O.ppm')]<-0.75 ;
+
+GC.standards[GC.standards$Sample.Name == '75perSTD',c('CH4.ppm')]<-3.75 ;
+GC.standards[GC.standards$Sample.Name == '75perSTD',c('CO2.ppm')]<-375 ;
+GC.standards[GC.standards$Sample.Name == '75perSTD',c('N2O.ppm')]<-0.75 ;
+
+GC.standards[GC.standards$Sample.Name == '50perSTD',c('CH4.ppm')]<-25 ;
+GC.standards[GC.standards$Sample.Name == '50perSTD',c('CO2.ppm')]<-2500 ;
+GC.standards[GC.standards$Sample.Name == '50perSTD',c('N2O.ppm')]<-25;
+
+GC.standards[GC.standards$Sample.Name == '100perSTD',c('CH4.ppm')]<-5 ;
+GC.standards[GC.standards$Sample.Name == '100perSTD',c('CO2.ppm')]<-500 ;
+GC.standards[GC.standards$Sample.Name == '100perSTD',c('N2O.ppm')]<-1 ;
+
+
+##### Exploring the standards data
+
+str(GC.standards)
+
+xyplot(CO2.Area~CO2.ppm, data=GC.standards, type="b",main="CO2")
+
+xyplot(N2O.Area~N2O.ppm, data=GC.standards, type="b",main="N2O")
+
+xyplot(CH4.Area~CH4.ppm, data=GC.standards, type="b",main="CH4")
+
+##### Exploring the standards data with CO2 areas below 5000, CH4 below100 and N2O below 10000
+
+xyplot(CO2.Area~CO2.ppm, data=GC.standards[GC.standards$CO2.Area <= 5000,], type="p",main="CO2")
+
+xyplot(CH4.Area~CH4.ppm, data=GC.standards[GC.standards$CH4.Area <= 100,], type="p",main="CH4")
+
+xyplot(N2O.Area~N2O.ppm, data=GC.standards[GC.standards$CH4.Area <= 100,], type="p",main="N2O")
+
+
+##### Exploring the standards by date of analysis DateOfAnalysis
+
+GC.standards$ANAL.DATE<-as.factor(GC.standards$DateOfAnalysis)  ;
+
+xyplot(CO2.Area~CO2.ppm, groups=ANAL.DATE, data=GC.standards, type="b",main="CO2", auto.key = T)
+xyplot(CO2.Area~CO2.ppm, groups=ANAL.DATE, data=GC.standards, type="b",main="CO2", auto.key = T, xlim = c(0,1000), ylim= c(0, 5000))
+xyplot(CO2.Area~CO2.ppm |ANAL.DATE , data=GC.standards, type="b",main="CO2")
+
+
+
+xyplot(N2O.Area~N2O.ppm, groups=ANAL.DATE, data=GC.standards, type="b",main="N2O", auto.key = T)
+xyplot(N2O.Area~N2O.ppm, groups=ANAL.DATE, data=GC.standards, type="b",main="N2O", auto.key = T,xlim = c(0,10), ylim= c(0, 2000))
+xyplot(N2O.Area~N2O.ppm | ANAL.DATE, data=GC.standards, type="b",main="N2O", auto.key = T)
+
+xyplot(CH4.Area~CH4.ppm, groups=ANAL.DATE, data=GC.standards, type="b",main="CH4", auto.key = T)
+xyplot(CH4.Area~CH4.ppm, groups=ANAL.DATE, data=GC.standards, type="b",main="CH4", auto.key = T,xlim = c(0,10), ylim= c(0, 50))
+xyplot(CH4.Area~CH4.ppm | ANAL.DATE, data=GC.standards, type="b",main="CH4", auto.key = T)
+
+
+
+###############################################################################################################
+#                           
+#                              Exploring the data without standards
+#
+###############################################################################################################
+
+##### Data with no standards included
+str(GC.All.Data)
+
+GC.Data.NoSTD<-GC.All.Data[!(GC.All.Data$Sample.Name %in% GC.standards$Sample.Name),];
+
+plot.CH4.hist.dat<-hist(GC.Data.NoSTD$CH4.Area)
+plot.CH4.density.dat<-density(GC.Data.NoSTD$CH4.Area, na.rm=T)
+
+plot.CO2.hist.dat<-hist(GC.Data.NoSTD$CO2.Area)
+plot.CO2.density.dat<-density(GC.Data.NoSTD$CO2.Area, na.rm=T)
+
+
+plot.N2O.hist.dat<-hist(GC.Data.NoSTD$N2O.Area)
+plot.N2O.density.dat<-density(GC.Data.NoSTD$N2O.Area, na.rm=T)
+
+##### compared with the standard data
+
+###CH4
+
+plot.CH4.hist.STD<-hist(GC.standards$CH4.Area)
+plot.CH4.density.STD<-density(GC.standards$CH4.Area, na.rm=T)
+
+plot(plot.CH4.hist.STD, col="RED" )
+plot(plot.CH4.hist.dat, col="BLUE" ,add=T)
+
+plot(plot.CH4.density.STD, col="RED")
+lines(plot.CH4.density.dat, col="BLUE")
+
+###CO2
+
+plot.CO2.hist.STD<-hist(GC.standards$CO2.Area)
+plot.CO2.density.STD<-density(GC.standards$CO2.Area, na.rm=T)
+
+plot(plot.CO2.hist.STD, col="RED" )
+plot(plot.CO2.hist.dat, col="BLUE" ,add=T)
+plot(plot.CO2.hist.STD, col="RED", add=T )
+
+plot(plot.CO2.density.STD, col="RED")
+lines(plot.CO2.density.dat, col="BLUE")
+
+
+###N2O
+
+plot.N2O.hist.STD<-hist(GC.standards$N2O.Area)
+plot.N2O.density.STD<-density(GC.standards$N2O.Area, na.rm=T)
+
+plot(plot.N2O.hist.STD, col="RED" )
+plot(plot.N2O.hist.dat, col="BLUE" ,add=T)
+plot(plot.N2O.hist.STD, col="RED", add=T )
+
+plot(plot.N2O.density.STD, col="RED")
+lines(plot.N2O.density.dat, col="BLUE")
+
+## initialize the dataframe to collect all the data together
+
+GC.All.Data.1<-data.frame(Sample.Name = character(),  Vial.number= integer(),  DateOfAnalysis = character(),  CH4.Area = double(), CO2.Area = double(),       N2O.Area = double(), Treatment = character() , BLOCK = integer(), CoverCrop = character(), Sampling.Time = integer(),  Treatment.F = factor(), BLOCK.F = factor(), CoverCrop.F = factor()) ;   
 
 
 
@@ -169,12 +449,11 @@ Numbered.File.List<-Numbered.File.List.1[! Numbered.File.List.1 %in% Numbered.Di
 #
 ###############################################################################################################
 
-str(PeakArea.results)
+
+
 
 
 ### Organizing the data according to Treatments
-
-grep("STD",PeakArea.results$Sample.Name)
 
 PeakArea.results$Treatment<-c("NONE");
 
