@@ -1,10 +1,12 @@
 ##############################################################################################################
 # 
 # 
-# Program to Analyze and plot GC data collected from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph  
+# Program to Analyze and plot GC data collected from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
+# 
+#     This program is focused on analysing standards for calibration
 # 
 # 
-#  Felipe Montes 2021/07/01
+#  Felipe Montes 2022/08/23
 # 
 # 
 # 
@@ -18,11 +20,10 @@
 ###############################################################################################################
 
 
+
 #  Tell the program where the package libraries are  #####################
 
-.libPaths("C:/Felipe/SotwareANDCoding/R_Library/library")  ;
-
-
+.libPaths("D:/Felipe/SotwareANDCoding/R_Library/library")  ;
 ###############################################################################################################
 #                             Setting up working directory  Loading Packages and Setting up working directory                        
 ###############################################################################################################
@@ -33,14 +34,23 @@
 # readClipboard() Willow Rock Spring\\SkyCap_SelectionTrial\\DataCollection") ;   # 
 
 
-setwd("C:\\Users\\frm10\\The Pennsylvania State University\\StrategicTillageAndN2O - Documents\\Data\\GCResults\\SummaryReport")
+setwd("D:\\Felipe\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data\\GasChromatograph")
 
 ###############################################################################################################
 #                            Install the packages that are needed                       
 ###############################################################################################################
 
+# install.packages("openxlsx",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
 
-#install.packages("tabulizer",  dependencies = T, lib="C:/Felipe/SotwareANDCoding/R_Library/library")
+# install.packages("Rtools",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
+
+# install.packages("pdftools",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
+
+# install.packages("askpass",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
+
+# install.packages("cli",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
+
+# install.packages("utf8",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
 
 
 
@@ -52,187 +62,241 @@ library(openxlsx)
 
 library(lattice)
 
+library(pdftools)
+
+library(stringr)
+
+
+
+
 
 ###############################################################################################################
 #                           Explore the files and directory and files with the data
 ###############################################################################################################
 ### Read the Directories where the GC data are stored
 
+File.List.directory<-"C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results" ;
+
+File.List<-list.files("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"); length(File.List) ; 
+
+# Only select the pdf files
+
+PDF.Results.Files<-File.List[grep(".pdf", File.List)] ;
+
+Excel.Results.Files<-File.List[grep(".xlsx", File.List)] ;
 
 
-Directory.List<-list.files(); length(Directory.List) 
-
-
-
-###############################################################################################################
-#                           
-# Directories, subdirectories and files are not always consistent, and some files and directories have no data 
-# Therefore A catalog with objects with valid data will be build and that will be the information base to
-#extract the data
-#
-###############################################################################################################
-
-# j=1
-# k=1
-
-
-
-#### Looking at the structure of the directories and the files, some dates have the peak areas in files named sumaryreport ("20210528" "20210601" "20210604" "20210614" ); The rest have peak the peak areas in files named peak areas ("20210616" "20210621" "20210623" "20210629" "20210702" "20210707" "20210715" "20210720" "20210730" "20210805" "20210812" "20210819" "20210902" "20210917" "20210929").
-
-# Let's get the data from the files that have the peak areas in sumaryreport
-
-#initialize the dataframe to collect all the directories, subdirectories and file names
-
-File.Catalog.sumaryreport<-data.frame( File.Name=character(), Directory=character());
-
-#### Do a loop throughout the directories and collect all the file names
-# i=1
-
-
-for (i in seq(1, 4)){
-  
-  Files.List<-list.files(paste0(".\\", Directory.List[i]) ) ;
-  
-  SummaryReportFiles<-Files.List[grep("[Ss]ummary[Rr]eport.xlsx",Files.List)] ;
-  
-  
-  File.Catalog.1<-data.frame(File.Name=SummaryReportFiles) ;
- 
-  File.Catalog.1$Directory<-Directory.List[i]
-  
-  File.Catalog<-rbind(File.Catalog.sumaryreport,File.Catalog.1 ) ;
-  
-  File.Catalog.sumaryreport<-File.Catalog ;
-  
-  
-  
-}
-
-rm(File.Catalog.1, File.Catalog,Files.List,SummaryReportFiles,i)
-
-# Let's get the data from the files that have the peak areas in peakareas
-
-
-#initialize the dataframe to collect all the directories, subdirectories and file names
-
-File.Catalog.peakareas<-data.frame( File.Name=character(), Directory=character());
-
-#### Do a loop throughout the directories and collect all the file names
-# j=19
-
-
-for (j in seq(5, length(Directory.List))){
-  
-  Files.List<-list.files(paste0(".\\", Directory.List[j]) ) ;
-  
-  PeakareaFiles<-Files.List[grep("peakareas.xls|peakareas.\\.xlsx",Files.List)] ;
-  
-  File.Catalog.1<-data.frame(File.Name=PeakareaFiles) ;
- 
-  File.Catalog.1$Directory<-Directory.List[j]
-  
-  File.Catalog<-rbind(File.Catalog.peakareas,File.Catalog.1 ) ;
-  
-  File.Catalog.peakareas<-File.Catalog ;
-  
-  
-}
-
-rm(File.Catalog.1, File.Catalog,Files.List, PeakareaFiles,j)
+# ###############################################################################################################
+# #                           Read all the  excel files in the File.List
+# ###############################################################################################################
+# 
+# 
+# 
+# ## initialize the dataframe to collect all the data in the directory files in the Excel.Results.Files
+# 
+# 
+# 
+# PeakArea.results.0<-data.frame(Sample.Name = character(), Vial.number = integer(), CH4.Area = double(), CO2.Area = double(), N2O.Area = double(), DateOfAnalysis = character(), AnalysisName = character() );
+# 
+# #i=1 
+# 
+# for (i in seq(1,length(Excel.Results.Files))) {
+#   
+#   
+#   PeakArea.results.1<-read.xlsx(xlsxFile = paste0(".\\Alli_Felipe2021\\Results\\",Excel.Results.Files[i]), sheet= 1, startRow=3, colNames=F, cols= c(1,2,4:6) );
+#   
+#   names(PeakArea.results.1)<-c('Sample.Name' , 'Vial.number' , 'CH4.Area' , 'CO2.Area', 'N2O.Area' );
+#   
+#   
+#   PeakArea.results.1$AnalysisName<-Excel.Results.Files[[i]] ;
+#   
+#   PeakArea.results<-rbind(PeakArea.results.0,PeakArea.results.1 );
+#   
+#   
+#   PeakArea.results.0<-PeakArea.results ;
+#   
+#   rm(PeakArea.results.1)
+#   
+# }
+# 
+# # Delete objects and files that are not longer needed
+# 
+# rm(PeakArea.results.1, i)
+# 
+# 
 
 
 ###############################################################################################################
-#                           Read all the  excel files in the file catalog
+#                           Read all the  pdf files in the File.List
 ###############################################################################################################
 
+# read pdf files using the pdftools package
+
+# get useful info from the pdf file
+
+Report.pdf.info<-pdf_info(pdf=paste0(File.List.directory,"\\",PDF.Results.Files[1]))  ;
+
+print(Report.pdf.info)
+
+# number of pages in the report
+
+Report.pdf.info$pages
 
 
-## initialize the dataframe to collect all the data in the directory files in the File.Catalog.sumaryreport
-    
-
-    
-PeakArea.results.0<-data.frame(Sample.Name = character(), Vial.number = integer(), CH4.Area = double(), CO2.Area = double(), N2O.Area = double(), DateOfAnalysis = character(), AnalysisName = character() );
-
-#i=7 
-   
-for (i in seq(1,dim(File.Catalog.sumaryreport)[1])) {
-  
-                       
-      PeakArea.results.1<-read.xlsx(paste0(".\\", File.Catalog.sumaryreport[i,c("Directory")], "\\", File.Catalog.sumaryreport[i,c("File.Name")] ), sheet=1, startRow=3, colNames=F, cols= c(1,2,4:6) );
-      
-      names(PeakArea.results.1)<-c('Sample.Name' , 'Vial.number' , 'CH4.Area' , 'CO2.Area', 'N2O.Area' );
-      
-      
-      PeakArea.results.1$DateOfAnalysis<-File.Catalog.sumaryreport[i,c("Directory")] ;
-      
-      PeakArea.results.1$AnalysisName<-File.Catalog.sumaryreport[i,c("File.Name")] ;
-      
-      PeakArea.results<-rbind(PeakArea.results.0,PeakArea.results.1 );
-      
-      
-      PeakArea.results.0<-PeakArea.results ;
-      
-      
-    }
-
-# Delete objects and files that are nbot longer needed
-
-   rm(PeakArea.results.1, i)
-###############################################################################################################
-   
+# read the pdf file as a text
 
 
-##  !!!!!  on 20210812 there is some GC data called ~$20210812B1B2peakareas.xlsx , ~$20210812B3B4peakareas.xlsx , and ~$20210812B3B4peakareas2.xlsx   that has not been read !!!!!
+Report.PDF.1<-pdf_text(pdf=paste0(File.List.directory,"\\",PDF.Results.Files[1])) ;
+str(Report.PDF.1)
 
-#these files appear to be corrupt, therefore lets get them out of the File.Catalog.peakareas
-  
-  BadFiles.Catalog.peakareas<-File.Catalog.peakareas[grep("~",File.Catalog.peakareas$File.Name),] ;
-   
-   File.Catalog.peakareas.Rev<-File.Catalog.peakareas[!File.Catalog.peakareas$File.Name %in% BadFiles.Catalog.peakareas$File.Name, ] ; 
-   
-## initialize the dataframe to collect all the data in the directory files in the File.Catalog.peakareas
-   
-   
-PeakArea.results.2<-data.frame(Sample.Name = character(), Vial.number = integer(), CH4.Area = double(), CO2.Area = double(), N2O.Area = double(), DateOfAnalysis = character(), AnalysisName = character() );
+# separate each page and each line using strsplit() and "\n" as he separation pattern
+
+Report.PDF.2<-strsplit(x=Report.PDF.1,split="\n") ;
+
+str(Report.PDF.2)
+
+
+# get the data from the list starting with page 1 [[1]]
+
+Report.PDF.2[[1]] ;   str(Report.PDF.2[[1]]) ;
+
+# get all the pages in one long character vector Report.PDF.3 by unlisting the list produced by Report.PDF.2
+
+Report.PDF.3<-unlist(Report.PDF.2);
+
+# remove all the blank components of the vector
+
+# remove all the blank components of the vector
+
+### in reg exp ^ means start of a string, and $ means end of a string. Subsequently, ^$ means empty or ""
+
+grep(pattern="^$",x=Report.PDF.3)
+
+grep(pattern="^$",x=Report.PDF.3, value=T)
+
+grep(pattern="^$",x=Report.PDF.3, value=T, invert=T)
+
+Report.PDF.4<-grep(pattern="^$",x=Report.PDF.3, value=T, invert=T) ;
+
+
+## Remove lines of the report that do not contain data
+
+print(Report.PDF.4[1:4])
+
+# [1] "Sequence Summary Report"                                                   
+# [2] "                                   CH4            CO2            N2O"      
+# [3] "                                   Peak Area      Peak Area      Peak Area"
+# [4] " 0PerSTD                 1    1    4.071          781.033        149.931"  
+# 
 
 
 
-for (i in seq(1,dim(File.Catalog.peakareas.Rev)[1])) {
-  
-  
-  PeakArea.results.1<-read.xlsx(paste0(".\\", File.Catalog.peakareas.Rev[i,c("Directory")], "\\", File.Catalog.peakareas.Rev[i,c("File.Name")] ), sheet=1, startRow=3, colNames=F, cols= c(1,2,4:6) );
-  
-  names(PeakArea.results.1)<-c('Sample.Name' , 'Vial.number' , 'CH4.Area' , 'CO2.Area', 'N2O.Area' );
-  
-  
-  PeakArea.results.1$DateOfAnalysis<-File.Catalog.peakareas[i,c("Directory")] ;
-  
-  PeakArea.results.1$AnalysisName<-File.Catalog.peakareas[i,c("File.Name")] ;
-  
-  PeakArea.results<-rbind(PeakArea.results.2,PeakArea.results.1 );
-  
-  
-  PeakArea.results.2<-PeakArea.results ;
-  
-  
-}
-
-   # Delete objects and files that are nbot longer needed
-   
-   rm(PeakArea.results.1, i)
-
-# !!!!!  on 20210702 there is some GC data called 20210702B3B4peakareasFIDISSUES that has not been read !!!!!
-
-# !!!!!  on 20210812 there is some GC data called ~$20210812B1B2peakareas.xlsx , ~$20210812B3B4peakareas.xlsx , and ~$20210812B3B4peakareas2.xlsx   that has not been read !!!!!
-
-################################################################################################################     #                      Put all the data together
-###############################################################################################################
+Report.PDF.5<-grep(pattern="Koehle*|Sequence|CH4|Peak", x=Report.PDF.4, value=T, invert=T)
 
 
-GC.All.Data<-rbind(PeakArea.results.0,PeakArea.results.2)  ; 
-   
 
-   
+# use  str_squish from the package stringr to get rid of the spaces between characters
+
+str_squish(Report.PDF.5[1])
+
+
+strsplit(str_squish(Report.PDF.5[1]), " ")[1]
+
+
+str(unlist(strsplit(str_squish(Report.PDF.5[1]), " ")[1]))
+
+
+# or even better  use strsplit to remove the the spaces between characters in character vectors
+
+strsplit(x=Report.PDF.5[1], split=c(" ", ""))
+
+strsplit(x=Report.PDF.5[5], split=c(" ", ""))
+
+str(strsplit(x=Report.PDF.5[80], split=c(" ", "")))
+
+# even better
+
+strsplit(x=Report.PDF.5, split=c(" "))
+
+Report.PDF.6<-strsplit(x=Report.PDF.5, split=c(" ")) ;
+
+str(Report.PDF.6) ; head(Report.PDF.6,3 )
+
+
+### in regular  expressions "^" means start of a string, and $ means end of a string. Subsequently, ^$ means empty or ""
+
+grep(pattern="^$",x=Report.PDF.6[[1]])
+
+grep(pattern="^$",x=Report.PDF.6[[1]], value=T)
+
+grep(pattern="^$",x=Report.PDF.6[[1]], value=T, invert=T)
+
+### using sapply to apply the grep function to all the elements in the Report.PDF.6 list
+
+lapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T))
+
+lapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T))[[1]]
+
+sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T))
+
+str(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))
+
+t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))
+
+Report.PDF.7<-data.frame(t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))) ;
+
+# Names of the pdf report columns c("Sample", "Position", "Vial", "CH4" , "CO2" , "N2O" )
+
+names(Report.PDF.7)<-c("Sample.Name", "Position" , "Vial", "CH4" , "CO2" , "N2O" );
+
+head(Report.PDF.7)
+
+######################### Add the sampling date and the processing date ####################
+
+##CHANGE PDF.Results.Files[1] TO PDF.Results.Files[i]
+
+
+Report.PDF.7$File<-PDF.Results.Files[1] ;
+
+head(Report.PDF.7)
+
+### Get the sampling date from the file name
+
+head(Report.PDF.7$File)
+
+strsplit(x=Report.PDF.7$File, split=c("pea")) [[1]]
+
+XXXX<-sapply(strsplit(x=Report.PDF.7$File, split=c("pea")), FUN="[[",1)
+
+regmatches(XXXX, regexpr("[[:digit:]]+",XXXX))
+
+
+regmatches(XXXX, regexpr("[[:digit:]]+",XXXX))
+
+Report.PDF.7$Sampling.Day<-regmatches(XXXX, regexpr("[[:digit:]]+",XXXX)) ;
+
+Report.PDF.7$Sampling.Date<-as.Date(Report.PDF.7$Sampling.Day, format="%Y%M%d")
+
+###### Get the Gas Chromatograph processing date 
+
+grep(pattern="Koehle*", x=Report.PDF.4, value=T)[[1]]
+
+Report.PDF.DateLine<-strsplit(x=grep(pattern="Koehle*", x=Report.PDF.4, value=T)[[1]], split=c(" ", ""))[[1]] ;
+
+as.Date(Report.PDF.DateLine, format="%Y-%m-%d" )
+
+is.na(as.Date(Report.PDF.DateLine, format="%Y-%m-%d" ))
+
+!is.na(as.Date(Report.PDF.DateLine, format="%Y-%m-%d" ))
+
+Report.PDF.DateLine[!is.na(as.Date(Report.PDF.DateLine, format="%Y-%m-%d" ))]
+
+as.Date(Report.PDF.DateLine[!is.na(as.Date(Report.PDF.DateLine, format="%Y-%m-%d" ))])
+
+Report.PDF.7$GC.Date<-as.Date(Report.PDF.DateLine[!is.na(as.Date(Report.PDF.DateLine, format="%Y-%m-%d" ))]);
+
+head(Report.PDF.7)
+
 
 ###############################################################################################################
 #                           
@@ -240,19 +304,67 @@ GC.All.Data<-rbind(PeakArea.results.0,PeakArea.results.2)  ;
 #
 ###############################################################################################################
 
-str(GC.All.Data)
+str(PeakArea.results)
    
-GC.All.Data$CH4.Area<-as.numeric(GC.All.Data$CH4.Area) ;
+PeakArea.results$CH4.Area<-as.numeric(PeakArea.results$CH4.Area) ;
 
-GC.All.Data$CO2.Area<-as.numeric(GC.All.Data$CO2.Area) ;
+PeakArea.results$CO2.Area<-as.numeric(PeakArea.results$CO2.Area) ;
 
-GC.All.Data$N2O.Area<-as.numeric(GC.All.Data$N2O.Area) ;
+PeakArea.results$N2O.Area<-as.numeric(PeakArea.results$N2O.Area) ;
 
 
 # getting the GC samples with standards together
    
 
-GC.standards<-GC.All.Data[grep("STD",GC.All.Data$Sample.Name),] ;
+GC.standards<-PeakArea.results[grep("ST",PeakArea.results$Sample.Name),] ;
+
+###############################################################################################################
+#                           
+#                            Data dispersion and variability 
+#
+###############################################################################################################
+
+
+### group the data by teh different standards
+
+GC.standards.STDA<-GC.standards[grep("STDA",GC.standards$Sample.Name),] ;
+
+GC.standards.STDA.100<-GC.standards.STDA[grep("100",GC.standards.STDA$Sample.Name),] ;
+
+boxplot(GC.standards.STDA.100$CH4.Area ~ GC.standards.STDA.100$AnalysisName, las= 2) ;
+
+
+
+abline(h=mean(GC.standards.STDA.100$CH4.Area), col= "RED");
+
+densityplot(GC.standards.STDA.100$CH4.Area)   ;
+hist(GC.standards.STDA.100$CH4.Area, plot = T, freq = T, breaks = 20) ;
+
+bwplot(CH4.Area ~ AnalysisName, data = GC.standards.STDA.100, scales=list(y=list(rot=0), x=list(rot=45)))
+
+
+
+bwplot(CH4.Area~Sample.Name, data = GC.standards)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 GC.standards$CH4.ppm<-NA
   
