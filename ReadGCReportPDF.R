@@ -71,7 +71,7 @@ ReadGCReportPDF<-function(GCPDF.File.path, GCPDF.File.name ){
   # 
   # Inputs required by the function
   # 
-  #  1-> GCPDF.File.path = path to the file containing the Gas Cromatograph analysis report in pdf format
+  #  1-> GCPDF.File.path = path to the file containing the Gas Chromatograph analysis report in pdf format
   #  
   #  in the code below GCPDF.File=paste0(File.List.directory,"\\",PDF.Results.Files[1])
   # 

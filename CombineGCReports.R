@@ -90,17 +90,25 @@ source("D:\\Felipe\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_Organ
 
 
 
-### Organize the file paths and file names to input into the function sequentially 
+###############################################################################################################
+#                         Organize the file paths and file names to input into the function sequentially  
+###############################################################################################################
+
 
 ### Path for the results of 2021: "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\GCResults2021\\SummaryReport"
 
 ### readClipboard() ;  
 
 
+
+### Initialize a data frame to store the directories and file names where th GC reports are
+
+File.DataF.0<-data.frame(Directory=character(),file=character()) ;
+
 Directory.List.2021.Path<-("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\GCResults2021\\SummaryReport");
 
-
 Directory.List.2021<-list.files(Directory.List.2021.Path) ;
+
 
 # i= Directory.List.2021[[1]]
 
@@ -110,7 +118,11 @@ Directory.List.2021<-list.files(Directory.List.2021.Path) ;
  
  PDF.Files<-File.List[grep(".pdf", File.List)]
  
- File.DataF<-data.frame("directory=",i,"file=",PDF.Files)
+ File.DataF.1<-data.frame(i,PDF.Files) ;
+ 
+ File.DataF<-rbind(File.DataF.0,File.DataF.1)
+ 
+ File.DataF.0<-File.DataF
 
  print(File.DataF)
    
@@ -118,7 +130,7 @@ Directory.List.2021<-list.files(Directory.List.2021.Path) ;
 
 ### initialize the data frame that will contain all the data from all the GC analysis reports
 
-v<-data.frame( Sample.Name = character(), Position = integer(), Vial = integer() , CH4 = double() ,
+GCAnalysisResults<-data.frame( Sample.Name = character(), Position = integer(), Vial = integer() , CH4 = double() ,
                            CO2 = double() , N2O = double(), File = character(), Sampling.Day = character(), 
                            Sampling.Date = as.Date(character()), GC.Date = as.Date(character())) ;
    
@@ -130,10 +142,10 @@ v<-data.frame( Sample.Name = character(), Position = integer(), Vial = integer()
 
 
 assign(paste0("GCAnalysis",PDF.Files[1]), ReadGCReportPDF(GCPDF.File.path=Directory.List.2021.Path, 
-                                                          GCPDF.File.name=paste0(Directory.List.2021[[1]],"\\",PDF.Files[1] ) ) )
+                                                          GCPDF.File.name=paste0(File.DataF[1,1],"\\",File.DataF[1,2] ) ) )
 
 
-
+paste0(Directory.List.2021.Path,paste0(Directory.List.2021[[1]],"\\",PDF.Files[1] ))
 
 
 
