@@ -3,7 +3,7 @@
 # 
 # Program to Analyze and plot GC data collected from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
 # 
-#     This program is focused on analysing standards for calibration
+#     This program is focused on analyzing standards for calibration
 # 
 # 
 #  Felipe Montes 2022/08/23
@@ -21,9 +21,7 @@
 
 
 
-#  Tell the program where the package libraries are  #####################
 
-.libPaths("D:/Felipe/SotwareANDCoding/R_Library/library")  ;
 ###############################################################################################################
 #                             Setting up working directory  Loading Packages and Setting up working directory                        
 ###############################################################################################################
@@ -40,17 +38,17 @@ setwd("D:\\Felipe\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_Organi
 #                            Install the packages that are needed                       
 ###############################################################################################################
 
-# install.packages("openxlsx",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
+# install.packages("openxlsx",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
 
-# install.packages("Rtools",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
+# install.packages("Rtools",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
 
-# install.packages("pdftools",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
+# install.packages("pdftools",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
 
-# install.packages("askpass",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
+# install.packages("askpass",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
 
-# install.packages("cli",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
+# install.packages("cli",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
 
-# install.packages("utf8",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
+# install.packages("utf8",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
 
 
 
@@ -166,7 +164,7 @@ Report.PDF.3<-unlist(Report.PDF.2);
 
 # remove all the blank components of the vector
 
-# remove all the blank components of the vector
+
 
 ### in reg exp ^ means start of a string, and $ means end of a string. Subsequently, ^$ means empty or ""
 
@@ -270,8 +268,6 @@ XXXX<-sapply(strsplit(x=Report.PDF.7$File, split=c("pea")), FUN="[[",1)
 
 regmatches(XXXX, regexpr("[[:digit:]]+",XXXX))
 
-
-regmatches(XXXX, regexpr("[[:digit:]]+",XXXX))
 
 Report.PDF.7$Sampling.Day<-regmatches(XXXX, regexpr("[[:digit:]]+",XXXX)) ;
 

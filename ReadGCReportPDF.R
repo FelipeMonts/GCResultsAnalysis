@@ -3,9 +3,9 @@
 # Function to read the results of the gas chromatogrpah from the PDF reports saved after analyzing the results. 
 # 
 #    Felipe Montes 2022/10/13 
+#   
+#    Rev 2023/07/17
 # 
-# 
-#  
 # 
 # 
 # 
@@ -22,9 +22,42 @@
 # 
 # #  Tell the program where the package libraries are  #####################
 # 
-# .libPaths("D:/Felipe/SotwareANDCoding/R_Library/library")  ;
+# .libPaths("C:\\Users\\frm10\\AppData\\Local\\R\\win-library\\4.2")  ;
+
+
 ###############################################################################################################
-#                             Setting up working directory  Loading Packages and Setting up working directory                        
+#                            Install the packages that are needed                       
+###############################################################################################################
+
+# install.packages("openxlsx",  dependencies = T)
+
+# install.packages("Rtools",  dependencies = T)
+
+# install.packages("pdftools",  dependencies = T)
+
+# install.packages("askpass",  dependencies = T)
+
+# install.packages("cli",  dependencies = T)
+
+# install.packages("utf8",  dependencies = T)
+
+
+###############################################################################################################
+#                           load the libraries that are needed   
+###############################################################################################################
+
+library(openxlsx)
+
+library(lattice)
+
+library(pdftools)
+
+library(stringr)
+
+
+
+###############################################################################################################
+#                             Setting up working directory                         
 ###############################################################################################################
 
 
@@ -35,56 +68,36 @@
 
 #setwd("D:\\Felipe\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data\\GasChromatograph")
 
+
+
 ###############################################################################################################
-#                            Install the packages that are needed                       
+#                           Start Code
 ###############################################################################################################
 
-# install.packages("openxlsx",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
 
-# install.packages("Rtools",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
-
-# install.packages("pdftools",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
-
-# install.packages("askpass",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
-
-# install.packages("cli",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
-
-# install.packages("utf8",  dependencies = T, lib="D:/Felipe/SotwareANDCoding/R_Library/library")
+###############################################################################################################
+# 
+# Inputs required by the function
+# 
+#  1-> GCPDF.File.path = path to the file containing the Gas Chromatograph analysis report in pdf format
+#  
+#  in the code below GCPDF.File=paste0(File.List.directory,"\\",PDF.Results.Files[1])
+# 
+#    GCPDF.File.path = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"
+#  
+#  2-> GCPDF.File.name= Name of the Gas Cromatograph analysis report in pdf format
+# 
+# 
+#    GCPDF.File.name="2021027B3B4peakareas.pdf" 
+# 
+# 
+# 
+###############################################################################################################
 
 
 ReadGCReportPDF<-function(GCPDF.File.path, GCPDF.File.name ){
   
-  ###############################################################################################################
-  #                           load the libraries that are needed   
-  ###############################################################################################################
-  
-  library(openxlsx)
-  
-  library(lattice)
-  
-  library(pdftools)
-  
-  library(stringr)
-  
-  
-  ###############################################################################################################
-  # 
-  # Inputs required by the function
-  # 
-  #  1-> GCPDF.File.path = path to the file containing the Gas Chromatograph analysis report in pdf format
-  #  
-  #  in the code below GCPDF.File=paste0(File.List.directory,"\\",PDF.Results.Files[1])
-  # 
-  #    GCPDF.File.path = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"
-  #  
-  #  2-> GCPDF.File.name= Name of the Gas Cromatograph analysis report in pdf format
-  # 
-  # 
-  #    GCPDF.File.name="2021027B3B4peakareas.pdf" 
-  # 
-  # 
-  # 
-  ###############################################################################################################
+ 
   
   # read the pdf file as a text
   
