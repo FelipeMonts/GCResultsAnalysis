@@ -1,6 +1,6 @@
 ##############################################################################################################
 # 
-# Function to read the results of the gas chromatogrpah from the PDF reports saved after analyzing the results. 
+# Function to read the results of the gas chromatograph from the PDF reports saved after analyzing the results. 
 # 
 #    Felipe Montes 2022/10/13 
 #   
