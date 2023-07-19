@@ -75,15 +75,20 @@ library(stringr)
 ###############################################################################################################
 ### Read the Directories where the GC data are stored
 
-File.List.directory<-"C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results" ;
+File.List.directory.path <- "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Felipe2022\\Results" ;
 
-File.List<-list.files("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"); length(File.List) ; 
+File.List.directory <- list.files(File.List.directory.path); length(File.List.directory) ; 
+
+File.List.Sub.directory <- list.files(paste0(File.List.directory.path , "\\" ,File.List.directory [[1]] )); length(File.List.Sub.directory) ;
+
+Summary.directory <- grep("Sum", File.List.Sub.directory, value = T) ;
+
 
 # Only select the pdf files
 
-PDF.Results.Files<-File.List[grep(".pdf", File.List)] ;
+PDF.Results.Files<-File.List[grep(".pdf", x = File.List)] ;
 
-Excel.Results.Files<-File.List[grep(".xlsx", File.List)] ;
+#Excel.Results.Files<-File.List[grep(".xlsx", File.List)] ;
 
 
 ###############################################################################################################
@@ -125,31 +130,51 @@ PeakArea.results.0<-data.frame(Sample.Name = character(), Position = integer() ,
 
 
 
-#i=1
+#i=2
 
 
-for (i in seq(1,length(Excel.Results.Files))) {
+for (i in seq(1,length(File.List.directory))) {
   
-
-  PeakArea.results.1<-ReadGCReportPDF(GCPDF.File.path = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"
-                                      
-                                      , GCPDF.File.name = PDF.Results.Files[i])
-
-  #names(PeakArea.results.1)<-c('Sample.Name' , 'Vial.number' , 'CH4.Area' , 'CO2.Area', 'N2O.Area' );
-
-
-  PeakArea.results.1$AnalysisName<-PDF.Results.Files[[i]] ;
-
-  PeakArea.results<-rbind(PeakArea.results.0,PeakArea.results.1 );
-
-
-  PeakArea.results.0<-PeakArea.results ;
+  File.List.Sub.directory <- list.files(paste0(File.List.directory.path , "\\" ,File.List.directory [[i]] ));
   
-  # Delete objects and files that are not longer needed
-
-  rm(PeakArea.results.1)
-
-}
+  Summary.directory <- grep("Sum", File.List.Sub.directory, value = T) ;
+  
+  
+  File.List <- list.files(paste0(File.List.directory.path , "\\" , File.List.directory [[i]] , "\\" , 
+                                 
+                                Summary.directory )); length(File.List) ;
+  
+  
+  
+  PDF.Results.Files<-File.List[grep(".pdf", x = File.List)] ;
+  
+ # j = 1  
+  
+  for (j in seq(1, length(PDF.Results.Files))) {
+    
+    PeakArea.results.1<-ReadGCReportPDF2022(GCPDF.File.path = paste0(File.List.directory.path , "\\" , File.List.directory [[i]] , "\\" , 
+                                                                 
+                                                                 Summary.directory ), GCPDF.File.name = PDF.Results.Files[j]) ;
+    
+    #names(PeakArea.results.1)<-c('Sample.Name' , 'Vial.number' , 'CH4.Area' , 'CO2.Area', 'N2O.Area' );
+    
+    
+    PeakArea.results.1$AnalysisName<-PDF.Results.Files[[i]] ;
+    
+    PeakArea.results<-rbind(PeakArea.results.0,PeakArea.results.1 );
+    
+    
+    PeakArea.results.0<-PeakArea.results ;
+    
+    # Delete objects and files that are not longer needed
+    
+    rm(PeakArea.results.1, PDF.Results.Files , PeakArea.results, File.List)
+    
+    
+    
+  }
+  
+ }
 
 
 
