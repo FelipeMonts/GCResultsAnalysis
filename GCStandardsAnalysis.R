@@ -19,36 +19,24 @@
 #                             Tell the program where the package libraries are stored                        
 ###############################################################################################################
 
+.libPaths("C:\\Users\\frm10\\AppData\\Local\\R\\win-library\\4.2")  ;
 
-
-
-###############################################################################################################
-#                             Setting up working directory  Loading Packages and Setting up working directory                        
-###############################################################################################################
-
-
-#      set the working directory
-
-# readClipboard() Willow Rock Spring\\SkyCap_SelectionTrial\\DataCollection") ;   # 
-
-
-setwd("D:\\Felipe\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data\\GasChromatograph")
 
 ###############################################################################################################
 #                            Install the packages that are needed                       
 ###############################################################################################################
 
-# install.packages("openxlsx",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
+# install.packages("openxlsx",  dependencies = T)
 
-# install.packages("Rtools",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
+# install.packages("Rtools",  dependencies = T)
 
-# install.packages("pdftools",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
+# install.packages("pdftools",  dependencies = T)
 
-# install.packages("askpass",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
+# install.packages("askpass",  dependencies = T)
 
-# install.packages("cli",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
+# install.packages("cli",  dependencies = T)
 
-# install.packages("utf8",  dependencies = T, lib = "C:/Users/frm10/AppData/Local/Temp/RtmpqMRxqa/downloaded_packages")
+# install.packages("utf8",  dependencies = T)
 
 
 
@@ -64,6 +52,21 @@ library(pdftools)
 
 library(stringr)
 
+
+
+
+
+###############################################################################################################
+#                             Setting up working directory  Loading Packages and Setting up working directory                        
+###############################################################################################################
+
+
+#      set the working directory
+
+# readClipboard() Willow Rock Spring\\SkyCap_SelectionTrial\\DataCollection") ;   # 
+
+
+setwd("D:\\Felipe\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data\\GasChromatograph")
 
 
 

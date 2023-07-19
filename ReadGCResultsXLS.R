@@ -94,14 +94,19 @@ Excel.Results.Files<-File.List[grep(".xlsx", File.List)] ;
 
 PeakArea.results.0<-data.frame(Sample.Name = character(), Vial.number = integer(), CH4.Area = double(), CO2.Area = double(), N2O.Area = double(), DateOfAnalysis = character(), AnalysisName = character() );
 
-#i=1
+#i=2
 
 for (i in seq(1,length(Excel.Results.Files))) {
-
+  
+   # Initialize the dataframe to collect all the data in the directory files in the Excel.Results.Files
+  
+  PeakArea.results.0<-data.frame(Sample.Name = character(), Vial.number = integer(), CH4.Area = double(), CO2.Area = double(), N2O.Area = double(), DateOfAnalysis = character(), AnalysisName = character() );
+  
+  # Read the file using the openxlsx package
 
   PeakArea.results.1<-read.xlsx(xlsxFile = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results\\", 
                                                   
-                                                  Excel.Results.Files[i]), sheet= 1, startRow=3, colNames=F, cols= c(1,2,4:6) );
+                                                  Excel.Results.Files[i]), sheet = 1, startRow=3, colNames=F, cols = c(1,2,4:6) );
 
   names(PeakArea.results.1)<-c('Sample.Name' , 'Vial.number' , 'CH4.Area' , 'CO2.Area', 'N2O.Area' );
 
