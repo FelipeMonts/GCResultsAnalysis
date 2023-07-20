@@ -131,7 +131,7 @@ PeakArea.results.0<-data.frame(Sample.Name = character(), Position = integer() ,
 for (i in seq(1,length(Excel.Results.Files))) {
   
 
-  PeakArea.results.1<-ReadGCReportPDF(GCPDF.File.path = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"
+  PeakArea.results.1<-ReadGCReportPDF2021(GCPDF.File.path = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"
                                       
                                       , GCPDF.File.name = PDF.Results.Files[i])
 

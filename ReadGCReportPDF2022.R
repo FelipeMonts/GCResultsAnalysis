@@ -95,7 +95,7 @@ library(stringr)
 ###############################################################################################################
 
 
-ReadGCReportPDF<-function(GCPDF.File.path, GCPDF.File.name ){
+ReadGCReportPDF2022<-function(GCPDF.File.path, GCPDF.File.name ){
   
  
   
@@ -226,14 +226,15 @@ ReadGCReportPDF<-function(GCPDF.File.path, GCPDF.File.name ){
   
   # XXXX<-sapply(strsplit(x=Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2)
   # 
-  # regmatches(XXXX, regexpr("[[:digit:]]+",XXXX))
+  # regmatches(Report.PDF.7$File[1], regexpr("[[:digit:]]+",Report.PDF.7$File[1]))
+  
+  # regmatches(Report.PDF.7$File, regexpr("[[:digit:]]+",Report.PDF.7$File))
   
   # regmatches(sapply(strsplit(x=Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2),
   #            regexpr("[[:digit:]]+",sapply(strsplit(x=Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2)));
   # 
   
-  Report.PDF.7$Sampling.Day<-regmatches(sapply(strsplit(x = Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2),
-                                        regexpr("[[:digit:]]+",sapply(strsplit(x=Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2)));
+  Report.PDF.7$Sampling.Day<-regmatches(Report.PDF.7$File, regexpr("[[:digit:]]+",Report.PDF.7$File));
   
   
   Report.PDF.7$Sampling.Date<-as.Date(Report.PDF.7$Sampling.Day, format="%Y%M%d");

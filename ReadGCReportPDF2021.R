@@ -95,7 +95,7 @@ library(stringr)
 ###############################################################################################################
 
 
-ReadGCReportPDF<-function(GCPDF.File.path, GCPDF.File.name ){
+ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   
  
   
