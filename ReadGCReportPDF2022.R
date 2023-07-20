@@ -110,7 +110,7 @@ ReadGCReportPDF<-function(GCPDF.File.path, GCPDF.File.name ){
   
   # separate each page and each line using strsplit() and "\n" as the separation pattern
   
-  Report.PDF.2<-strsplit(x=Report.PDF.1,split="\n") ;
+  Report.PDF.2 <- strsplit(x=Report.PDF.1,split="\n") ;
   
   # str(Report.PDF.2)
   
@@ -121,7 +121,7 @@ ReadGCReportPDF<-function(GCPDF.File.path, GCPDF.File.name ){
   
   # get all the pages in one long character vector Report.PDF.3 by unlisting the list produced by Report.PDF.2
   
-  Report.PDF.3<-unlist(Report.PDF.2);
+  Report.PDF.3 <- unlist(Report.PDF.2);
   
   # remove all the blank components of the vector
   
@@ -150,7 +150,7 @@ ReadGCReportPDF<-function(GCPDF.File.path, GCPDF.File.name ){
   
   
   
-  Report.PDF.5<-grep(pattern="Koehle*|Sequence|CH4|Peak", x=Report.PDF.4, value=T, invert=T)
+  Report.PDF.5<-grep(pattern="Koehle*|Felipe*|Sequence|CH4|Peak", x=Report.PDF.4, value=T, invert=T) ;
   
   
   
@@ -220,21 +220,20 @@ ReadGCReportPDF<-function(GCPDF.File.path, GCPDF.File.name ){
   
   # head(Report.PDF.7$File)
   
-  # strsplit(x=Report.PDF.7$File, split=c("pea")) [[1]]
+  # strsplit(x=Report.PDF.7$File, split=c("GCN2O")) [[1]]
   
   #  Testing and building this complex call based on sapply, strsplit and regmatches
   
-  # XXXX<-sapply(strsplit(x=Report.PDF.7$File, split=c("pea")), FUN="[[",1)
+  # XXXX<-sapply(strsplit(x=Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2)
   # 
   # regmatches(XXXX, regexpr("[[:digit:]]+",XXXX))
   
-  # regmatches(sapply(strsplit(x=Report.PDF.7$File, split=c("pea")), FUN="[[",1),
-  #            regexpr("[[:digit:]]+",sapply(strsplit(x=Report.PDF.7$File, split=c("pea")), FUN="[[",1)));
+  # regmatches(sapply(strsplit(x=Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2),
+  #            regexpr("[[:digit:]]+",sapply(strsplit(x=Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2)));
   # 
   
-  Report.PDF.7$Sampling.Day<-regmatches(sapply(strsplit(x=Report.PDF.7$File, split=c("pea")), FUN="[[",1),
-                                        regexpr("[[:digit:]]+",sapply(strsplit(x=Report.PDF.7$File, split=c("pea")), FUN="[[",1)));
-  
+  Report.PDF.7$Sampling.Day<-regmatches(sapply(strsplit(x = Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2),
+                                        regexpr("[[:digit:]]+",sapply(strsplit(x=Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2)));
   
   
   Report.PDF.7$Sampling.Date<-as.Date(Report.PDF.7$Sampling.Day, format="%Y%M%d");
@@ -257,7 +256,7 @@ ReadGCReportPDF<-function(GCPDF.File.path, GCPDF.File.name ){
   # 
   # as.Date(Report.PDF.DateLine[!is.na(as.Date(Report.PDF.DateLine, format="%Y-%m-%d" ))])
   
-  Report.PDF.DateLine<-strsplit(x=grep(pattern="Koehle*", x=Report.PDF.4, value=T)[[1]], split=c(" ", ""))[[1]] ;
+  Report.PDF.DateLine<-strsplit(x=grep(pattern="Koehle*|Felipe*", x=Report.PDF.4, value=T)[[1]], split=c(" ", ""))[[1]] ;
   
   Report.PDF.7$GC.Date<-as.Date(Report.PDF.DateLine[!is.na(as.Date(Report.PDF.DateLine, format="%Y-%m-%d" ))]);
   
