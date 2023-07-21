@@ -260,8 +260,8 @@ GC.standards$CO2.ppm<-NA
 
 GC.standards$N2O.ppm<-NA
 
-#Values of the standards 
-#CH4	CO2	N2O
+# Values of the standards 
+# CH4	CO2	N2O
 # 0 perSTD	ppm 	uL/Lgas	0	0	0
 # 25 perSTDA	ppm 	uL/Lgas	1.25	125	0.25
 # 50 perSTDA	ppm 	uL/Lgas	2.5	250	0.5
