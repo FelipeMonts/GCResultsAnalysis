@@ -38,7 +38,7 @@
 
 # install.packages("utf8",  dependencies = T)
 
-
+# install.packages("quantreg",  dependencies = T)
 
 ###############################################################################################################
 #                           load the libraries that are needed   
@@ -52,7 +52,7 @@ library(pdftools)
 
 library(stringr)
 
-
+library(quantreg)
 
 
 
@@ -339,10 +339,18 @@ GC.standards$Series <- as.factor(GC.standards$Series) ;
 str(GC.standards)
 
 
-xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards, type="b",main="CO2", auto.key = T) ;
+xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards, 
+       
+       type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
 
 
+xyplot(CH4 ~ CH4.ppm | GC.Date , groups = Series , data=GC.standards, 
+       
+       type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
 
+xyplot(N2O ~ N2O.ppm | GC.Date , groups = Series , data=GC.standards, 
+       
+       type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
 
 
 
