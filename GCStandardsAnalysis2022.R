@@ -346,11 +346,11 @@ xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards,
 
 xyplot(CH4 ~ CH4.ppm | GC.Date , groups = Series , data=GC.standards, 
        
-       type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
+       type="b",main="CH4", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
 
 xyplot(N2O ~ N2O.ppm | GC.Date , groups = Series , data=GC.standards, 
        
-       type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
+       type="b",main="N2O", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
 
 
 
@@ -366,13 +366,55 @@ xyplot(CO2.Area~CO2.ppm |ANAL.DATE , data=GC.standards, type="b",main="CO2")
 
 
 
-xyplot(N2O.Area~N2O.ppm, groups=ANAL.DATE, data=GC.standards, type="b",main="N2O", auto.key = T)
-xyplot(N2O.Area~N2O.ppm, groups=ANAL.DATE, data=GC.standards, type="b",main="N2O", auto.key = T,xlim = c(0,10), ylim= c(0, 2000))
-xyplot(N2O.Area~N2O.ppm | ANAL.DATE, data=GC.standards, type="b",main="N2O", auto.key = T)
+###############################################################################################################
+#                           
+#        Regression for standards that were obtained on the same day of a particular GC analysis
+#
+###############################################################################################################
 
-xyplot(CH4.Area~CH4.ppm, groups=ANAL.DATE, data=GC.standards, type="b",main="CH4", auto.key = T)
-xyplot(CH4.Area~CH4.ppm, groups=ANAL.DATE, data=GC.standards, type="b",main="CH4", auto.key = T,xlim = c(0,10), ylim= c(0, 50))
-xyplot(CH4.Area~CH4.ppm | ANAL.DATE, data=GC.standards, type="b",main="CH4", auto.key = T)
+
+
+
+str(GC.standards)
+
+levels(GC.standards$ANAL.DATE)[[1]]
+
+GC.standards[GC.standards$ANAL.DATE == levels(GC.standards$ANAL.DATE)[[8]], ]
+
+plot(CO2~CO2.ppm, data = GC.standards[GC.standards$ANAL.DATE == levels(GC.standards$ANAL.DATE)[[8]], ], col= "blue") ;
+
+
+### Ordinary Least Square Regression OLS
+
+OLS.regression <- lm(CO2~CO2.ppm, data = GC.standards[GC.standards$ANAL.DATE == levels(GC.standards$ANAL.DATE)[[8]], ] ) ;
+
+summary(OLS.regression)
+
+str(OLS.regression)
+
+OLS.regression$coefficients[[1]]
+
+
+abline(a = OLS.regression$coefficients[[1]], b = OLS.regression$coefficients[[2]] , col="red")
+
+
+
+### quantile regression
+
+Quantile.Reg <- rq( CO2~CO2.ppm, data = GC.standards[GC.standards$ANAL.DATE == levels(GC.standards$ANAL.DATE)[[8]], ] )
+
+summary(Quantile.Reg)
+
+
+str(Quantile.Reg)
+
+abline(a = Quantile.Reg$coefficients[[1]], b = Quantile.Reg$coefficients[[2]] , col="cyan")
+
+
+
+
+
+
 
 
 
