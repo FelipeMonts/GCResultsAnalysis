@@ -293,7 +293,7 @@ plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "H100" ,  ])
 
 xyplot(N2O~N2O.ppm, data=GC.standards, type="p",main="N2O")
 
-xyplot(CH4.Area~CH4.ppm, data=GC.standards, type="b",main="CH4")
+xyplot(CH4~CH4.ppm, data=GC.standards, type="b",main="CH4")
 
 
 ##### Exploring the standards data with CO2 areas below 5000, CH4 below100 and N2O below 10000
@@ -308,9 +308,9 @@ xyplot(N2O ~ N2O.ppm, data=GC.standards, type="p",main="N2O")
 
 ##### Exploring the standards by date of analysis Date Of Analysis
 
-GC.standards$ANAL.DATE<-as.factor(GC.standards$DateOfAnalysis)  ;
+GC.standards$ANAL.DATE<-as.factor(GC.standards$GC.Date)  ;
 
-xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data=GC.standards, type="b",main="CO2", auto.key = T)
+xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data=GC.standards, type="b", main="CO2", auto.key = T)
 
 xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Position , data=GC.standards, type="p",main="CO2", auto.key = T)
 
@@ -352,17 +352,37 @@ xyplot(N2O ~ N2O.ppm | GC.Date , groups = Series , data=GC.standards,
        
        type="b",main="N2O", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
 
+#### Adding ablines to the lattice xyplot using the panel.abline parameter in the panel function.
+
+# An example from from https://stackoverflow.com/questions/11949766/how-to-add-abline-with-lattice-xyplot-function
+# 
+# xyplot(Neff ~ Eeff, data = phuong,
+#        panel = function(x, y) {
+#          panel.xyplot(x, y)
+#          panel.abline(lm(y ~ x))
+#        }, 
+#        xlab = "Energy efficiency (%)", 
+#        ylab = "Nitrogen efficiency (%)")
 
 
-xyplot(N2O ~ N2O.ppm, groups = GC.Date, data=GC.standards, type="b",main="N2O", auto.key = T) 
+xyplot(N2O ~ N2O.ppm | GC.Date , groups = Series , data=GC.standards, 
+       
+       panel = function(x, y) { panel.xyplot(x, y)
+         
+         panel.xyplot(x, y) 
+         
+         panel.abline(lm(y ~ x))
+         
+         panel.abline(a= 1000, b=0, col="RED")
+       },
+       
+       type="b",main="N2O", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3)
+       
+       
 
-xyplot(CH4 ~ CH4.ppm, groups = GC.Date, data=GC.standards, type="b",main="CH4", auto.key = T)
 
 
 
-
-xyplot(CO2.Area~CO2.ppm, groups=ANAL.DATE, data=GC.standards, type="b",main="CO2", auto.key = T, xlim = c(0,1000), ylim= c(0, 5000))
-xyplot(CO2.Area~CO2.ppm |ANAL.DATE , data=GC.standards, type="b",main="CO2")
 
 
 
@@ -401,16 +421,41 @@ abline(a = OLS.regression$coefficients[[1]], b = OLS.regression$coefficients[[2]
 
 ### quantile regression
 
-Quantile.Reg <- rq( CO2~CO2.ppm, data = GC.standards[GC.standards$ANAL.DATE == levels(GC.standards$ANAL.DATE)[[8]], ] )
+Quantile.Reg <- rq( CO2~CO2.ppm, data = GC.standards[GC.standards$ANAL.DATE == levels(GC.standards$ANAL.DATE)[[8]], ], tau = c(0.25, 0.50, 0.75) )
 
 summary(Quantile.Reg)
 
 
 str(Quantile.Reg)
 
-abline(a = Quantile.Reg$coefficients[[1]], b = Quantile.Reg$coefficients[[2]] , col="cyan")
+abline(a = Quantile.Reg$coefficients[1,1], b = Quantile.Reg$coefficients[2,1] , col="cyan")
+
+abline(a = Quantile.Reg$coefficients[1,2], b = Quantile.Reg$coefficients[2,2] , col="green")
+
+abline(a = Quantile.Reg$coefficients[1,3], b = Quantile.Reg$coefficients[2,3] , col="magenta")
+
+xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards, 
+       
+       type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3); 
 
 
+xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards, 
+       
+       panel = function(x, y) { panel.xyplot(x, y)
+         
+         panel.xyplot(x, y) 
+         
+         panel.abline(lm(y ~ x), col = "BLACK", lwd = 2)
+         
+         panel.abline(rq(y ~ x), col="RED" , lwd = 2)
+       },
+       
+       type="b",main="N2O", auto.key = T)
+
+
+
+
+##### Exploring the  OLS and quntile regression coefficients
 
 
 
