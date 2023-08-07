@@ -85,7 +85,7 @@ library(stringr)
 # 
 #    GCPDF.File.path = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"
 #  
-#  2-> GCPDF.File.name= Name of the Gas Cromatograph analysis report in pdf format
+#  2-> GCPDF.File.name= Name of the Gas Chromatograph analysis report in pdf format
 # 
 # 
 #    GCPDF.File.name="2021027B3B4peakareas.pdf" 
@@ -197,12 +197,56 @@ ReadGCReportPDF2022<-function(GCPDF.File.path, GCPDF.File.name ){
   # lapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T))[[1]]
   # 
   # sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T))
+  #
+  # sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T))[1]
   # 
   # str(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))
-  # 
+  
+  # length(lapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T))[[1]])
+  
+  # length(lapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T))[[2]])
+
   # t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))
   
-  Report.PDF.7<-data.frame(t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))) ;
+  #Report.PDF.6.1 <- sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)) 
+  
+  
+  
+ #t(sapply(Report.PDF.6.1 , FUN = "[" , seq(1:6)))
+           
+         
+ 
+  
+  
+  
+  ###### some reports have only one gas measurement in the first column and that causes problems with creating
+  
+  ###### the data frame. The if condition fixes this problem 
+  
+  if (length(lapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T))[[1]]) == 
+      
+      length(lapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T))[[2]])) {
+    
+   # Report.PDF.6.1 <- sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T) )
+    
+    Report.PDF.6.1 <- lapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T) )
+    
+  } else {
+    
+    print(paste0("THE REPORT " , GCPDF.File.name , " DOES NOT HAVE COMPLETE DATA IN THE FIRST POSITION"))
+    
+    Report.PDF.6.1 <- lapply(Report.PDF.6[-1], function(x) grep(pattern="^$",x, value=T, invert=T)) 
+    
+    
+  }
+  
+  #data.frame(t(Report.PDF.6.1 ))
+  
+  # Report.PDF.7<-data.frame(t(Report.PDF.6.1 )) 
+  
+   Report.PDF.7<-data.frame(t(sapply(Report.PDF.6.1 , FUN = "[" , seq(1:6)))) 
+   
+   
   
   # Names of the pdf report columns c("Sample", "Position", "Vial", "CH4" , "CO2" , "N2O" )
   
@@ -224,7 +268,7 @@ ReadGCReportPDF2022<-function(GCPDF.File.path, GCPDF.File.name ){
   
   #  Testing and building this complex call based on sapply, strsplit and regmatches
   
-  # XXXX<-sapply(strsplit(x=Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2)
+  # XXXX<-sapply(strsplit(x=Report.PDF.7$File, split=c("N2O")), FUN="[[",2)
   # 
   # regmatches(Report.PDF.7$File[1], regexpr("[[:digit:]]+",Report.PDF.7$File[1]))
   
@@ -234,8 +278,15 @@ ReadGCReportPDF2022<-function(GCPDF.File.path, GCPDF.File.name ){
   #            regexpr("[[:digit:]]+",sapply(strsplit(x=Report.PDF.7$File, split=c("GCN2O")), FUN="[[",2)));
   # 
   
-  Report.PDF.7$Sampling.Day<-regmatches(Report.PDF.7$File, regexpr("[[:digit:]]+",Report.PDF.7$File));
+  # Report.PDF.7$Sampling.Day<-regmatches(Report.PDF.7$File, regexpr("[[:digit:]]+",Report.PDF.7$File));
   
+  Samplig.Day.1 <- sapply(strsplit(x=Report.PDF.7$File, split=c("2022")), FUN="[[",2) ;
+  
+  
+  Samplig.Day.2 <- strtrim( x = Samplig.Day.1, width = 4) ;
+  
+  Report.PDF.7$Sampling.Day <- paste0("2022" , Samplig.Day.2)
+
   
   Report.PDF.7$Sampling.Date<-as.Date(Report.PDF.7$Sampling.Day, format="%Y%M%d");
   

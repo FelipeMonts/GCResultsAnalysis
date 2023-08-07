@@ -123,11 +123,11 @@ PeakArea.results.0<-data.frame(Sample.Name = character(), Position = integer() ,
 
 
 
-# i = 9
+# i = 20
 
 #for (i in seq(1,length(File.List.directory)))
 
-for (i in seq(21,length(File.List.directory))){
+for (i in seq(1,length(File.List.directory)-2)){
   
   File.List.Sub.directory <- list.files(paste0(File.List.directory.path , "\\" ,File.List.directory [[i]] ));
   
@@ -142,7 +142,7 @@ for (i in seq(21,length(File.List.directory))){
   
   PDF.Results.Files<-File.List[grep(".pdf", x = File.List)] ;
   
- # j = 1  
+ # j = 2
   
   for (j in seq(1, length(PDF.Results.Files))) {
     
@@ -162,7 +162,7 @@ for (i in seq(21,length(File.List.directory))){
     
     # Delete objects and files that are not longer needed
     
-    rm(PeakArea.results.1, PDF.Results.Files , File.List)
+    rm(PeakArea.results.1)
     
     
     
@@ -182,6 +182,8 @@ PeakArea.results <- read.csv(file = "C:\\Users\\frm10\\OneDrive - The Pennsylvan
 ###############################################################################################################
 
 str(PeakArea.results)
+
+head(PeakArea.results)
    
 # PeakArea.results$CH4<-as.double(PeakArea.results$CH4) ;
 # 
