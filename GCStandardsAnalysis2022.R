@@ -40,6 +40,8 @@
 
 # install.packages("quantreg",  dependencies = T)
 
+# install.packages("HMR",  dependencies = T)
+
 ###############################################################################################################
 #                           load the libraries that are needed   
 ###############################################################################################################
@@ -53,6 +55,8 @@ library(pdftools)
 library(stringr)
 
 library(quantreg)
+
+library(HMR)
 
 
 
@@ -274,7 +278,16 @@ GC.standards[GC.standards$Sample.Name == 'L25',c('N2O.ppm')]<-0.25  ;
 GC.standards[GC.standards$Sample.Name == '0',c('CH4.ppm', 'CO2.ppm', 'N2O.ppm')]<-1e-5 ;
 
 
-##### Exploring the standards data
+##### Exploring the standards by date of analysis Date Of Analysis
+
+GC.standards$ANAL.DATE<-as.factor(GC.standards$GC.Date)  ;
+
+xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data=GC.standards, type="b", main="CO2", auto.key = T)
+
+xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Position , data=GC.standards, type="p",main="CO2", auto.key = T)
+
+simpleKey(text = GC.standards$Position )
+
 
 str(GC.standards)
 
@@ -326,16 +339,6 @@ xyplot(CH4 ~ CH4.ppm, data=GC.standards, type="p",main="CH4")
 xyplot(N2O ~ N2O.ppm, data=GC.standards, type="p",main="N2O")
 
 
-##### Exploring the standards by date of analysis Date Of Analysis
-
-GC.standards$ANAL.DATE<-as.factor(GC.standards$GC.Date)  ;
-
-xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data=GC.standards, type="b", main="CO2", auto.key = T)
-
-xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Position , data=GC.standards, type="p",main="CO2", auto.key = T)
-
-simpleKey(text = GC.standards$Position )
-
 
 #### Adding an factor identification for each of the different standards in a run
 
@@ -379,6 +382,17 @@ levels(GC.standards$Factor.Name)
 
 #### Adding ablines to the lattice xyplot using the panel.abline parameter in the panel function.
 
+
+#### Testing lm to add the ablines ##
+
+plot(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] )
+
+lm(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] )
+
+str(lm(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] ))
+
+by(data = GC.standards, INDICES = GC.standards[, c("ANAL.DATE" , "Series")], function(x) lm(CO2.ppm ~ CO2, data = x))
+
 # An example from from https://stackoverflow.com/questions/11949766/how-to-add-abline-with-lattice-xyplot-function
 # 
 # xyplot(Neff ~ Eeff, data = phuong,
@@ -390,7 +404,7 @@ levels(GC.standards$Factor.Name)
 #        ylab = "Nitrogen efficiency (%)")
 
 
-xyplot(N2O ~ N2O.ppm | GC.Date , groups = Series , data=GC.standards, 
+xyplot(N2O.ppm ~ N2O | GC.Date , groups = Series , data=GC.standards, 
        
        panel = function(x, y) { panel.xyplot(x, y)
          
@@ -398,7 +412,9 @@ xyplot(N2O ~ N2O.ppm | GC.Date , groups = Series , data=GC.standards,
          
          panel.abline(lm(y ~ x))
          
-         panel.abline(a= 1000, b=0, col="RED")
+         panel.text(3000, 30,labels = signif(lm(y ~ x)$coefficients[2], digits = 3))
+         
+         panel.abline(a= 30, b=0, col="RED")
        },
        
        type="b",main="N2O", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3)
@@ -464,7 +480,16 @@ xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards,
        type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3); 
 
 
-xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards, 
+###############################################################################################################
+#                           
+#        Comparison between ordinary least squares regression and quantile regresson for the standards
+#
+###############################################################################################################
+
+
+####   CO2  ####
+
+xyplot(CO2.ppm ~ CO2 | GC.Date , groups = Series , data=GC.standards, 
        
        panel = function(x, y) { panel.xyplot(x, y)
          
@@ -473,84 +498,287 @@ xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards,
          panel.abline(lm(y ~ x), col = "BLACK", lwd = 2)
          
          panel.abline(rq(y ~ x), col="RED" , lwd = 2)
+         
+         panel.text(10000, 4000,labels = signif(rq(y ~ x)$coefficients[2], digits = 3), col = "red")
+         
+         panel.text(10000, 3500,labels = signif(rq(y ~ x)$coefficients[1], digits = 3), col = "red")
+         
+         panel.text(20000, 2000,labels = signif(lm(y ~ x)$coefficients[1], digits = 3), col = 'black' )
+         
+         panel.text(20000, 2500,labels = signif(lm(y ~ x)$coefficients[2], digits = 3), col = 'black' )
+       },
+       
+       type="b",main="CO2", auto.key = T)
+
+
+xyplot(CO2.ppm ~ CO2 , data=GC.standards, 
+       
+       panel = function(x, y) { panel.xyplot(x, y)
+         
+         panel.xyplot(x, y) 
+         
+         panel.abline(lm(y ~ x), col = "BLACK", lwd = 2)
+         
+         panel.abline(rq(y ~ x), col="RED" , lwd = 2)
+         
+         panel.text(10000, 4000,labels = signif(rq(y ~ x)$coefficients[2], digits = 3), col = "red")
+         
+         panel.text(10000, 3500,labels = signif(rq(y ~ x)$coefficients[1], digits = 3), col = "red")
+         
+         panel.text(20000, 2000,labels = signif(lm(y ~ x)$coefficients[1], digits = 3), col = 'black' )
+         
+         panel.text(20000, 2500,labels = signif(lm(y ~ x)$coefficients[2], digits = 3), col = 'black' )
+       },
+       
+       type="b",main="N2O", auto.key = T)
+
+
+####   N2O  ####
+
+xyplot(N2O.ppm ~ N2O | GC.Date , groups = Series , data=GC.standards, 
+       
+       panel = function(x, y) { panel.xyplot(x, y)
+         
+         panel.xyplot(x, y) 
+         
+         panel.abline(lm(y ~ x), col = "BLACK", lwd = 2)
+         
+         panel.abline(rq(y ~ x), col="RED" , lwd = 2)
+         
+         panel.text(10000, 40,labels = signif(rq(y ~ x)$coefficients[2], digits = 3), col = "red")
+         
+         panel.text(10000, 35,labels = signif(rq(y ~ x)$coefficients[1], digits = 3), col = "red")
+         
+         panel.text(20000, 20,labels = signif(lm(y ~ x)$coefficients[1], digits = 3), col = 'black' )
+         
+         panel.text(20000, 25,labels = signif(lm(y ~ x)$coefficients[2], digits = 3), col = 'black' )
+       },
+       
+       type="b",main="N2O", auto.key = T)
+
+
+xyplot(N2O.ppm ~ N2O , data=GC.standards, 
+       
+       panel = function(x, y) { panel.xyplot(x, y)
+         
+         panel.xyplot(x, y) 
+         
+         panel.abline(lm(y ~ x), col = "BLACK", lwd = 2)
+         
+         panel.abline(rq(y ~ x), col="RED" , lwd = 2)
+         
+         panel.text(10000, 40,labels = signif(rq(y ~ x)$coefficients[2], digits = 3), col = "red")
+         
+         panel.text(10000, 35,labels = signif(rq(y ~ x)$coefficients[1], digits = 3), col = "red")
+         
+         panel.text(20000, 20,labels = signif(lm(y ~ x)$coefficients[1], digits = 3), col = 'black' )
+         
+         panel.text(20000, 25,labels = signif(lm(y ~ x)$coefficients[2], digits = 3), col = 'black' )
        },
        
        type="b",main="N2O", auto.key = T)
 
 
 
+####   CH4  ####
 
-##### Exploring the  OLS and quntile regression coefficients
+xyplot(CH4.ppm ~ CH4 | GC.Date , groups = Series , data=GC.standards, 
+       
+       panel = function(x, y) { panel.xyplot(x, y)
+         
+         panel.xyplot(x, y) 
+         
+         panel.abline(lm(y ~ x), col = "BLACK", lwd = 2)
+         
+         panel.abline(rq(y ~ x), col="RED" , lwd = 2)
+         
+         panel.text(200, 40,labels = signif(rq(y ~ x)$coefficients[2], digits = 3), col = "red")
+         
+         panel.text(200, 35,labels = signif(rq(y ~ x)$coefficients[1], digits = 3), col = "red")
+         
+         panel.text(400, 20,labels = signif(lm(y ~ x)$coefficients[1], digits = 3), col = 'black' )
+         
+         panel.text(400, 25,labels = signif(lm(y ~ x)$coefficients[2], digits = 3), col = 'black' )
+       },
+       
+       type="b",main="CH4", auto.key = T)
+
+
+xyplot(CH4.ppm ~ CH4 , data=GC.standards, 
+       
+       panel = function(x, y) { panel.xyplot(x, y)
+         
+         panel.xyplot(x, y) 
+         
+         panel.abline(lm(y ~ x), col = "BLACK", lwd = 2)
+         
+         panel.abline(rq(y ~ x), col="RED" , lwd = 2)
+         
+         panel.text(200, 40,labels = signif(rq(y ~ x)$coefficients[2], digits = 3), col = "red")
+         
+         panel.text(200, 35,labels = signif(rq(y ~ x)$coefficients[1], digits = 3), col = "red")
+         
+         panel.text(400, 20,labels = signif(lm(y ~ x)$coefficients[1], digits = 3), col = 'black' )
+         
+         panel.text(400, 25,labels = signif(lm(y ~ x)$coefficients[2], digits = 3), col = 'black' )
+       },
+       
+       type="b",main="CH4", auto.key = T)
+
+
+#################################################################################################################
+# 
+# the best model for the standard calibration is the one using all the standards data in a linear regression
+# 
+# 
+################################################################################################################## 
+ 
+
+#### CO2 standards calibration ####
+
+CO2.Calibration <- lm(CO2.ppm ~ CO2 , data = GC.standards) ;
+
+summary(CO2.Calibration)
+
+# Call:
+#   lm(formula = CO2.ppm ~ CO2, data = GC.standards)
+# 
+# Residuals:
+#   Min      1Q  Median      3Q     Max 
+# -2556.7  -272.6  -147.0   123.9  3928.5 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)    
+# (Intercept) -31.605388  39.270520  -0.805    0.421    
+# CO2           0.269938   0.004337  62.242   <2e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 696.6 on 599 degrees of freedom
+# Multiple R-squared:  0.8661,	Adjusted R-squared:  0.8659 
+# F-statistic:  3874 on 1 and 599 DF,  p-value: < 2.2e-16
+
+
+#### N20 standards calibration ####
+
+N2O.Calibration <- lm(N2O.ppm ~ N2O , data = GC.standards) ;
+
+summary(N2O.Calibration)
+
+# Call:
+#   lm(formula = N2O.ppm ~ N2O, data = GC.standards)
+# 
+# Residuals:
+#   Min      1Q  Median      3Q     Max 
+# -23.093  -1.763  -1.525  -0.551  41.403 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)    
+# (Intercept) 1.425e+00  3.382e-01   4.214  2.9e-05 ***
+#   N2O         1.494e-03  2.159e-05  69.213  < 2e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 6.605 on 595 degrees of freedom
+# (4 observations deleted due to missingness)
+# Multiple R-squared:  0.8895,	Adjusted R-squared:  0.8893 
+# F-statistic:  4790 on 1 and 595 DF,  p-value: < 2.2e-16
+# 
+
+#### CH4 standards calibration ####
+
+CH4.Calibration <- lm(CH4.ppm ~ CH4 , data = GC.standards) ;
+
+summary(CH4.Calibration)
+
+# Call:
+#   lm(formula = CH4.ppm ~ CH4, data = GC.standards)
+# 
+# Residuals:
+#   Min      1Q  Median      3Q     Max 
+# -30.104  -2.879  -1.213   1.128  40.544 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)    
+# (Intercept) 2.465241   0.353385   6.976 8.06e-12 ***
+#   CH4         0.116513   0.001816  64.143  < 2e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 6.786 on 599 degrees of freedom
+# Multiple R-squared:  0.8729,	Adjusted R-squared:  0.8727 
+# F-statistic:  4114 on 1 and 599 DF,  p-value: < 2.2e-16
 
 
 
 
-
-
-
-###############################################################################################################
+# ###############################################################################################################
 #                           
 #                              Exploring the data without standards
 #
 ###############################################################################################################
 
 ##### Data with no standards included
-str(GC.All.Data)
 
-GC.Data.NoSTD<-GC.All.Data[!(GC.All.Data$Sample.Name %in% GC.standards$Sample.Name),];
+str(GC.standards)
 
-plot.CH4.hist.dat<-hist(GC.Data.NoSTD$CH4.Area)
-plot.CH4.density.dat<-density(GC.Data.NoSTD$CH4.Area, na.rm=T)
+str(PeakArea.results)
 
-plot.CO2.hist.dat<-hist(GC.Data.NoSTD$CO2.Area)
-plot.CO2.density.dat<-density(GC.Data.NoSTD$CO2.Area, na.rm=T)
+levels(GC.standards$Factor.Name)
 
+GC.Data.NoSTD<-PeakArea.results[!(PeakArea.results$Sample.Name %in% levels(GC.standards$Factor.Name)),];
 
-plot.N2O.hist.dat<-hist(GC.Data.NoSTD$N2O.Area)
-plot.N2O.density.dat<-density(GC.Data.NoSTD$N2O.Area, na.rm=T)
-
-##### compared with the standard data
-
-###CH4
-
-plot.CH4.hist.STD<-hist(GC.standards$CH4.Area)
-plot.CH4.density.STD<-density(GC.standards$CH4.Area, na.rm=T)
-
-plot(plot.CH4.hist.STD, col="RED" )
-plot(plot.CH4.hist.dat, col="BLUE" ,add=T)
-
-plot(plot.CH4.density.STD, col="RED")
-lines(plot.CH4.density.dat, col="BLUE")
-
-###CO2
-
-plot.CO2.hist.STD<-hist(GC.standards$CO2.Area)
-plot.CO2.density.STD<-density(GC.standards$CO2.Area, na.rm=T)
-
-plot(plot.CO2.hist.STD, col="RED" )
-plot(plot.CO2.hist.dat, col="BLUE" ,add=T)
-plot(plot.CO2.hist.STD, col="RED", add=T )
-
-plot(plot.CO2.density.STD, col="RED")
-lines(plot.CO2.density.dat, col="BLUE")
+str(GC.Data.NoSTD)
 
 
-###N2O
+plot.CH4.hist.dat<-hist(GC.Data.NoSTD$CH4)
+plot.CH4.density.dat<-density(GC.Data.NoSTD$CH4, na.rm=T)
 
-plot.N2O.hist.STD<-hist(GC.standards$N2O.Area)
-plot.N2O.density.STD<-density(GC.standards$N2O.Area, na.rm=T)
+plot.CO2.hist.dat<-hist(GC.Data.NoSTD$CO2)
+plot.CO2.density.dat<-density(GC.Data.NoSTD$CO2, na.rm=T)
 
-plot(plot.N2O.hist.STD, col="RED" )
-plot(plot.N2O.hist.dat, col="BLUE" ,add=T)
-plot(plot.N2O.hist.STD, col="RED", add=T )
 
-plot(plot.N2O.density.STD, col="RED")
-lines(plot.N2O.density.dat, col="BLUE")
+plot.N2O.hist.dat<-hist(GC.Data.NoSTD$N2O)
+plot.N2O.density.dat<-density(GC.Data.NoSTD$N2O, na.rm=T)
 
-## initialize the dataframe to collect all the data together
 
-GC.All.Data.1<-data.frame(Sample.Name = character(),  Vial.number= integer(),  DateOfAnalysis = character(),  CH4.Area = double(), CO2.Area = double(),       N2O.Area = double(), Treatment = character() , BLOCK = integer(), CoverCrop = character(), Sampling.Time = integer(),  Treatment.F = factor(), BLOCK.F = factor(), CoverCrop.F = factor()) ;   
+###############################################################################################################
+#                          
+#            Calculation of concentration based on the Standard gas concentrations
+#  
+#
+###############################################################################################################
 
+
+str(GC.Data.NoSTD)
+
+
+##### CO2 ######
+
+GC.Data.NoSTD$CO2.Intercept <- coefficients(CO2.Calibration)[1] ;
+
+GC.Data.NoSTD$CO2.Slope <- coefficients(CO2.Calibration)[2] ;
+
+GC.Data.NoSTD$CO2.ppm <- (GC.Data.NoSTD$CO2 * GC.Data.NoSTD$CO2.Slope) + GC.Data.NoSTD$CO2.Intercept ;
+
+
+##### N2O ######
+
+GC.Data.NoSTD$N2O.Intercept <- coefficients(N2O.Calibration)[1] ;
+
+GC.Data.NoSTD$N2O.Slope <- coefficients(N2O.Calibration)[2] ;
+
+GC.Data.NoSTD$N2O.ppm <- (GC.Data.NoSTD$N2O * GC.Data.NoSTD$N2O.Slope) + GC.Data.NoSTD$N2O.Intercept ;
+
+
+
+##### CH4 ######
+
+GC.Data.NoSTD$CH4.Intercept <- coefficients(CH4.Calibration)[1] ;
+
+GC.Data.NoSTD$CH4.Slope <- coefficients(CH4.Calibration)[2] ;
+
+GC.Data.NoSTD$CH4.ppm <- (GC.Data.NoSTD$CH4 * GC.Data.NoSTD$CH4.Slope) + GC.Data.NoSTD$CH4.Intercept ;
 
 
 ###############################################################################################################
@@ -559,88 +787,99 @@ GC.All.Data.1<-data.frame(Sample.Name = character(),  Vial.number= integer(),  D
 #
 ###############################################################################################################
 
-
+str(GC.Data.NoSTD)
 
 
 
 ### Organizing the data according to Treatments
 
-PeakArea.results$Treatment<-c("NONE");
+unique(GC.Data.NoSTD$Sample.Name)
 
-PeakArea.results[grep("STD",PeakArea.results$Sample.Name), c("Treatment")]<-c("STANDARD");
+GC.Data.NoSTD$Treatment<-c("NONE");
 
-PeakArea.results[grep("AT",PeakArea.results$Sample.Name), c("Treatment")]<-c("A");
 
-PeakArea.results[grep("BT",PeakArea.results$Sample.Name), c("Treatment")]<-c("B");
+GC.Data.NoSTD[grep("AT",GC.Data.NoSTD$Sample.Name), c("Treatment")]<-c("A");
 
-PeakArea.results[grep("CT",PeakArea.results$Sample.Name), c("Treatment")]<-c("C");
+GC.Data.NoSTD[grep("BT",GC.Data.NoSTD$Sample.Name), c("Treatment")]<-c("B");
 
-PeakArea.results[grep("DT",PeakArea.results$Sample.Name), c("Treatment")]<-c("D");
+GC.Data.NoSTD[grep("CT",GC.Data.NoSTD$Sample.Name), c("Treatment")]<-c("C");
+
+GC.Data.NoSTD[grep("DT",GC.Data.NoSTD$Sample.Name), c("Treatment")]<-c("D");
 
 ### Check if there was any treatment left with "NONE" label
 
-PeakArea.results[which(PeakArea.results$Treatment=="NONE"), ];
+GC.Data.NoSTD[which(GC.Data.NoSTD$Treatment == "NONE"), ];
 
-PeakArea.results[51,c("Treatment")]<-c("C");
+
 
 
 ### Organizing the data according to Blocks
 
-grep("B1",PeakArea.results$Sample.Name)
+grep("B1",GC.Data.NoSTD$Sample.Name)
 
-PeakArea.results$BLOCK<-c(9999);
+GC.Data.NoSTD$BLOCK<-c(9999);
 
-PeakArea.results[grep("B1",PeakArea.results$Sample.Name), c("BLOCK")]<-c(1);
+GC.Data.NoSTD[grep("B1",GC.Data.NoSTD$Sample.Name), c("BLOCK")]<-c(1);
 
-PeakArea.results[grep("B2",PeakArea.results$Sample.Name), c("BLOCK")]<-c(2);
+GC.Data.NoSTD[grep("B2",GC.Data.NoSTD$Sample.Name), c("BLOCK")]<-c(2);
 
-PeakArea.results[grep("B3",PeakArea.results$Sample.Name), c("BLOCK")]<-c(3);
+GC.Data.NoSTD[grep("B3",GC.Data.NoSTD$Sample.Name), c("BLOCK")]<-c(3);
 
-PeakArea.results[grep("B4",PeakArea.results$Sample.Name), c("BLOCK")]<-c(4);
+GC.Data.NoSTD[grep("B4",GC.Data.NoSTD$Sample.Name), c("BLOCK")]<-c(4);
+
+### Check if there was any BLOCK labeled 9999
+
+GC.Data.NoSTD[which(GC.Data.NoSTD$BLOCK == 9999 ), ];
+
 
 
 ### Organizing the data according to CoverCrop
 
-grep("3Spp",PeakArea.results$Sample.Name)
+grep("3Spp",GC.Data.NoSTD$Sample.Name)
 
-PeakArea.results$CoverCrop<-c("NONE");
+GC.Data.NoSTD$CoverCrop<-c("NONE");
 
-PeakArea.results[grep("3Spp",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("3Spp");
+GC.Data.NoSTD[grep("3Spp",GC.Data.NoSTD$Sample.Name), c("CoverCrop")]<-c("3Spp");
 
-PeakArea.results[grep("Clover",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("Clover");
+GC.Data.NoSTD[grep("Clover",GC.Data.NoSTD$Sample.Name), c("CoverCrop")]<-c("Clover");
 
-PeakArea.results[grep("Trit",PeakArea.results$Sample.Name), c("CoverCrop")]<-c("Trit");
+GC.Data.NoSTD[grep("Trit",GC.Data.NoSTD$Sample.Name), c("CoverCrop")]<-c("Trit");
+
+
+### Check if there was any  CoverCrop labeled "NONE"
+
+GC.Data.NoSTD[which(GC.Data.NoSTD$CoverCrop == "NONE" ), ];
 
 
 ### Organizing the data according to Sampling Time Order
 
-grep("T0",PeakArea.results$Sample.Name)
+grep("T0",GC.Data.NoSTD$Sample.Name)
 
-PeakArea.results$Sampling.Time<-c(9999);
+GC.Data.NoSTD$Sampling.Time<-c(9999);
 
-PeakArea.results[grep("T0",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(0);
+GC.Data.NoSTD[grep("T0",GC.Data.NoSTD$Sample.Name), c("Sampling.Time")]<-c(0);
 
-PeakArea.results[grep("T15",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(15);
+GC.Data.NoSTD[grep("T15",GC.Data.NoSTD$Sample.Name), c("Sampling.Time")]<-c(15);
 
-PeakArea.results[grep("T30",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(30);
+GC.Data.NoSTD[grep("T30",GC.Data.NoSTD$Sample.Name), c("Sampling.Time")]<-c(30);
 
-PeakArea.results[grep("T45",PeakArea.results$Sample.Name), c("Sampling.Time")]<-c(45);
+GC.Data.NoSTD[grep("T45",GC.Data.NoSTD$Sample.Name), c("Sampling.Time")]<-c(45);
 
 
 ### Check if there was any Sampling.Time left with "NONE" label
 
-PeakArea.results[which(PeakArea.results$Sampling.Time==9999),];
-
-PeakArea.results[51,c("Sampling.Time")]<-c(30);
+GC.Data.NoSTD[which(GC.Data.NoSTD$Sampling.Time==9999),];
 
 
 ### Converting experimental designations into factors
 
-PeakArea.results$Treatment.F<-as.factor(PeakArea.results$Treatment) ;
+GC.Data.NoSTD$Treatment.F<-as.factor(GC.Data.NoSTD$Treatment) ;
 
-PeakArea.results$BLOCK.F<-as.factor(PeakArea.results$BLOCK) ;
+GC.Data.NoSTD$BLOCK.F<-as.factor(GC.Data.NoSTD$BLOCK) ;
 
-PeakArea.results$CoverCrop.F<-as.factor(PeakArea.results$CoverCrop) ;
+GC.Data.NoSTD$CoverCrop.F<-as.factor(GC.Data.NoSTD$CoverCrop) ;
+
+
 
 
 
@@ -654,79 +893,37 @@ PeakArea.results$CoverCrop.F<-as.factor(PeakArea.results$CoverCrop) ;
 #
 ###############################################################################################################
 
-str(PeakArea.results)
+str(GC.Data.NoSTD)
 
-xyplot(CH4.Area + N2O.Area + CO2.Area ~ Sampling.Time | Treatment.F * BLOCK.F * CoverCrop.F, data=PeakArea.results[!PeakArea.results$Treatment.F == "STANDARD",],xlim=c(0,45), type="o", auto.key = T);
+levels(GC.Data.NoSTD$Treatment.F)
+
+levels(GC.Data.NoSTD$BLOCK.F)
+
+levels(GC.Data.NoSTD$CoverCrop.F)
+
+GC.Data.NoSTD[GC.Data.NoSTD$CoverCrop.F == "Clover" ,]
+
+xyplot(CO2.ppm ~ Sampling.Time | Treatment.F * BLOCK.F * CoverCrop.F, 
+       
+       data = GC.Data.NoSTD , xlim=c(0,45), ylim = c(0, max(GC.Data.NoSTD$CO2.ppm)) ,   type="o", auto.key = T);
+
+
+xyplot(N2O.ppm ~ Sampling.Time | Treatment.F * BLOCK.F * CoverCrop.F, 
+       
+       data = GC.Data.NoSTD , xlim=c(0,45), ylim = c(0, max(GC.Data.NoSTD$N2O.ppm)) ,   type="o", auto.key = T);
+
+
+xyplot(CH4.ppm ~ Sampling.Time | Treatment.F * BLOCK.F * CoverCrop.F, 
+       
+       data = GC.Data.NoSTD , xlim=c(0,45), ylim = c(0, max(GC.Data.NoSTD$CH4.ppm)) ,   type="o", auto.key = T);
+
 
 
 
 
 ###############################################################################################################
-#                          
-#            Calculation of concentration based on the Standard gas concentrations
-#  
 #
-###############################################################################################################
-
-
-Standards.Plot<-PeakArea.results[PeakArea.results$Treatment.F == "STANDARD",] ;
-
-Standards.Plot$Percent.Standard<-as.numeric(gsub(pattern = "PerSTD_1", x=Standards.Plot$Sample.Name, replacement = ""));
-str(Standards.Plot) ; names(Standards.Plot) ;
-
-
-GC.Standards<-data.frame(NAME=c("25PerSTD_1", "50PerSTD_1", "75PerSTD_1", "100PerSTD_1"), UNITS=c("uL/Lgas"), CH4.Conc=c(1.25, 2.5, 3.75, 5), CO2.Conc=c(125, 25, 375, 500), N2O.Conc=c(0.25, 0.5, 0.75, 1) );
-
-str(GC.Standards) ; names(GC.Standards);
-
-
-All.Standards<-merge(Standards.Plot, GC.Standards, by.x=c('Sample.Name'), by.y=c('NAME'), all.x = T);
-
-str(All.Standards)
-
-plot(CH4.Conc ~ CH4.Area , data=All.Standards, col='BLUE', pch=19, cex=2) ;
-
-CH4.Conc.Reg<-lm(CH4.Conc ~ CH4.Area, data=All.Standards); summary(CH4.Conc.Reg) ;
-
-predict.lm(CH4.Conc.Reg)
-
-points(All.Standards$CH4.Area, predict.lm(CH4.Conc.Reg), col="RED", type="o")
-
-
-
-
-plot( CO2.Conc ~ CO2.Area, data=All.Standards, col='GREEN', pch=19 , cex=2 ) ;
-
-All.Standards[,c("CO2.Area" , "CO2.Conc", "Percent.Standard")]
-
-### There seems to be a mistake in the CO2 standards. The CO2.Conc 125 (25% STD) and the CO2.Conc 25 (50% STD) seem to be interchanged
-
-points(All.Standards[c(1,2,3,4),c("CO2.Area")], All.Standards[c(1,3,2,4),c("CO2.Conc")], col='BLUE', pch=19 , cex=2 ) ;
-
-CO2.Standards.Corr<-data.frame(CO2.Conc = All.Standards[c(1,3,2,4),c("CO2.Conc")],  CO2.Area= All.Standards[c(1,2,3,4),c("CO2.Area")])
-
-CO2.Conc.Reg<-lm(CO2.Conc ~ CO2.Area, data=CO2.Standards.Corr); summary(CO2.Conc.Reg) ;
-
-points(CO2.Standards.Corr$CO2.Area, predict.lm(CO2.Conc.Reg), col="RED", type="o")
-
-
-plot(All.Standards[c(1,2,3,4),c("CO2.Area")] ~ predict.lm(CO2.Conc.Reg, All.Standards[c(1,2,3,4),c("CO2.Area")]) , col='RED', pch=19 , cex=2) ;
-
-
-N2O.Conc.Reg<-lm(N2O.Conc ~ N2O.Area, data=All.Standards); summary(N2O.Conc.Reg) ;
-
-predict.lm(N2O.Conc.Reg)
-
-points(All.Standards$N2O.Area, predict.lm(N2O.Conc.Reg), col="BLUE", type="o")
-
-
-
-
-
-###############################################################################################################
-#                          Calculations of gas emission rates base on GraceNet Protocols
-#
-#  All the reference data was taking from Allison Kohele's Calculations Excel Files
+#  Reference data taken from Allison Kohele's Calculations Excel Files
 #
 ###############################################################################################################
 
@@ -743,10 +940,49 @@ Chamber.Dimensions[Chamber.Dimensions$DIMENSION =="Surface.Area", c("VALUE")]<-C
 
 Molar.Mass<-data.frame(GAS=c("CH4" , "CO2" , "N2O"), UNITS=c("g/mol"), VALUE=c(16.04, 44.01, 44.013));
 
-Gas.Law<-data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K-Mol", "m3-atm/K-Mol"), VALUE=c(0.08205736, 8.314462,8.314462, 8.314462, 8.205736e-5 ));
+Gas.Law<-data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K-Mol", "m3-atm/K-Mol"), VALUE=c(0.08205736, 8.314462,8.314462, 8.314462, 8.205736e-5 ))  ;
+
+
+###############################################################################################################
+#
+#  Calculation of flux rates based on the paper:
+# 
+# Pedersen, A. R., S. O. Petersen, and K. Schelde. “A Comprehensive Approach to Soil-Atmosphere Trace-Gas Flux 
+# 
+# Estimation with Static Chambers.” European Journal of Soil Science 61, no. 6 (2010): 888–902. 
+# 
+# https://doi.org/10.1111/j.1365-2389.2010.01291.x.
+# 
+# 
+# and the r package : 
+
+# Pedersen, Asger R. “HMR: Flux Estimation with Static Chamber Data,” May 20, 2020. https://CRAN.R-project.org/package=HMR.
+# 
+#
+###############################################################################################################
+
+str(GC.Data.NoSTD)
+
+unique(GC.Data.NoSTD$Sampling.Day)
+
+Test.data.HMR <- GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Day == "20220630" & GC.Data.NoSTD$BLOCK.F == "1" &
+                                 
+                                 GC.Data.NoSTD$Treatment.F == "A" & GC.Data.NoSTD$CoverCrop.F == "3Spp" , 
+                               
+                               c( "Sampling.Time" ,  "CO2.ppm" , "N2O.ppm" , "CH4.ppm")] ;
+
+plot(CO2.ppm ~ Sampling.Time, data = Test.data.HMR[1:4,] , col = "red")
+
+plot(N2O.ppm ~ Sampling.Time, data = Test.data.HMR[1:4,] , col = "blue")
+
+plot(CH4.ppm ~ Sampling.Time, data = Test.data.HMR[1:4,] , col = "brown")
 
 
 
+
+
+
+HMR(filename = Test.data.HMR )
 
 
 
