@@ -126,11 +126,11 @@ Flux.Data.Error.Revised.0 <- Flux.Data[0,]
 #    Pre-filtering for discarding no fluxes based on the variance of the t0 concentration measurements
 # 
 ###############################################################################################################
-
+ # j=1
 
 for (j in seq(1:length(Flux.Data.Error))) {
   
-  Flux.Data.Process <- Flux.Data[Flux.Data$Series == Flux.Data.Error[[i]] ,]
+  Flux.Data.Process <- Flux.Data[Flux.Data$Series == Flux.Data.Error[[j]] ,]
   
   # str(Flux.Data.Process)
   
@@ -210,15 +210,15 @@ for (j in seq(1:length(Flux.Data.Error))) {
   
   # str(HMR.k.0)
   
-  plot(MSQE ~ k.i , data = HMR.k.0, log = "x")
+  plot(MSQE ~ k.i , data = HMR.k.0, log = "x", main = Flux.Data.Error[[j]] )
   
-  plot(MSQE ~ k.i , data = HMR.k.0)
+  plot(MSQE ~ k.i , data = HMR.k.0 ,  main = Flux.Data.Error[[j]])
   
-  LM.prediction <- lm(CO2.ppm ~ xi , data = Flux.Data.Process )
+  LM.prediction <- lm(CO2.ppm ~ xi , data = Flux.Data.Process , main = Flux.Data.Error[[j]])
   
   f0 <-  LM.prediction$coefficients [[2]] 
   
-  plot(CO2.ppm ~ xi , data = Flux.Data.Process)
+  plot(CO2.ppm ~ xi , data = Flux.Data.Process, main = Flux.Data.Error[[j]])
   
   abline(a = LM.prediction$coefficients [[1]] , b = LM.prediction$coefficients [[2]], col = 'red' )
   
@@ -235,18 +235,18 @@ for (j in seq(1:length(Flux.Data.Error))) {
   #str(Flux.Data)
   
   
-  Flux.Data.Error.Revised.1 <- Flux.Data.Process[i,]
+  Flux.Data.Error.Revised.1 <- Flux.Data.Process ;
   
-  Flux.Data.Error.Revised.1$Prefilter.p [i] <- P.Noflux  ;
+  Flux.Data.Error.Revised.1$Prefilter.p [j] <- P.Noflux  ;
   
-  Flux.Data.Error.Revised.1$LR.f0 [i] <- LM.prediction$coefficients [[2]]  ;
+  Flux.Data.Error.Revised.1$LR.f0 [j] <- LM.prediction$coefficients [[2]]  ;
   
-  Flux.Data.Error.Revised <- cbind(Flux.Data.Error.Revised.0 , Flux.Data.Error.Revised.1) ;
+  Flux.Data.Error.Revised <- rbind(Flux.Data.Error.Revised.0 , Flux.Data.Error.Revised.1) ;
   
   Flux.Data.Error.Revised.0 <- Flux.Data.Error.Revised ;
   
   
-  
+  rm(Flux.Data.Error.Revised.1 , Flux.Data.Process)
   
    
 }
