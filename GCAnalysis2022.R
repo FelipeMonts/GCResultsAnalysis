@@ -335,16 +335,6 @@ xyplot(N2O~N2O.ppm, data=GC.standards, type="p",main="N2O")
 xyplot(CH4~CH4.ppm, data=GC.standards, type="b",main="CH4")
 
 
-##### Exploring the standards data with CO2 areas below 5000, CH4 below100 and N2O below 10000
-
-xyplot(CO2 ~ CO2.ppm, data=GC.standards, type="p",main="CO2")
-
-
-xyplot(CH4 ~ CH4.ppm, data=GC.standards, type="p",main="CH4")
-
-xyplot(N2O ~ N2O.ppm, data=GC.standards, type="p",main="N2O")
-
-
 
 #### Adding an factor identification for each of the different standards in a run
 
@@ -978,68 +968,6 @@ str(GC.Data.NoSTD)
 unique(GC.Data.NoSTD$Sampling.Day)
 
 
-##### Test Data ################################################################################################
-
-Test.data.HMR <- GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Day == "20220630" & GC.Data.NoSTD$BLOCK.F == "1" &
-                                 
-                                 GC.Data.NoSTD$Treatment.F == "A" & GC.Data.NoSTD$CoverCrop.F == "3Spp" , 
-                               
-                               c( "Sampling.Time" ,  "CO2.ppm" , "N2O.ppm" , "CH4.ppm")] ;
-
-plot(CO2.ppm ~ Sampling.Time, data = Test.data.HMR[1:4,] , col = "red")
-
-plot(N2O.ppm ~ Sampling.Time, data = Test.data.HMR[1:4,] , col = "blue")
-
-plot(CH4.ppm ~ Sampling.Time, data = Test.data.HMR[1:4,] , col = "brown")
-
-
-Test.data.HMR.CO2 <- Test.data.HMR[,c("Sampling.Time" , "CO2.ppm"  )]
-
-Test.data.HMR.CO2$Series[1:4] <- "S1"
-
-Test.data.HMR.CO2$Series[5:8] <- "S2"
-
-Test.data.HMR.CO2$V <- Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Volume" , c("VALUE")]
-
-Test.data.HMR.CO2$A <- Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Surface.Area" , c("VALUE")]
-
-names(Test.data.HMR.CO2)
-
-Test.data.HMR.CO2.1 <- Test.data.HMR.CO2[,c( "Series" , "V" , "A" , "Sampling.Time" , "CO2.ppm")]
-
-names(Test.data.HMR.CO2.1) <- c("Series" , "V" , "A" , "Time" , "Concentration")
-
-setwd("D:/Felipe/Current_Projects/CCC Based Experiments/StrategicTillage_NitrogenLosses_OrganicCoverCrops/DataAnalysis/RCode/GCResultsAnalysis")
-
-
-write.table(x = Test.data.HMR.CO2.1, sep = ";", dec = "." ,file = "TEST_DATA.csv", row.names = F)
-
-
-
- # HRM.Results <- HMR(filename = "TEST_DATA.csv" , Display.Message = F , FollowHMR = T, LR.always = T ,
- #                   
- #                 IfNoValidHMR = 'No flux', IfNoFlux = 'No flux', IfNoSignal = 'No flux')
- # 
-
-HRM.Results <- HMR(filename = "HMRTestData.csv" , sep = "," , dec = "." ,Display.Message = F , FollowHMR = F, LR.always = T ,
-
-                IfNoValidHMR = 'No flux', IfNoFlux = 'No flux', IfNoSignal = 'No flux')
-
-
-xyplot(Concentration ~ Time | Series, data= Test.data.HMR.CO2.1, 
-       
-       panel = function(x, y) { panel.xyplot(x, y)
-         
-         panel.xyplot(x, y) 
-         
-         panel.abline(lm(y ~ x), col = "BLACK", lwd = 2)
-        
-       },
-       
-       type="b",main="Test", auto.key = T)
-
-
-
 ####### Creating series data names for the HMR analysis ############
 
 str(GC.Data.NoSTD)
@@ -1099,11 +1027,31 @@ head(CO2.Series.HMR)
 
 write.table(x = CO2.Series.HMR , sep = ";", dec = "." ,file = "CO2.Series.csv", row.names = F) ;
 
+######### Variance of the ambient concentration measurements #############
+
+str(GC.Data.NoSTD)
+
+GC.Data.NoSTD$Sampling.Day.F <- as.factor(GC.Data.NoSTD$Sampling.Day );
+
+sigma02 <- var( GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, c("CO2.ppm")])
+
+bwplot(CO2.ppm ~ Sampling.Day.F,  data = GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, ] )
+
+bwplot(~CO2.ppm ,  data = GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, ], horizontal = T )
 
 
-CO2.HRM.Results <- HMR(filename = "CO2.Series.csv" , sep = ";" , dec = "." ,Display.Message = F , FollowHMR = F, LR.always = T ,
-                   
-                   IfNoValidHMR = 'No flux', IfNoFlux = 'No flux', IfNoSignal = 'No flux') ;
+CO2.HRM.Results <- HMR(filename = "CO2.Series.csv" , sep = ";" , dec = "." ,Display.Message = F , FollowHMR = T, 
+                       
+                        pfvar = sigma02,  LR.always = T , IfNoValidHMR = 'LR', IfNoFlux = 'No flux', 
+                       
+                       IfNoSignal = 'No flux') ;
+
+str(CO2.HRM.Results)
+
+
+###### Transform flux data (F0) from text to number
+
+CO2.HRM.Results$Flux <- as.numeric(CO2.HRM.Results$f0)   ;
 
 ######## Results that were processed  #########
 
@@ -1116,4 +1064,50 @@ str(CO2.HRM.Results[!CO2.HRM.Results$Warning == "Data error" ,])
 str(CO2.HRM.Results[CO2.HRM.Results$Warning == "Data error" ,])
 
 
-save.image()
+
+
+###############################################################################################################
+#
+#  Add the fluxes to complete the database for analysis
+#    
+###############################################################################################################
+str(GC.Data.NoSTD)
+
+str(CO2.HRM.Results)
+
+GC.Data.NoSTD$Series
+
+Flux.Data <- merge(GC.Data.NoSTD, CO2.HRM.Results, by = "Series") ;
+
+str(Flux.Data)
+
+######## Test for the merge operation ######
+
+str(Flux.Data[Flux.Data$Warning== "Data error" ,])
+
+Flux.Data[Flux.Data$Warning == "Data error" , c("Series")]
+
+str(CO2.HRM.Results)
+
+unique(Flux.Data[Flux.Data$Warning == "Data error" , c("Series")])
+
+unique(Flux.Data[!Flux.Data$Warning == "Data error" , c("Series")])
+
+CO2.HRM.Results[CO2.HRM.Results$Warning == "Data error" , c("Series")]
+
+unique(CO2.HRM.Results[CO2.HRM.Results$Warning == "Data error" , c("Series")])
+
+unique(CO2.HRM.Results[!CO2.HRM.Results$Warning == "Data error" , c("Series")])
+
+Flux.Data[Flux.Data$Series == "20220901_3_Trit_C" , c("f0")]
+
+CO2.HRM.Results[CO2.HRM.Results$Series ==  "20220901_3_Trit_C" , c("f0")]
+
+
+CO2.HRM.Results[is.na(CO2.HRM.Results$Series),]
+
+Flux.Data[is.na(Flux.Data$Series),]
+
+
+save.image(file = "GCAnalysis2022.RData")
+

@@ -288,9 +288,9 @@ ReadGCReportPDF2022<-function(GCPDF.File.path, GCPDF.File.name ){
   Report.PDF.7$Sampling.Day <- paste0("2022" , Samplig.Day.2)
 
   
-  Report.PDF.7$Sampling.Date<-as.Date(Report.PDF.7$Sampling.Day, format="%Y%M%d");
+  Report.PDF.7$Sampling.Date<-as.Date(Report.PDF.7$Sampling.Day, format="%Y%m%d");
   
-  
+
   
   ###### Get the Gas Chromatograph processing date 
   
