@@ -107,7 +107,7 @@ Flux.Data$f0 <- as.numeric(Flux.Data$f0) ;
 
 Flux.Data$LR.f0<- as.numeric(Flux.Data$LR.f0) ;
 
-Flux.Data.Error <- unique(Flux.Data[which(Flux.Data$Warning == "Data error") , c("Series")])
+Flux.Data.Error <- Flux.Data[which(Flux.Data$Warning == "Data error") , c("Series")]
 
 Flux.Data[Flux.Data$Series == Flux.Data.Error[[1]] ,]
 
@@ -126,9 +126,9 @@ Flux.Data.Error.Revised.0 <- Flux.Data[0,]
 #    Pre-filtering for discarding no fluxes based on the variance of the t0 concentration measurements
 # 
 ###############################################################################################################
- # j=1
+ # j=9
 
-for (j in seq(1:length(Flux.Data.Error))) {
+for (j in seq(9,length(Flux.Data.Error))) {
   
   Flux.Data.Process <- Flux.Data[Flux.Data$Series == Flux.Data.Error[[j]] ,]
   
@@ -210,15 +210,28 @@ for (j in seq(1:length(Flux.Data.Error))) {
   
   # str(HMR.k.0)
   
-  plot(MSQE ~ k.i , data = HMR.k.0, log = "x", main = Flux.Data.Error[[j]] )
+  plot(MSQE ~ k.i , data = HMR.k.0, log = "x", main = paste0(Flux.Data.Error[[j]]," p-Noise ", 
+                                                             
+                                                             signif(as.numeric(P.Noflux),3)))
   
-  plot(MSQE ~ k.i , data = HMR.k.0 ,  main = Flux.Data.Error[[j]])
+  plot(MSQE ~ k.i , data = HMR.k.0 , main = paste0(Flux.Data.Error[[j]]," p-Noise ", 
+                                                   
+                                                   signif(as.numeric(P.Noflux),3)))
   
-  LM.prediction <- lm(CO2.ppm ~ xi , data = Flux.Data.Process , main = Flux.Data.Error[[j]])
   
-  f0 <-  LM.prediction$coefficients [[2]] 
+  LM.prediction.xi <- lm(CO2.ppm ~ xi , data = Flux.Data.Process)
   
-  plot(CO2.ppm ~ xi , data = Flux.Data.Process, main = Flux.Data.Error[[j]])
+  f0 <-  LM.prediction.xi$coefficients [[2]] 
+  
+ ######## linear prediction for the raw data 
+  
+  
+   LM.prediction <- lm(CO2.ppm ~ Sampling.Time , data = Flux.Data.Process)
+  
+  plot(CO2.ppm ~ Sampling.Time , data = Flux.Data.Process, main = paste0(Flux.Data.Error[[j]]," p-Noise ", 
+                                                                         
+                                                                         signif(as.numeric(P.Noflux),3)))
+  
   
   abline(a = LM.prediction$coefficients [[1]] , b = LM.prediction$coefficients [[2]], col = 'red' )
   
@@ -235,11 +248,13 @@ for (j in seq(1:length(Flux.Data.Error))) {
   #str(Flux.Data)
   
   
+  Flux.Data.Process$Prefilter.p <-  P.Noflux
+  
+  Flux.Data.Process$LR.f0 <-  LM.prediction$coefficients [[2]] 
+  
+  
   Flux.Data.Error.Revised.1 <- Flux.Data.Process ;
   
-  Flux.Data.Error.Revised.1$Prefilter.p [j] <- P.Noflux  ;
-  
-  Flux.Data.Error.Revised.1$LR.f0 [j] <- LM.prediction$coefficients [[2]]  ;
   
   Flux.Data.Error.Revised <- rbind(Flux.Data.Error.Revised.0 , Flux.Data.Error.Revised.1) ;
   
@@ -252,6 +267,28 @@ for (j in seq(1:length(Flux.Data.Error))) {
 }
 
 
+str( Flux.Data.Error.Revised.0)
+
+str(Flux.Data)
+
+Flux.Data$Rev.Prefilter.p <- NA ;
+
+Flux.Data$Rev.LR.f0 <- NA ;
+
+Flux.Data$Rev.Flux <- NA ;
+
+Flux.Data$Rev.xi <- NA ;
 
 
+Flux.Data[which(Flux.Data$Series %in% Flux.Data.Error), c("Flux.Data$Rev.Prefilter.p")]  <- Flux.Data.Error.Revised.0$Prefilter.p ;
 
+str(Flux.Data[which(Flux.Data$Series %in% Flux.Data.Error), c("Rev.Prefilter.p")])
+str(Flux.Data.Error.Revised.0$Prefilter.p)
+
+Flux.Data[which(Flux.Data$Series %in% Flux.Data.Error) , c("Series")]
+
+unique(Flux.Data[which(!Flux.Data[which(Flux.Data$Series %in% Flux.Data.Error), 
+                                  
+                                  c("Series")] %in% Flux.Data.Error.Revised.0$Series), c("Series")])
+
+Flux.Data.Error.Revised.0
