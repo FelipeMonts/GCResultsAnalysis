@@ -107,7 +107,9 @@ Flux.Data$f0 <- as.numeric(Flux.Data$f0) ;
 
 Flux.Data$LR.f0<- as.numeric(Flux.Data$LR.f0) ;
 
-Flux.Data.Error <- Flux.Data[which(Flux.Data$Warning == "Data error") , c("Series")]
+Flux.Data.Error <- unique(Flux.Data[which(Flux.Data$Warning == "Data error") , c("Series")])
+
+str(Flux.Data.Error)
 
 Flux.Data[Flux.Data$Series == Flux.Data.Error[[1]] ,]
 
@@ -278,6 +280,10 @@ Flux.Data$Rev.LR.f0 <- NA ;
 Flux.Data$Rev.Flux <- NA ;
 
 Flux.Data$Rev.xi <- NA ;
+
+
+
+
 
 
 Flux.Data[which(Flux.Data$Series %in% Flux.Data.Error), c("Flux.Data$Rev.Prefilter.p")]  <- Flux.Data.Error.Revised.0$Prefilter.p ;
