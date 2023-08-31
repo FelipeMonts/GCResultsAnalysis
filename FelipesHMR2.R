@@ -238,9 +238,9 @@ for (j in seq(1,length(Flux.Data.Error))) {
                                                    signif(as.numeric(P.Noflux),3)))
   
   
-  LM.prediction.xi <- lm(CO2.ppm ~ xi , data = Flux.Data.Process)
-  
-  f0 <-  LM.prediction.xi$coefficients [[2]] 
+  # LM.prediction.xi <- lm(CO2.ppm ~ xi , data = Flux.Data.Process)
+  # 
+  # f0 <-  LM.prediction.xi$coefficients [[2]] 
   
  ######## linear prediction for the raw data 
   
@@ -294,25 +294,46 @@ str(Flux.Data)
 str(Flux.Data.Error.Revised )
 
 
-
+###############################################################################################################
+# 
+#   Gather together the original data Flux.Data and the data that was corrected due to
+#   
+#                              "Data error" Flux.Data.Error.Revised
+#  
+# 
+###############################################################################################################
 
 
 Flux.Data.Corrected <- merge( x = Flux.Data ,  y = Flux.Data.Error.Revised, all.x = T) ;
 
+#Flux.Data.Error<- unique(Flux.Data[which(Flux.Data$Warning == "Data error") , c("Series")]) ;
 
-Flux.Data.Corrected[Flux.Data.Corrected$Series == "20220615_4_3Spp_B",]
+head(Flux.Data.Error,5)
+
+tail(Flux.Data.Error,5)
+
+Flux.Data.Corrected[Flux.Data.Corrected$Series == "20220927_4_Clover_C", 
+                    
+                    c( "Row.Names" , "xi" , "Rev.Prefilter.p" ,  "Rev.LR.f0" )]
+
+#Flux.Data.No.Error<- unique(Flux.Data[which(Flux.Data$Warning == "Data error") , c("Series")]) ;
+
+Flux.Data.No.Error<- unique(Flux.Data[which(!Flux.Data$Warning == "Data error") , c("Series")])
+
+head(Flux.Data.No.Error,5)
+
+tail(Flux.Data.No.Error,5)
+
+Flux.Data.Corrected[Flux.Data.Corrected$Series == "20221005_4_Clover_D", 
+                    
+                    c( "Row.Names" , "xi" , "Rev.Prefilter.p" ,  "Rev.LR.f0" )]
+
+str(Flux.Data.Corrected )
 
 
-
-
-
-str(Flux.Data.Error.Revised.0)
-
-str(Flux.Data[unique(Flux.Data$Series),])
-
-# write.csv( x = Flux.Data.Error.Revised.0 , file = "Flux_Data_Error.csv") 
+# write.csv( x = Flux.Data.Corrected , file = "Flux_Data_Corrected.csv") 
 # 
 # 
 # write.csv( x = Flux.Data , file = "Flux_Data.csv")
 
-
+row.names(unique(Flux.Data.Corrected[, c( "Sampling.Day" , "BLOCK" , "CoverCrop" , "Treatment.F")]))
