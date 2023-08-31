@@ -107,11 +107,23 @@ Flux.Data$f0 <- as.numeric(Flux.Data$f0) ;
 
 Flux.Data$LR.f0<- as.numeric(Flux.Data$LR.f0) ;
 
-Flux.Data.Error <- unique(Flux.Data[which(Flux.Data$Warning == "Data error") , c("Series")])
+####### use row names to identify rows in the primary data frame ######
+
+Flux.Data$Row.Names <- row.names.data.frame(Flux.Data) ;
+
+Flux.Data[Flux.Data$Warning == "Data error", c("Series")] ;
+
+unique(Flux.Data[Flux.Data$Warning == "Data error", c("Series")])
+
+Flux.Data.Error<- unique(Flux.Data[which(Flux.Data$Warning == "Data error") , c("Series")]) ;
 
 str(Flux.Data.Error)
 
-Flux.Data[Flux.Data$Series == Flux.Data.Error[[1]] ,]
+#unique(Flux.Data[Flux.Data$Series %in% Flux.Data.Error, c("Series")])
+
+
+
+#Flux.Data[Flux.Data$Series == Flux.Data.Error[[1]] ,]
 
 
 ##############################################################################################################
@@ -120,17 +132,22 @@ Flux.Data[Flux.Data$Series == Flux.Data.Error[[1]] ,]
 # 
 ###############################################################################################################
 
-Flux.Data.Error.Revised.0 <- Flux.Data[0,]
+Flux.Data.Error.Revised.1 <- Flux.Data[0,]
 
+
+Flux.Data.Error.Revised <- cbind(Flux.Data.Error.Revised.1 , data.frame(Rev.Prefilter.p = double(), Rev.LR.f0 = double()))
+
+
+str(Flux.Data.Error.Revised)
 
 ##############################################################################################################
 # 
 #    Pre-filtering for discarding no fluxes based on the variance of the t0 concentration measurements
 # 
 ###############################################################################################################
- # j=9
+# j=1
 
-for (j in seq(9,length(Flux.Data.Error))) {
+for (j in seq(1,length(Flux.Data.Error))) {
   
   Flux.Data.Process <- Flux.Data[Flux.Data$Series == Flux.Data.Error[[j]] ,]
   
@@ -228,7 +245,7 @@ for (j in seq(9,length(Flux.Data.Error))) {
  ######## linear prediction for the raw data 
   
   
-   LM.prediction <- lm(CO2.ppm ~ Sampling.Time , data = Flux.Data.Process)
+  LM.prediction <- lm(CO2.ppm ~ Sampling.Time , data = Flux.Data.Process)
   
   plot(CO2.ppm ~ Sampling.Time , data = Flux.Data.Process, main = paste0(Flux.Data.Error[[j]]," p-Noise ", 
                                                                          
@@ -247,54 +264,55 @@ for (j in seq(9,length(Flux.Data.Error))) {
   
   
   
-  #str(Flux.Data)
+  # str(Flux.Data)
   
   
-  Flux.Data.Process$Prefilter.p <-  P.Noflux
+  # Flux.Data.Error.Revised.0$Rev.Prefilter.p <- P.Noflux
+  # 
+  # Flux.Data.Error.Revised.0$Rev.LR.f0[1] <- LM.prediction$coefficients [[2]] 
+  # 
   
-  Flux.Data.Process$LR.f0 <-  LM.prediction$coefficients [[2]] 
+  Flux.Data.Process$Rev.Prefilter.p <- P.Noflux ;
   
+  Flux.Data.Process$Rev.LR.f0 <- LM.prediction$coefficients [[2]]  ;
   
   Flux.Data.Error.Revised.1 <- Flux.Data.Process ;
   
   
-  Flux.Data.Error.Revised <- rbind(Flux.Data.Error.Revised.0 , Flux.Data.Error.Revised.1) ;
+  Flux.Data.Error.Revised.2 <- rbind(Flux.Data.Error.Revised , Flux.Data.Error.Revised.1) ;
   
-  Flux.Data.Error.Revised.0 <- Flux.Data.Error.Revised ;
+  Flux.Data.Error.Revised <- Flux.Data.Error.Revised.2 ;
   
   
-  rm(Flux.Data.Error.Revised.1 , Flux.Data.Process)
+  rm(Flux.Data.Error.Revised.1 ,  Flux.Data.Error.Revised.2, Flux.Data.Process)
   
    
 }
 
-
-str( Flux.Data.Error.Revised.0)
-
 str(Flux.Data)
 
-Flux.Data$Rev.Prefilter.p <- NA ;
-
-Flux.Data$Rev.LR.f0 <- NA ;
-
-Flux.Data$Rev.Flux <- NA ;
-
-Flux.Data$Rev.xi <- NA ;
+str(Flux.Data.Error.Revised )
 
 
 
 
 
+Flux.Data.Corrected <- merge( x = Flux.Data ,  y = Flux.Data.Error.Revised, all.x = T) ;
 
-Flux.Data[which(Flux.Data$Series %in% Flux.Data.Error), c("Flux.Data$Rev.Prefilter.p")]  <- Flux.Data.Error.Revised.0$Prefilter.p ;
 
-str(Flux.Data[which(Flux.Data$Series %in% Flux.Data.Error), c("Rev.Prefilter.p")])
-str(Flux.Data.Error.Revised.0$Prefilter.p)
+Flux.Data.Corrected[Flux.Data.Corrected$Series == "20220615_4_3Spp_B",]
 
-Flux.Data[which(Flux.Data$Series %in% Flux.Data.Error) , c("Series")]
 
-unique(Flux.Data[which(!Flux.Data[which(Flux.Data$Series %in% Flux.Data.Error), 
-                                  
-                                  c("Series")] %in% Flux.Data.Error.Revised.0$Series), c("Series")])
 
-Flux.Data.Error.Revised.0
+
+
+str(Flux.Data.Error.Revised.0)
+
+str(Flux.Data[unique(Flux.Data$Series),])
+
+# write.csv( x = Flux.Data.Error.Revised.0 , file = "Flux_Data_Error.csv") 
+# 
+# 
+# write.csv( x = Flux.Data , file = "Flux_Data.csv")
+
+
