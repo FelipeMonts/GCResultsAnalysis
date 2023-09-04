@@ -336,4 +336,52 @@ str(Flux.Data.Corrected )
 # 
 # write.csv( x = Flux.Data , file = "Flux_Data.csv")
 
-row.names(unique(Flux.Data.Corrected[, c( "Sampling.Day" , "BLOCK" , "CoverCrop" , "Treatment.F")]))
+ # Flux.Data.Corrected <- read.csv(file = "Flux_Data_Corrected.csv" , as.is = T )
+ # 
+ # Flux.Data <- read.csv(file = "Flux_Data.csv" , as.is = T )
+ # 
+ # 
+
+str(Flux.Data)
+
+str(Flux.Data.Corrected )
+
+
+###############################################################################################################
+# 
+#   simplify the data frame to have only one line with the flux per record and discard the multiple
+#   
+#                              sampling times for each record
+#  
+# 
+###############################################################################################################
+
+
+Unique.Rows.Flux <- as.numeric(row.names(unique(Flux.Data.Corrected[, c( "Sampling.Day" , "BLOCK" , "CoverCrop" , "Treatment.F")])))
+
+
+names(Flux.Data.Corrected)
+
+
+Concentration.Flux.Data <- Flux.Data.Corrected[Unique.Rows.Flux, 
+                                               
+                                               c("Sampling.Date" , "GC.Date" , "Treatment.F" , "BLOCK.F" , "CoverCrop.F" ,
+                                                 
+                                                 "f0" , "f0.se" , "f0.p" , "f0.lo95" , "f0.up95" , "Method" , "Warning", 
+                                                 
+                                                 "Prefilter" , "Prefilter.p" , "LR.f0" , "LR.f0.se" , "LR.f0.p" ,
+                                                 
+                                                 "LR.f0.lo95" , "LR.f0.up95", "Rev.Prefilter.p" , "Rev.LR.f0")]
+
+str(Concentration.Flux.Data)
+
+
+
+# sapply(Concentration.Flux.Data[, c("f0" , "f0.se" , "f0.p" , "f0.lo95" , "f0.up95" , "Method" , "Prefilter" ,
+# 
+#                             "Prefilter.p" , "LR.f0" , "LR.f0.se" , "LR.f0.p" , "LR.f0.lo95" , "LR.f0.up95",
+# 
+#                             "Rev.Prefilter.p" , "Rev.LR.f0")], as.numeric)
+# 
+
+# write.csv( x = Concentration.Flux.Data , file = "Concentration.Flux.Data.csv")
