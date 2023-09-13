@@ -88,7 +88,7 @@ library(stringr)
 #  2-> GCPDF.File.name= Name of the Gas Cromatograph analysis report in pdf format
 # 
 # 
-#    GCPDF.File.name="2021027B3B4peakareas.pdf" 
+#    GCPDF.File.name="20210929B1B2peakareas1.pdf" 
 # 
 # 
 # 
@@ -204,6 +204,7 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   
   Report.PDF.7<-data.frame(t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))) ;
   
+  Report.PDF.7<-data.frame(t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))) ;
   # Names of the pdf report columns c("Sample", "Position", "Vial", "CH4" , "CO2" , "N2O" )
   
   names(Report.PDF.7)<-c("Sample.Name", "Position" , "Vial", "CH4" , "CO2" , "N2O" );
@@ -273,5 +274,6 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   
   
 }
+
 
 

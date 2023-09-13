@@ -65,23 +65,47 @@ setwd(paste0("D:\\Felipe\\Current_Projects\\CCC Based Experiments\\" ,
 
 getwd()
 
+###############################################################################################################
+#                           Select the N2O Sampling year
+###############################################################################################################
+
+Year = 2021
+
+# Year = 2022
+
+
+###############################################################################################################
+#                           Select the Gas
+###############################################################################################################
+
+
+# Gas = "CO2"
+# 
+# Gas = "N2O"
+# 
+Gas = "CH4"
+
+
+
 
 ###############################################################################################################
 #                           load the working data from GCANalysis 
 ###############################################################################################################
 
 
-load("GCAnalysis2022.RData")
+load(paste0("FluxDataAnalysisResults\\" , Gas , "_GCAnalysis_" , Year, ".RData"))
+
+
 
 # ########### Ad chamber dimensions for the calculations
 # 
 # str(Chamber.Dimensions)
 # 
-# V <- Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Volume" , c("VALUE")]
-# 
-# A <- Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Surface.Area" , c("VALUE")] 
-# 
-# h = V / A
+V <- Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Volume" , c("VALUE")]
+
+A <- Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Surface.Area" , c("VALUE")]
+
+h = V / A
 
 # Series.1 <- HMR.Test.Data[1:11, c( "Time" , "Concentration")];
 # 
@@ -93,13 +117,15 @@ load("GCAnalysis2022.RData")
 
 ##############################################################################################################
 # 
-#             Getting al the data with errors in the HMR procedure
+#             Getting all the data with errors in the HMR procedure
 # 
 ###############################################################################################################
 
 str(Flux.Data)
 
 unique(Flux.Data$Warning)
+
+Flux.Data$Sample.Name
 
 ######## converting fo from character to numeric
 
@@ -115,7 +141,7 @@ Flux.Data[Flux.Data$Warning == "Data error", c("Series")] ;
 
 unique(Flux.Data[Flux.Data$Warning == "Data error", c("Series")])
 
-Flux.Data.Error<- unique(Flux.Data[which(Flux.Data$Warning == "Data error") , c("Series")]) ;
+Flux.Data.Error <- unique(Flux.Data[which(Flux.Data$Warning == "Data error") , c("Series")]) ;
 
 str(Flux.Data.Error)
 
@@ -145,20 +171,22 @@ str(Flux.Data.Error.Revised)
 #    Pre-filtering for discarding no fluxes based on the variance of the t0 concentration measurements
 # 
 ###############################################################################################################
-# j=1
+# j=2
 
-for (j in seq(1,length(Flux.Data.Error))) {
+for (j in seq(2,length(Flux.Data.Error))) {
   
   Flux.Data.Process <- Flux.Data[Flux.Data$Series == Flux.Data.Error[[j]] ,]
   
   # str(Flux.Data.Process)
   
   
-  sigma2 <- var(Flux.Data.Process$CO2.ppm) 
+  sigma2 <- var(Flux.Data.Process[,paste0(Gas,".ppm")])
   
-  n <-dim(Flux.Data.Process)[1]
   
-  P.Noflux <- dchisq( x = (dim(Max.Flux.Data)[1]-1 ) * (sigma2 / sigma02), df = dim(Flux.Data.Process)[1]-1 ) 
+  n <- dim(Flux.Data.Process)[1]
+  
+  P.Noflux <- dchisq( x = n-1 * (sigma2 / sigma02), df = n-1 ) 
+  
   
   # 
   # plot(CO2.ppm ~ Sampling.Time ,  data = Flux.Data.Process)
@@ -214,7 +242,7 @@ for (j in seq(1,length(Flux.Data.Error))) {
     
     #  plot(Concentration ~ xi , data = Max.Flux.Data)
     
-    HMR.lm.xi <- lm(CO2.ppm ~ xi , data = Flux.Data.Process )
+    HMR.lm.xi <- lm(as.formula(paste0(Gas , ".ppm" , " ~ ", "xi")) , data = Flux.Data.Process )
     
     deviance(HMR.lm.xi)
     
@@ -244,10 +272,11 @@ for (j in seq(1,length(Flux.Data.Error))) {
   
  ######## linear prediction for the raw data 
   
+ 
   
-  LM.prediction <- lm(CO2.ppm ~ Sampling.Time , data = Flux.Data.Process)
+  LM.prediction <- lm(as.formula(paste0(Gas , ".ppm" , " ~ ", "Sampling.Time")) , data = Flux.Data.Process)
   
-  plot(CO2.ppm ~ Sampling.Time , data = Flux.Data.Process, main = paste0(Flux.Data.Error[[j]]," p-Noise ", 
+  plot(as.formula(paste0(Gas , ".ppm" , " ~ ", "Sampling.Time")) , data = Flux.Data.Process, main = paste0(Flux.Data.Error[[j]]," p-Noise ", 
                                                                          
                                                                          signif(as.numeric(P.Noflux),3)))
   
@@ -331,7 +360,7 @@ Flux.Data.Corrected[Flux.Data.Corrected$Series == "20221005_4_Clover_D",
 str(Flux.Data.Corrected )
 
 
-# write.csv( x = Flux.Data.Corrected , file = "Flux_Data_Corrected.csv") 
+# write.csv( x = Flux.Data.Corrected , file = paste0("FluxDataAnalysisResults\\" , Gas, "_Flux_Data_Corrected.csv")) ;
 # 
 # 
 # write.csv( x = Flux.Data , file = "Flux_Data.csv")
@@ -375,7 +404,7 @@ Concentration.Flux.Data <- Flux.Data.Corrected[Unique.Rows.Flux,
 
 str(Concentration.Flux.Data)
 
-
+row.names(Concentration.Flux.Data)
 
 # sapply(Concentration.Flux.Data[, c("f0" , "f0.se" , "f0.p" , "f0.lo95" , "f0.up95" , "Method" , "Prefilter" ,
 # 
@@ -384,4 +413,5 @@ str(Concentration.Flux.Data)
 #                             "Rev.Prefilter.p" , "Rev.LR.f0")], as.numeric)
 # 
 
-# write.csv( x = Concentration.Flux.Data , file = "Concentration.Flux.Data.csv")
+write.csv( x = Concentration.Flux.Data , file = paste0("FluxDataAnalysisResults\\" , Gas, "_Concentration.Flux.Data_", Year , ".csv")) ;
+

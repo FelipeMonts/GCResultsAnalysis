@@ -2,3 +2,16 @@
 Flux_Data_Error.csv
 Flux_Data.csv
 Flux_Data_Corrected.csv
+CH4.Series.csv
+*.csv
+*.RData
+.RData
+*.csv
+.RData
+Concentration.Flux.Data.csv
+GCAnalysis2022.RData
+.RData
+Concentration.Flux.Data.csv
+GCAnalysis2022.RData
+.RData
+.RData
