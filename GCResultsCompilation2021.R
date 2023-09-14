@@ -128,7 +128,7 @@ PeakArea.results.0<-data.frame(Sample.Name = character(), Position = integer() ,
 #i=41
 
 
-for (i in seq(42,length(PDF.Results.Files))) {
+for (i in seq(1,length(PDF.Results.Files))) {
   
 
   PeakArea.results.1<-ReadGCReportPDF2021(GCPDF.File.path = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"

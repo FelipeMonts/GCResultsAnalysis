@@ -46,9 +46,9 @@ getwd()
 #                           Select the N2O Sampling year
 ###############################################################################################################
 
-# Year = 2021
+Year = 2021
 
-Year = 2022
+# Year = 2022
 
 
 ###############################################################################################################
@@ -56,9 +56,9 @@ Year = 2022
 ###############################################################################################################
 
 
-# Gas = "CO2"
+Gas = "CO2"
 # 
-Gas = "N2O"
+# Gas = "N2O"
 # 
 # Gas = "CH4"
 
@@ -69,16 +69,24 @@ Gas = "N2O"
 #                           load the working data from Concentration.Flux.Data analysis 
 ###############################################################################################################
 
-Concentration.Flux.Data <- read.csv( file = paste0("FluxDataAnalysisResults\\" , 
+Concentration.Flux.Data.1 <- read.csv( file = paste0("FluxDataAnalysisResults\\" , 
                                                    
                                                    Gas, "_Concentration.Flux.Data_", Year , ".csv"))  ;
 
+#  str(Concentration.Flux.Data.1)
+
+
+############# order the data by date ############
+
+Concentration.Flux.Data.1$Sampling.Date <- as.Date(Concentration.Flux.Data.1$Sampling.Date) ;
+
+Concentration.Flux.Data <- Concentration.Flux.Data.1[order(Concentration.Flux.Data.1$Sampling.Date),]
+
 str(Concentration.Flux.Data)
 
+head(Concentration.Flux.Data)
 
-###############################################################################################################
-#                           Calculate cumulative emissions
-###############################################################################################################
+
 
 ###############################################################################################################
 #           
@@ -138,12 +146,18 @@ head(Concentration.Flux.Data)
 Concentration.Flux.Data$f0.mol.min <- Concentration.Flux.Data$f0 * Patm / (R * Concentration.Flux.Data$Temp.K *1e6) ;
 
 
+Concentration.Flux.Data[which(is.na(Concentration.Flux.Data$f0.mol.min)),]
+
+
+
 ####################  LR.f0 measurements with the warning "Data error"    ##############
 
 Concentration.Flux.Data[Concentration.Flux.Data$Warning == "Data error" , c("LR.f0")] <-  
   
-  Concentration.Flux.Data[Concentration.Flux.Data$Warning == "Data error" , c("Rev.LR.f0")]
+  Concentration.Flux.Data[Concentration.Flux.Data$Warning == "Data error" , c("Rev.LR.f0")] ;
 
+
+Concentration.Flux.Data[which(is.na(Concentration.Flux.Data$LR.f0)),]
 
 ####################  LR.f0 ##############
 
@@ -156,7 +170,10 @@ Concentration.Flux.Data$LR.f0.mol.min <- Concentration.Flux.Data$LR.f0 * Patm / 
 
 Concentration.Flux.Data[Concentration.Flux.Data$Warning == "Data error" , c("Prefilter.p")] <-  
   
-  Concentration.Flux.Data[Concentration.Flux.Data$Warning == "Data error" , c("Rev.Prefilter.p")]
+  Concentration.Flux.Data[Concentration.Flux.Data$Warning == "Data error" , c("Rev.Prefilter.p")] ;
+
+
+Concentration.Flux.Data[which(is.na(Concentration.Flux.Data$Prefilter.p)),]
 
 
 Concentration.Flux.Data[Concentration.Flux.Data$Prefilter.p >= 0.05 , c("LR.f0.mol.min")] <- 1e-10 ;
@@ -168,6 +185,7 @@ head(Concentration.Flux.Data)
 
 tail(Concentration.Flux.Data)
 
+
 ###############################################################################################################
 #                           Calculating mass flux
 ##############################################################################################################
@@ -178,6 +196,7 @@ if (Gas == "CO2") {
   Gas.Substance.MW <- 44.0095  # g mol-1 
     
   Gas.Element.MW <- 12.0107  # g mol-1   
+  
   
 } else {
   
@@ -201,11 +220,22 @@ if (Gas == "CO2") {
   
 }
 
+
+Element.Subtance.MW.Ratio <- Gas.Substance.MW / Gas.Element.MW 
+
+
 ####################  f0 #################
 
-Concentration.Flux.Data$f0.KgElement.Ha.day <- Concentration.Flux.Data$f0.mol.min * Gas.Substance.MW * 1440 * 10000 / 1000 ;
+Concentration.Flux.Data$f0.KgElement.Ha.day <- Concentration.Flux.Data$f0.mol.min * Gas.Element.MW * 1440 * 10000 / 1000 ;
 
-Concentration.Flux.Data$f0.KgSubstance.Ha.day <- Concentration.Flux.Data$f0.mol.min * Gas.Element.MW * 1440 * 10000 / 1000 ;
+head(Concentration.Flux.Data$f0.KgElement.Ha.day, 50)
+
+
+Concentration.Flux.Data$f0.KgSubstance.Ha.day <-  Concentration.Flux.Data$f0.KgElement.Ha.day * Element.Subtance.MW.Ratio;
+
+# head(Concentration.Flux.Data$f0.KgSubstance.Ha.day, 50)
+# 
+# head(Concentration.Flux.Data$f0.mol.min * Gas.Substance.MW * 1440 * 10000 / 1000 , 50)
 
 str(Concentration.Flux.Data)
 
@@ -213,9 +243,9 @@ head(Concentration.Flux.Data)
 
 ####################  LR.f0 ##############
 
-Concentration.Flux.Data$LR.f0.KgElement.Ha.day <- Concentration.Flux.Data$LR.f0.mol.min * Gas.Substance.MW * 1440 * 10000 / 1000 ;
+Concentration.Flux.Data$LR.f0.KgElement.Ha.day <- Concentration.Flux.Data$LR.f0.mol.min * Gas.Element.MW * 1440 * 10000 / 1000 ;
 
-Concentration.Flux.Data$LR.f0.KgSubstance.Ha.day <- Concentration.Flux.Data$LR.f0.mol.min * Gas.Element.MW * 1440 * 10000 / 1000 ;
+Concentration.Flux.Data$LR.f0.KgSubstance.Ha.day <- Concentration.Flux.Data$LR.f0.KgElement.Ha.day * Element.Subtance.MW.Ratio ;
 
 str(Concentration.Flux.Data)
 
@@ -228,8 +258,6 @@ head(Concentration.Flux.Data)
 ###############################################################################################################
 
 
-Concentration.Flux.Data$Sampling.Date <- as.Date(Concentration.Flux.Data$Sampling.Date) ;
-
 ############ Create unique experimental unit identifier ########################################
 
 Concentration.Flux.Data$Exp.Unit.ID <- as.factor(paste0(Concentration.Flux.Data$BLOCK.F, ".",
@@ -239,6 +267,8 @@ Concentration.Flux.Data$Exp.Unit.ID <- as.factor(paste0(Concentration.Flux.Data$
                        Concentration.Flux.Data$Treatment.F) ) 
 
 levels(Concentration.Flux.Data$Exp.Unit.ID)
+
+#  i = "2.3Spp.A"  
 
 
 for (i in levels(Concentration.Flux.Data$Exp.Unit.ID)) {
@@ -262,19 +292,56 @@ for (i in levels(Concentration.Flux.Data$Exp.Unit.ID)) {
   # 
   # sum(diff(x) * (head(y,-1)+tail(y,-1)))/2
   
+
+ Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i ,];
   
-  delta.x <- as.numeric(diff.Date(
+  Flux.Calc.Data <- Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i , ]
+  
+  x.1 <- Flux.Calc.Data[seq(1,dim.data.frame(Flux.Calc.Data)[1]-1), c("Sampling.Date")] ;
+  
+  x.2 <- Flux.Calc.Data[seq(2,dim.data.frame(Flux.Calc.Data)[1]), c("Sampling.Date")] ;
+  
+  dim.data.frame(Flux.Calc.Data)
+  
+  length(x.1)
+  
+  length(x.2)
+  
+  Delta.x <- c(1, (x.2 - x.1)) 
+  
+  str(Delta.x)
+  
+  y.1 <- Flux.Calc.Data[seq(1,dim.data.frame(Flux.Calc.Data)[1]-1), c("LR.f0.KgElement.Ha.day")] ;
+  
+  y.2 <- Flux.Calc.Data[seq(2,dim.data.frame(Flux.Calc.Data)[1]), c("LR.f0.KgElement.Ha.day")] ;
+  
+  length(y.1)
+  
+  length(y.2)
+  
+  y.1.y.2 <- c(y.1[1], ((y.1 + y.2)/2)) ; 
+  
+  length(y.1.y.2)
+  
+  Total.Cum.Emissions <- sum((delta.x *(y.1 + y.2))/2, na.rm = T)
+  
+  Total.Cum.Emissions <- Total.Cum.Emissions.1 + Order.by.Date[1,c("LR.f0.KgElement.Ha.day") ] +
+   
+    Order.by.Date[dim(Order.by.Date)[1],c("LR.f0.KgElement.Ha.day") ] ;
     
-    Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i ,c("Sampling.Date")  ])) ;
   
-  y.1 <- head(Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i ,c("LR.f0.KgElement.Ha.day")  ],-1)
+  Incre.Cum.Emissions <- cumsum((delta.x *(y.1 + y.2))/2) ;
   
-  y.2 <- tail(Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i ,c("LR.f0.KgElement.Ha.day")  ],-1)
+  Incre.Cum.Emissions[1] <- Order.by.Date[ ,c("LR.f0.KgElement.Ha.day") ][1] ;
+  
+  Incre.Cum.Emissions[length(Incre.Cum.Emissions)] <- Total.Cum.Emissions ;
   
   
-  Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i , 
+  # Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i , 
                           
-                          c("Cumm.Emissions.KgElement.Ha") ] <- sum(delta.x *(y.1 + y.2))/2
+                          c("Cumm.Emissions.KgElement.Ha") ] <- sum((delta.x *(y.1 + y.2))/2, na.rm = T)
+  
+  cumsum((delta.x *(y.1 + y.2))/2)
   
   
   Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i , 
@@ -322,4 +389,4 @@ head(Concentration.Flux.Data)
 
 
 
-write.csv( x = Mass.Flux.Data , file = paste0("FluxDataAnalysisResults\\" , Gas, "_Mass.Flux.Data_" , Year, ".csv")) ;
+write.csv( x = Concentration.Flux.Data , file = paste0("FluxDataAnalysisResults\\" , Gas, "_Mass.Flux.Data_" , Year, ".csv")) ;
