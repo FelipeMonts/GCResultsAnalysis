@@ -80,6 +80,10 @@ Concentration.Flux.Data.1 <- read.csv( file = paste0("FluxDataAnalysisResults\\"
 
 Concentration.Flux.Data.1$Sampling.Date <- as.Date(Concentration.Flux.Data.1$Sampling.Date) ;
 
+
+Concentration.Flux.Data.1$Month.Year <- as.factor(format(Concentration.Flux.Data.1$Sampling.Date, "%m.%y")) ;
+
+
 Concentration.Flux.Data <- Concentration.Flux.Data.1[order(Concentration.Flux.Data.1$Sampling.Date),]
 
 str(Concentration.Flux.Data)
@@ -173,7 +177,7 @@ Concentration.Flux.Data[Concentration.Flux.Data$Warning == "Data error" , c("Pre
   Concentration.Flux.Data[Concentration.Flux.Data$Warning == "Data error" , c("Rev.Prefilter.p")] ;
 
 
-Concentration.Flux.Data[which(is.na(Concentration.Flux.Data$Prefilter.p)),]
+Concentration.Flux.Data[which(is.na(Concentration.Flux.Data$Prefilter.p)),c("Prefilter.p")] <- 1.0 ;
 
 
 Concentration.Flux.Data[Concentration.Flux.Data$Prefilter.p >= 0.05 , c("LR.f0.mol.min")] <- 1e-10 ;
@@ -268,10 +272,47 @@ Concentration.Flux.Data$Exp.Unit.ID <- as.factor(paste0(Concentration.Flux.Data$
 
 levels(Concentration.Flux.Data$Exp.Unit.ID)
 
+
+###############################################################################################################
+#       initialize te data frame to collect the data and add blank columns to store the cumulative emissions 
+###############################################################################################################
+
+
+Flux.Calc.Data.0 <- data.frame(Concentration.Flux.Data[0,] ,  Total.Cum.Emissions = double(), 
+                               
+                               Incre.Cum.Emissions = double(), Period.Emissions = double(),
+                               
+                               Month.Emissions = double())
+
+str(Flux.Calc.Data.0)
+
+
+
+
+
+###############################################################################################################
+#       Calculate cumulative emissions by exp unit, incremental and monthly 
+###############################################################################################################
+
 #  i = "2.3Spp.A"  
 
 
 for (i in levels(Concentration.Flux.Data$Exp.Unit.ID)) {
+  
+  
+  ############ initiate data frame to colect the data ########
+  
+  
+  
+  
+  # Flux.Calc.Data.0$Total.Cum.Emissions <- NA ;
+  # 
+  # Flux.Calc.Data.0$Incre.Cum.Emissions <- NA ;
+  # 
+  # Flux.Calc.Data.0$Period.Emissions <- NA ;
+  # 
+  # Flux.Calc.Data.0$Month.Emissions <- NA ;
+
   
   
   plot(LR.f0.KgElement.Ha.day ~ Sampling.Date, 
@@ -292,8 +333,6 @@ for (i in levels(Concentration.Flux.Data$Exp.Unit.ID)) {
   # 
   # sum(diff(x) * (head(y,-1)+tail(y,-1)))/2
   
-
- Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i ,];
   
   Flux.Calc.Data <- Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i , ]
   
@@ -323,32 +362,23 @@ for (i in levels(Concentration.Flux.Data$Exp.Unit.ID)) {
   
   length(y.1.y.2)
   
-  Total.Cum.Emissions <- sum((delta.x *(y.1 + y.2))/2, na.rm = T)
+  Flux.Calc.Data$Total.Cum.Emissions <- sum((Delta.x * y.1.y.2), na.rm = T) ;
   
-  Total.Cum.Emissions <- Total.Cum.Emissions.1 + Order.by.Date[1,c("LR.f0.KgElement.Ha.day") ] +
-   
-    Order.by.Date[dim(Order.by.Date)[1],c("LR.f0.KgElement.Ha.day") ] ;
+  Flux.Calc.Data$Incre.Cum.Emissions <- cumsum(Delta.x * y.1.y.2) ;
+  
+  Flux.Calc.Data$Period.Emissions <- Delta.x * y.1.y.2 ;
+  
+  Flux.Calc.Data$Month.Emissions <- 10e-10  ;
+  
+  # j = "09.21"
+  
+  for (j in levels(Flux.Calc.Data$Month.Year)) {
     
-  
-  Incre.Cum.Emissions <- cumsum((delta.x *(y.1 + y.2))/2) ;
-  
-  Incre.Cum.Emissions[1] <- Order.by.Date[ ,c("LR.f0.KgElement.Ha.day") ][1] ;
-  
-  Incre.Cum.Emissions[length(Incre.Cum.Emissions)] <- Total.Cum.Emissions ;
-  
-  
-  # Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i , 
-                          
-                          c("Cumm.Emissions.KgElement.Ha") ] <- sum((delta.x *(y.1 + y.2))/2, na.rm = T)
-  
-  cumsum((delta.x *(y.1 + y.2))/2)
-  
-  
-  Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == i , 
-                          
-                          c("Cumm.Emissions.KgSubstance.Ha")]
-  
-  
+    Month.Cumulative.Emissions <- sum(Flux.Calc.Data[Flux.Calc.Data$Month.Year == j, c("Period.Emissions")] )
+    
+    Flux.Calc.Data[Flux.Calc.Data$Month.Year == j, c("Month.Emissions")] <- Month.Cumulative.Emissions
+    
+  }
   
   
   
@@ -358,28 +388,14 @@ for (i in levels(Concentration.Flux.Data$Exp.Unit.ID)) {
   #                                       
   #                                       c("Sampling.Date"  ,"LR.f0.KgElement.Ha.day")  ] ,col = "red") ;
   # 
-  # 
-  # points(LR.f0.KgElement.Ha.day ~ Sampling.Date,
-  #        
-  #        data = Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == "3.Spp.A" ,
-  #                                       
-  #                                       c("Sampling.Date"  ,"LR.f0.KgElement.Ha.day")  ] ,col = "magenta");
-  # 
-  # plot(LR.f0.KgElement.Ha.day ~ Sampling.Date,
-  # 
-  #        data = Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == "3.Spp.A" ,
-  # 
-  #                                       c("Sampling.Date"  ,"LR.f0.KgElement.Ha.day")  ] ,col = "cyan")
-  # 
-  # 
-  # points(LR.f0.KgElement.Ha.day ~ Sampling.Date, 
-  #        
-  #        data = Concentration.Flux.Data[Concentration.Flux.Data$Exp.Unit.ID == "3.Clover.D" ,
-  #                                       
-  #                                       c("Sampling.Date"  ,"LR.f0.KgElement.Ha.day")  ] ,col = "cyan") ;
-  # 
-  # 
-  # 
+ 
+  
+  ###### collect the data and merge it with the original data set ##########
+  
+  Flux.Calc.Data.1 <- rbind( Flux.Calc.Data.0 , Flux.Calc.Data ) ;
+  
+  Flux.Calc.Data.0 <- Flux.Calc.Data.1 ;
+  
   
 }
 
