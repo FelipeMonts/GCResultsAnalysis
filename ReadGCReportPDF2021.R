@@ -88,7 +88,7 @@ library(stringr)
 #  2-> GCPDF.File.name= Name of the Gas Cromatograph analysis report in pdf format
 # 
 # 
-#    GCPDF.File.name="20210929B1B2peakareas1.pdf" 
+#    GCPDF.File.name="20210812B3B4peakareas2.pdf" 
 # 
 # 
 # 
@@ -238,7 +238,7 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   
   
   
-  Report.PDF.7$Sampling.Date<-as.Date(Report.PDF.7$Sampling.Day, format="%Y%M%d");
+  Report.PDF.7$Sampling.Date<-as.Date(Report.PDF.7$Sampling.Day, format="%Y%m%d");
   
   
   

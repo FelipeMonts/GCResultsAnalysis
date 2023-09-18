@@ -68,8 +68,12 @@ library(stringr)
 # setwd("D:\\Felipe\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data\\GasChromatograph")
 
 
+###############################################################################################################
+#                            Load the function  ReadGCReportPDF2021.R
+###############################################################################################################
 
 
+source(file = "D:\\Felipe\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\ReadGCReportPDF2021.R", verbose =T)
 ###############################################################################################################
 #                           Explore the files and directory and files with the data
 ###############################################################################################################
@@ -81,9 +85,19 @@ File.List<-list.files("C:\\Users\\frm10\\OneDrive - The Pennsylvania State Unive
 
 # Only select the pdf files
 
-PDF.Results.Files <- File.List[grep(".pdf", File.List)] ;
+PDF.Results.Files.1 <- File.List[grep(".pdf", File.List)] ;
 
-Excel.Results.Files <-File.List[grep(".xlsx", File.List)] ;
+# PDF.Results.Files.1[40]
+
+# PDF.Results.Files.1[45]
+
+######## Drop 40 - > "20210929B1B2peakareas1.pdf" which had a GC error and therefore is incomplete ######
+
+######## rows >= 45 are chamber tests
+
+PDF.Results.Files <- PDF.Results.Files.1[c(1:39, 41:44)] ;
+
+# Excel.Results.Files <-File.List[grep(".xlsx", File.List)] ;
 
 
 ###############################################################################################################
@@ -125,20 +139,20 @@ PeakArea.results.0<-data.frame(Sample.Name = character(), Position = integer() ,
 
 
 
-#i=41
+# i = PDF.Results.Files[1]
 
 
-for (i in seq(1,length(PDF.Results.Files))) {
+for (i in PDF.Results.Files) {
   
 
   PeakArea.results.1<-ReadGCReportPDF2021(GCPDF.File.path = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"
                                       
-                                      , GCPDF.File.name = PDF.Results.Files[i])
+                                      , GCPDF.File.name = i)
 
   #names(PeakArea.results.1)<-c('Sample.Name' , 'Vial.number' , 'CH4.Area' , 'CO2.Area', 'N2O.Area' );
 
 
-  PeakArea.results.1$AnalysisName<-PDF.Results.Files[[i]] ;
+  PeakArea.results.1$AnalysisName <- i ;
 
   PeakArea.results<-rbind(PeakArea.results.0,PeakArea.results.1 );
 

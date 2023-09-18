@@ -93,7 +93,7 @@ str(PeakArea.results)
 
 unique(PeakArea.results$Sampling.Day)
 
-unique(PeakArea.results$Sampling.Date)
+tail(unique(PeakArea.results$Sampling.Date))
 
 
 
@@ -371,81 +371,44 @@ if (Year == 2021) {
   
 }
 
-plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "0" ,  ])
-
-boxplot(CO2 ~ ANAL.DATE , data = GC.standards[GC.standards$Factor.Name == "0" ,  ]  )
-
-boxplot(CH4 ~ ANAL.DATE , data = GC.standards[GC.standards$Factor.Name == "0" ,  ]  )
-
-boxplot(N2O ~ ANAL.DATE , data = GC.standards[GC.standards$Factor.Name == "0" ,  ]  )
-
-plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "L25" ,  ]) 
-
-boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "L25" ,  ]  )
-
-plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "L50" ,  ])
-
-boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "L50" ,  ]  )
-
-plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "L100" ,  ])
-
-boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "L100" ,  ]  )
-
-plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "H50" ,  ]) 
-
-boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "H50" ,  ]  )
-
-plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "H100" ,  ])
-
-boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "H100" ,  ]  )
-
-boxplot(CH4 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "H100" ,  ]  )
-
-boxplot(N2O ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "H100" ,  ]  )
 
 
-xyplot(N2O~N2O.ppm, data=GC.standards, type="p",main="N2O")
+#### Adding an factor identification for each of the different standards in a run (2022 data)
 
-xyplot(CH4~CH4.ppm, data=GC.standards, type="b",main="CH4")
-
-
-
-#### Adding an factor identification for each of the different standards in a run
-
-GC.standards$Series <- "None" ;
-
-GC.standards[GC.standards$Position %in% c(1:5), c("Series")] <- 1 ;
-
-GC.standards[GC.standards$Position %in% c(30:34), c("Series")] <- 2 ;
-
-GC.standards[GC.standards$Position %in% c(51:55), c("Series")] <- 3 ;
-
-GC.standards[GC.standards$Position %in% c(80:84), c("Series")] <- 4 ;
-
-GC.standards[GC.standards$Position %in% c(101:105), c("Series")] <- 5 ;
-
-
-head(GC.standards)
-
-GC.standards$Series <- as.factor(GC.standards$Series) ;
-
-str(GC.standards)
-
-
-xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards, 
-       
-       type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
-
-
-xyplot(CH4 ~ CH4.ppm | GC.Date , groups = Series , data=GC.standards, 
-       
-       type="b",main="CH4", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
-
-xyplot(N2O ~ N2O.ppm | GC.Date , groups = Series , data=GC.standards, 
-       
-       type="b",main="N2O", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
-
-levels(GC.standards$Factor.Name)
+# GC.standards$Series <- "None" ;
+# 
+# GC.standards[GC.standards$Position %in% c(1:5), c("Series")] <- 1 ;
+# 
+# GC.standards[GC.standards$Position %in% c(30:34), c("Series")] <- 2 ;
+# 
+# GC.standards[GC.standards$Position %in% c(51:55), c("Series")] <- 3 ;
+# 
+# GC.standards[GC.standards$Position %in% c(80:84), c("Series")] <- 4 ;
+# 
+# GC.standards[GC.standards$Position %in% c(101:105), c("Series")] <- 5 ;
+# 
+# 
+# head(GC.standards)
+# 
+# GC.standards$Series <- as.factor(GC.standards$Series) ;
+# 
+# str(GC.standards)
+# 
+# 
+# xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards, 
+#        
+#        type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
+# 
+# 
+# xyplot(CH4 ~ CH4.ppm | GC.Date , groups = Series , data=GC.standards, 
+#        
+#        type="b",main="CH4", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
+# 
+# xyplot(N2O ~ N2O.ppm | GC.Date , groups = Series , data=GC.standards, 
+#        
+#        type="b",main="N2O", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
+# 
+# levels(GC.standards$Factor.Name)
 
 
 
@@ -453,15 +416,15 @@ levels(GC.standards$Factor.Name)
 #### Adding ablines to the lattice xyplot using the panel.abline parameter in the panel function.
 
 
-#### Testing lm to add the ablines ##
-
-plot(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] )
-
-lm(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] )
-
-str(lm(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] ))
-
-by(data = GC.standards, INDICES = GC.standards[, c("ANAL.DATE" , "Series")], function(x) lm(CO2.ppm ~ CO2, data = x))
+# #### Testing lm to add the ablines ##
+# 
+# plot(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] )
+# 
+# lm(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] )
+# 
+# str(lm(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] ))
+# 
+# by(data = GC.standards, INDICES = GC.standards[, c("ANAL.DATE" , "Series")], function(x) lm(CO2.ppm ~ CO2, data = x))
 
 # An example from from https://stackoverflow.com/questions/11949766/how-to-add-abline-with-lattice-xyplot-function
 # 
@@ -474,25 +437,25 @@ by(data = GC.standards, INDICES = GC.standards[, c("ANAL.DATE" , "Series")], fun
 #        ylab = "Nitrogen efficiency (%)")
 
 
-xyplot(N2O.ppm ~ N2O | GC.Date , groups = Series , data=GC.standards, 
-       
-       panel = function(x, y) { panel.xyplot(x, y)
-         
-         panel.xyplot(x, y) 
-         
-         panel.abline(lm(y ~ x))
-         
-         panel.text(3000, 30,labels = signif(lm(y ~ x)$coefficients[2], digits = 3))
-         
-         panel.abline(a= 30, b=0, col="RED")
-       },
-       
-       type="b",main="N2O", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3)
-       
-       
-
-
-
+# xyplot(N2O.ppm ~ N2O | GC.Date , groups = Series , data=GC.standards, 
+#        
+#        panel = function(x, y) { panel.xyplot(x, y)
+#          
+#          panel.xyplot(x, y) 
+#          
+#          panel.abline(lm(y ~ x))
+#          
+#          panel.text(3000, 30,labels = signif(lm(y ~ x)$coefficients[2], digits = 3))
+#          
+#          panel.abline(a= 30, b=0, col="RED")
+#        },
+#        
+#        type="b",main="N2O", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3)
+#        
+#        
+# 
+# 
+# 
 
 
 
@@ -545,9 +508,9 @@ abline(a = Quantile.Reg$coefficients[1,2], b = Quantile.Reg$coefficients[2,2] , 
 
 abline(a = Quantile.Reg$coefficients[1,3], b = Quantile.Reg$coefficients[2,3] , col="magenta")
 
-xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards, 
-       
-       type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3); 
+# xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data = GC.standards, 
+#        
+#        type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3); 
 
 
 ###############################################################################################################

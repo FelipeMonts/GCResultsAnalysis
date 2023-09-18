@@ -79,11 +79,11 @@ Year = 2021
 ###############################################################################################################
 
 
-# Gas = "CO2"
+Gas = "CO2"
 # 
 # Gas = "N2O"
 # 
-Gas = "CH4"
+# Gas = "CH4"
 
 
 
@@ -171,7 +171,7 @@ str(Flux.Data.Error.Revised)
 #    Pre-filtering for discarding no fluxes based on the variance of the t0 concentration measurements
 # 
 ###############################################################################################################
-# j=2
+# j=1
 
 for (j in seq(2,length(Flux.Data.Error))) {
   
@@ -335,13 +335,17 @@ str(Flux.Data.Error.Revised )
 
 Flux.Data.Corrected <- merge( x = Flux.Data ,  y = Flux.Data.Error.Revised, all.x = T) ;
 
+str(Flux.Data.Corrected)
+
 #Flux.Data.Error<- unique(Flux.Data[which(Flux.Data$Warning == "Data error") , c("Series")]) ;
 
-head(Flux.Data.Error,5)
+head(Flux.Data.Corrected,5)
 
-tail(Flux.Data.Error,5)
+tail(Flux.Data.Corrected,5)
 
-Flux.Data.Corrected[Flux.Data.Corrected$Series == "20220927_4_Clover_C", 
+unique(Flux.Data.Corrected$Series)
+
+Flux.Data.Corrected[Flux.Data.Corrected$Series == "20210812_4_Clover_A", 
                     
                     c( "Row.Names" , "xi" , "Rev.Prefilter.p" ,  "Rev.LR.f0" )]
 
@@ -353,7 +357,7 @@ head(Flux.Data.No.Error,5)
 
 tail(Flux.Data.No.Error,5)
 
-Flux.Data.Corrected[Flux.Data.Corrected$Series == "20221005_4_Clover_D", 
+Flux.Data.Corrected[Flux.Data.Corrected$Series == "20210917_4_Clover_A", 
                     
                     c( "Row.Names" , "xi" , "Rev.Prefilter.p" ,  "Rev.LR.f0" )]
 
@@ -386,15 +390,16 @@ str(Flux.Data.Corrected )
 ###############################################################################################################
 
 
-Unique.Rows.Flux <- as.numeric(row.names(unique(Flux.Data.Corrected[, c( "Sampling.Day" , "BLOCK" , "CoverCrop" , "Treatment.F")])))
+Unique.Rows.Flux <- row.names(unique.data.frame(Flux.Data.Corrected[, 
+                                                                    
+                                                                    c( "Sampling.Day", "Sampling.Date" , "GC.Date" , 
+                                                                       
+                                                                       "Treatment.F" , "BLOCK.F" , "CoverCrop.F")])) ;
+                                  
 
-
-names(Flux.Data.Corrected)
-
-
-Concentration.Flux.Data <- Flux.Data.Corrected[Unique.Rows.Flux, 
+Concentration.Flux.Data <- Flux.Data.Corrected[which(row.names(Flux.Data.Corrected) %in% Unique.Rows.Flux), 
                                                
-                                               c("Sampling.Date" , "GC.Date" , "Treatment.F" , "BLOCK.F" , "CoverCrop.F" ,
+                                               c( "Sampling.Day", "Sampling.Date" , "GC.Date" , "Treatment.F" , "BLOCK.F" , "CoverCrop.F" ,
                                                  
                                                  "f0" , "f0.se" , "f0.p" , "f0.lo95" , "f0.up95" , "Method" , "Warning", 
                                                  
@@ -402,9 +407,13 @@ Concentration.Flux.Data <- Flux.Data.Corrected[Unique.Rows.Flux,
                                                  
                                                  "LR.f0.lo95" , "LR.f0.up95", "Rev.Prefilter.p" , "Rev.LR.f0")]
 
+
 str(Concentration.Flux.Data)
 
-row.names(Concentration.Flux.Data)
+head(Concentration.Flux.Data)
+
+tail(Concentration.Flux.Data)
+
 
 # sapply(Concentration.Flux.Data[, c("f0" , "f0.se" , "f0.p" , "f0.lo95" , "f0.up95" , "Method" , "Prefilter" ,
 # 
