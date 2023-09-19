@@ -350,6 +350,8 @@ for (i in levels(Concentration.Flux.Data$Exp.Unit.ID)) {
   
   str(Delta.x)
   
+  length(Delta.x)
+  
   y.1 <- Flux.Calc.Data[seq(1,dim.data.frame(Flux.Calc.Data)[1]-1), c("LR.f0.KgElement.Ha.day")] ;
   
   y.2 <- Flux.Calc.Data[seq(2,dim.data.frame(Flux.Calc.Data)[1]), c("LR.f0.KgElement.Ha.day")] ;
@@ -399,10 +401,10 @@ for (i in levels(Concentration.Flux.Data$Exp.Unit.ID)) {
   
 }
 
-str(Concentration.Flux.Data)
+str( Flux.Calc.Data.0)
 
-head(Concentration.Flux.Data)
+head( Flux.Calc.Data.0)
 
 
 
-write.csv( x = Concentration.Flux.Data , file = paste0("FluxDataAnalysisResults\\" , Gas, "_Mass.Flux.Data_" , Year, ".csv")) ;
+write.csv( x = Flux.Calc.Data.0 , file = paste0("FluxDataAnalysisResults\\" , Gas, "_Mass.Flux.Data_" , Year, ".csv")) ;
