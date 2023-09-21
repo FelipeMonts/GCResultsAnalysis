@@ -95,9 +95,9 @@ load(file = paste0("GCAnalysis" , Year , ".RData"))
 
 ####### GAS  HMR analysis ############
 
- Gas = "CO2"
+ # Gas = "CO2"
  # 
- # Gas = "N2O"
+ Gas = "N2O"
  # 
  # Gas = "CH4"
 

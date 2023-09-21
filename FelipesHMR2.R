@@ -173,7 +173,7 @@ str(Flux.Data.Error.Revised)
 ###############################################################################################################
 # j=1
 
-for (j in seq(2,length(Flux.Data.Error))) {
+for (j in seq(1,length(Flux.Data.Error))) {
   
   Flux.Data.Process <- Flux.Data[Flux.Data$Series == Flux.Data.Error[[j]] ,]
   
