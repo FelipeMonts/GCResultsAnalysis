@@ -669,9 +669,29 @@ xyplot(CH4.ppm ~ CH4 , data=GC.standards,
 
 #### CO2 standards calibration ####
 
-CO2.Calibration <- lm(CO2.ppm ~ CO2 , data = GC.standards) ;
 
-summary(CO2.Calibration)
+plot(CO2.ppm ~ CO2 , data = GC.standards)
+
+##### There is a point with 2500 ppm that has GC CO2 area greater than 2500
+
+GC.standards[GC.standards$CO2 >= 25000,]
+
+GC.standards.2 <- GC.standards[GC.standards$CO2<= 25000,] ;
+
+# Sample.Name Position Vial     CH4      CO2      N2O                      File Sampling.Day Sampling.Date    GC.Date
+# 1768    50PerSTD        5    1 583.846 25807.62 44608.26 20210720B3B4peakareas.pdf     20210720    2021-07-20 2021-08-06
+# AnalysisName Factor.Name CH4.ppm CO2.ppm N2O.ppm  ANAL.DATE
+# 1768 20210720B3B4peakareas.pdf    50PerSTD      25    2500      25 2021-08-06
+# This point appears in all of the gases as an outlier, therefore it is bets to remove it.
+
+GC.standards <- GC.standards.2 ;
+
+#################### Regression without forcing the intercept through 0 ####################
+
+# CO2.Calibration <- lm(CO2.ppm ~ CO2 , data = GC.standards) ;
+# 
+# 
+# summary(CO2.Calibration)
 
 # Call:
 #   lm(formula = CO2.ppm ~ CO2, data = GC.standards)
@@ -691,12 +711,78 @@ summary(CO2.Calibration)
 # Multiple R-squared:  0.8661,	Adjusted R-squared:  0.8659 
 # F-statistic:  3874 on 1 and 599 DF,  p-value: < 2.2e-16
 
+#################### Regression forcing the intercept through 0 ####################
+
+CO2.Calibration <- lm(CO2.ppm ~ CO2 + 0 , data = GC.standards) ;
+
+summary(CO2.Calibration)
+
+# Call:
+#   lm(formula = CO2.ppm ~ CO2 + 0, data = GC.standards)
+# 
+# Residuals:
+#   Min      1Q  Median      3Q     Max 
+# -2505.3  -301.8  -139.0  1954.6  4774.0 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)    
+# CO2  0.33033    0.02177   15.18   <2e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 1837 on 197 degrees of freedom
+# Multiple R-squared:  0.5389,	Adjusted R-squared:  0.5366 
+# F-statistic: 230.3 on 1 and 197 DF,  p-value: < 2.2e-16
+# 
+
+abline(lm(CO2.ppm ~ CO2  + 0 ,data = GC.standards), col = "red" , lwd = 2 )
+
+abline(lm(CO2.ppm ~ CO2  + 0 ,data = GC.standards.2), col = "blue" , lwd = 2)
+
+abline(rq(CO2.ppm ~ CO2  + 0 ,data = GC.standards), col = "magenta" , lwd = 2)
+
+abline(rq(CO2.ppm ~ CO2  + 0 ,data = GC.standards.2), col = "green" , lwd = 2)
+
+
 
 #### N20 standards calibration ####
 
-N2O.Calibration <- lm(N2O.ppm ~ N2O , data = GC.standards) ;
+
+plot(N2O.ppm ~ N2O , data = GC.standards)
+
+#################### Regression without forcing the intercept through 0 ####################
+
+# N2O.Calibration <- lm(N2O.ppm ~ N2O  , data = GC.standards) ;
+# 
+# summary(N2O.Calibration)
+
+# Call:
+#   lm(formula = N2O.ppm ~ N2O, data = GC.standards)
+# 
+# Residuals:
+#   Min     1Q Median     3Q    Max 
+# -13.17 -12.57 -12.25  12.01  37.29 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)    
+# (Intercept) 1.250e+01  1.372e+00   9.114  < 2e-16 ***
+#   N2O         1.171e-03  1.403e-04   8.346 1.25e-14 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 17.28 on 196 degrees of freedom
+# Multiple R-squared:  0.2622,	Adjusted R-squared:  0.2584 
+# F-statistic: 69.65 on 1 and 196 DF,  p-value: 1.253e-14
+
+
+#################### Regression forcing the intercept through 0 ####################
+
+
+N2O.Calibration <- lm(N2O.ppm ~ N2O + 0 , data = GC.standards) ;
 
 summary(N2O.Calibration)
+
+
 
 # Call:
 #   lm(formula = N2O.ppm ~ N2O, data = GC.standards)
@@ -720,28 +806,64 @@ summary(N2O.Calibration)
 
 #### CH4 standards calibration ####
 
-CH4.Calibration <- lm(CH4.ppm ~ CH4 , data = GC.standards) ;
+plot(CH4.ppm ~ CH4 , data = GC.standards)
 
-summary(CH4.Calibration)
+#################### Regression without forcing the intercept through 0 ####################
+
+
+# CH4.Calibration <- lm(CH4.ppm ~ CH4 , data = GC.standards) ;
+# 
+# summary(CH4.Calibration)
 
 # Call:
 #   lm(formula = CH4.ppm ~ CH4, data = GC.standards)
 # 
 # Residuals:
 #   Min      1Q  Median      3Q     Max 
-# -30.104  -2.879  -1.213   1.128  40.544 
+# -14.642 -12.402  -7.507   9.523  35.063 
 # 
 # Coefficients:
 #   Estimate Std. Error t value Pr(>|t|)    
-# (Intercept) 2.465241   0.353385   6.976 8.06e-12 ***
-#   CH4         0.116513   0.001816  64.143  < 2e-16 ***
+# (Intercept) 14.29260    1.30325  10.967  < 2e-16 ***
+#   CH4          0.08576    0.01027   8.352 1.21e-14 ***
 #   ---
 #   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 # 
-# Residual standard error: 6.786 on 599 degrees of freedom
-# Multiple R-squared:  0.8729,	Adjusted R-squared:  0.8727 
-# F-statistic:  4114 on 1 and 599 DF,  p-value: < 2.2e-16
+# Residual standard error: 15.92 on 196 degrees of freedom
+# Multiple R-squared:  0.2625,	Adjusted R-squared:  0.2587 
+# F-statistic: 69.75 on 1 and 196 DF,  p-value: 1.209e-14
 
+
+
+#################### Regression forcing the intercept through 0 ####################
+
+
+CH4.Calibration <- lm(CH4.ppm ~ CH4 + 0, data = GC.standards) ;
+
+summary(CH4.Calibration)
+
+
+# Call:
+#   lm(formula = CH4.ppm ~ CH4 + 0, data = GC.standards)
+# 
+# Residuals:
+#   Min      1Q  Median      3Q     Max 
+# -21.755   0.263   1.768  23.038  48.936 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)    
+# CH4  0.14168    0.01129   12.54   <2e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 20.17 on 197 degrees of freedom
+# Multiple R-squared:  0.4441,	Adjusted R-squared:  0.4413 
+# F-statistic: 157.4 on 1 and 197 DF,  p-value: < 2.2e-16
+
+abline(lm(CH4.ppm ~ CH4, data = GC.standards) , col = "red" , lwd = 2) 
+
+
+abline(lm(CH4.ppm ~ CH4 + 0 , data = GC.standards) , col = "magenta" , lwd = 2) 
 
 
 
