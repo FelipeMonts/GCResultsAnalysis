@@ -208,5 +208,5 @@ Gas.HRM.Results[is.na(Gas.HRM.Results$Series),]
 Flux.Data[is.na(Flux.Data$Series),]
 
 
-save.image(file = paste0(Gas,"_GCAnalysis_" , Year, ".RData"))
+save.image(file = paste0(Gas,"_HMR_Analysis_" , Year, ".RData"))
 

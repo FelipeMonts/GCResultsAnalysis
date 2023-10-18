@@ -69,9 +69,9 @@ getwd()
 #                           Select the N2O Sampling year
 ###############################################################################################################
 
-# Year = 2021
+Year = 2021
 
-Year = 2022
+# Year = 2022
 
 
 ###############################################################################################################
@@ -79,9 +79,9 @@ Year = 2022
 ###############################################################################################################
 
 
-Gas = "CO2"
+# Gas = "CO2"
 # 
-# Gas = "N2O"
+Gas = "N2O"
 # 
 # Gas = "CH4"
 
@@ -415,6 +415,8 @@ head(Concentration.Flux.Data)
 tail(Concentration.Flux.Data)
 
 
+save.image(file = paste0(Gas,"_FelipesHMR2_" , Year, ".RData"))
+
 # sapply(Concentration.Flux.Data[, c("f0" , "f0.se" , "f0.p" , "f0.lo95" , "f0.up95" , "Method" , "Prefilter" ,
 # 
 #                             "Prefilter.p" , "LR.f0" , "LR.f0.se" , "LR.f0.p" , "LR.f0.lo95" , "LR.f0.up95",
@@ -424,3 +426,5 @@ tail(Concentration.Flux.Data)
 
 write.csv( x = Concentration.Flux.Data , file = paste0("FluxDataAnalysisResults\\" , Gas, "_Concentration.Flux.Data_", Year , ".csv")) ;
 
+
+Concentration.Flux.Data[order(Concentration.Flux.Data$LR.f0, decreasing = T),]

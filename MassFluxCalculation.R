@@ -1,6 +1,6 @@
 ###############################################################################################################
 #
-#  Calculation of flux mass rates based on concetration (volume) flux rates
+#  Calculation of flux mass rates based on concentration (volume) flux rates
 # 
 #   Felipe Montes 2023/09/04
 #
@@ -46,9 +46,9 @@ getwd()
 #                           Select the N2O Sampling year
 ###############################################################################################################
 
-# Year = 2021
+Year = 2021
 
-Year = 2022
+# Year = 2022
 
 
 ###############################################################################################################
@@ -56,9 +56,9 @@ Year = 2022
 ###############################################################################################################
 
 
-Gas = "CO2"
+# Gas = "CO2"
 # 
-# Gas = "N2O"
+Gas = "N2O"
 # 
 # Gas = "CH4"
 
@@ -405,6 +405,6 @@ str( Flux.Calc.Data.0)
 
 head( Flux.Calc.Data.0)
 
-
+# save.image(file = paste0("FluxDataAnalysisResults\\" , Gas, "_Mass.Flux.Data_" , Year, ".csv")) 
 
 write.csv( x = Flux.Calc.Data.0 , file = paste0("FluxDataAnalysisResults\\" , Gas, "_Mass.Flux.Data_" , Year, ".csv")) ;

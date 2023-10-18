@@ -75,9 +75,9 @@ setwd("D:\\Felipe\\Current_Projects\\CCC Based Experiments\\StrategicTillage_Nit
 
 #### N2O Sampling year  #####
 
-Year = 2021
+# Year = 2021
 
-# Year = 2022
+Year = 2022
 
 
 PeakArea.results <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults" , Year ,".csv" ) , header = T)
@@ -910,18 +910,20 @@ str(GC.Data.NoSTD)
 
 ##### CO2 ######
 
-GC.Data.NoSTD$CO2.Intercept <- coefficients(CO2.Calibration)[1] ;
+GC.Data.NoSTD$CO2.Intercept <- 0 ;
 
-GC.Data.NoSTD$CO2.Slope <- coefficients(CO2.Calibration)[2] ;
+GC.Data.NoSTD$CO2.Slope <- coefficients(CO2.Calibration)[1] ;
 
 GC.Data.NoSTD$CO2.ppm <- (GC.Data.NoSTD$CO2 * GC.Data.NoSTD$CO2.Slope) + GC.Data.NoSTD$CO2.Intercept ;
+
+plot(GC.Data.NoSTD$CO2.ppm )
 
 
 ##### N2O ######
 
-GC.Data.NoSTD$N2O.Intercept <- coefficients(N2O.Calibration)[1] ;
+GC.Data.NoSTD$N2O.Intercept <- 0 ;
 
-GC.Data.NoSTD$N2O.Slope <- coefficients(N2O.Calibration)[2] ;
+GC.Data.NoSTD$N2O.Slope <- coefficients(N2O.Calibration)[1] ;
 
 GC.Data.NoSTD$N2O.ppm <- (GC.Data.NoSTD$N2O * GC.Data.NoSTD$N2O.Slope) + GC.Data.NoSTD$N2O.Intercept ;
 
@@ -929,9 +931,9 @@ GC.Data.NoSTD$N2O.ppm <- (GC.Data.NoSTD$N2O * GC.Data.NoSTD$N2O.Slope) + GC.Data
 
 ##### CH4 ######
 
-GC.Data.NoSTD$CH4.Intercept <- coefficients(CH4.Calibration)[1] ;
+GC.Data.NoSTD$CH4.Intercept <- 0 ;
 
-GC.Data.NoSTD$CH4.Slope <- coefficients(CH4.Calibration)[2] ;
+GC.Data.NoSTD$CH4.Slope <- coefficients(CH4.Calibration)[1] ;
 
 GC.Data.NoSTD$CH4.ppm <- (GC.Data.NoSTD$CH4 * GC.Data.NoSTD$CH4.Slope) + GC.Data.NoSTD$CH4.Intercept ;
 
@@ -953,20 +955,24 @@ unique(GC.Data.NoSTD$Sample.Name)
 GC.Data.NoSTD$Treatment<-c("NONE");
 
 
-GC.Data.NoSTD[grep("AT",GC.Data.NoSTD$Sample.Name), c("Treatment")]<-c("A");
+GC.Data.NoSTD[grep("AT",GC.Data.NoSTD$Sample.Name , ignore.case = T), c("Treatment")]<-c("A");
 
-GC.Data.NoSTD[grep("BT",GC.Data.NoSTD$Sample.Name), c("Treatment")]<-c("B");
+GC.Data.NoSTD[grep("BT",GC.Data.NoSTD$Sample.Name , ignore.case = T), c("Treatment")]<-c("B");
 
-GC.Data.NoSTD[grep("CT",GC.Data.NoSTD$Sample.Name), c("Treatment")]<-c("C");
+GC.Data.NoSTD[grep("CT",GC.Data.NoSTD$Sample.Name , ignore.case = T) , c("Treatment")]<-c("C");
 
-GC.Data.NoSTD[grep("DT",GC.Data.NoSTD$Sample.Name), c("Treatment")]<-c("D");
+GC.Data.NoSTD[grep("DT",GC.Data.NoSTD$Sample.Name , ignore.case = T) , c("Treatment")]<-c("D");
 
 ### Check if there was any treatment left with "NONE" label
 
 GC.Data.NoSTD[which(GC.Data.NoSTD$Treatment == "NONE"), ];
 
+GC.Data.NoSTD[GC.Data.NoSTD$Sample.Name == "B4TritC30",]
+
+GC.Data.NoSTD[GC.Data.NoSTD$Sample.Name == "B4TritC30", c("Treatment")] <- c("C") ;
 
 
+GC.Data.NoSTD[which(GC.Data.NoSTD$Treatment == "NONE"), ];
 
 ### Organizing the data according to Blocks
 
@@ -1026,6 +1032,15 @@ GC.Data.NoSTD[grep("T45",GC.Data.NoSTD$Sample.Name), c("Sampling.Time")]<-c(45);
 GC.Data.NoSTD[which(GC.Data.NoSTD$Sampling.Time==9999),];
 
 
+GC.Data.NoSTD[GC.Data.NoSTD$Sample.Name == "B4TritC30",] ;
+
+GC.Data.NoSTD[GC.Data.NoSTD$Sample.Name == "B4TritC30", c("Sampling.Time")] <- c(30) ;
+
+
+GC.Data.NoSTD[which(GC.Data.NoSTD$Sampling.Time==9999),];
+
+
+
 ### Converting experimental designations into factors
 
 GC.Data.NoSTD$Treatment.F<-as.factor(GC.Data.NoSTD$Treatment) ;
@@ -1047,6 +1062,14 @@ GC.Data.NoSTD$CoverCrop.F<-as.factor(GC.Data.NoSTD$CoverCrop) ;
 #                               Exploratory Data visualization
 #
 ###############################################################################################################
+
+GC.Data.NoSTD$Series <- paste( GC.Data.NoSTD$Sampling.Day , GC.Data.NoSTD$BLOCK.F , 
+                               
+                               GC.Data.NoSTD$CoverCrop.F , GC.Data.NoSTD$Treatment.F, sep = "_") ;
+
+head(GC.Data.NoSTD)
+
+
 
 str(GC.Data.NoSTD)
 
