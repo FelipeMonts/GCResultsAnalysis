@@ -14,14 +14,6 @@
 ############################################################################################################### 
 
 
-
-###############################################################################################################
-#                             Tell the program where the package libraries are stored                        
-###############################################################################################################
-
-.libPaths("C:\\Users\\frm10\\AppData\\Local\\R\\win-library\\4.2")  ;
-
-
 ###############################################################################################################
 #                            Install the packages that are needed                       
 ###############################################################################################################
@@ -69,8 +61,7 @@ library(HMR)
 
 # readClipboard() 
 
-setwd("D:\\Felipe\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis")
-
+setwd("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis");
 
 
 #### N2O Sampling year  #####
@@ -522,7 +513,7 @@ abline(a = Quantile.Reg$coefficients[1,3], b = Quantile.Reg$coefficients[2,3] , 
 
 ####   CO2  ####
 
-xyplot(CO2.ppm ~ CO2 | GC.Date , groups = Series , data=GC.standards, 
+xyplot(CO2.ppm ~ CO2 | GC.Date , groups = ANAL.DATE , data=GC.standards, 
        
        panel = function(x, y) { panel.xyplot(x, y)
          
@@ -568,7 +559,7 @@ xyplot(CO2.ppm ~ CO2 , data=GC.standards,
 
 ####   N2O  ####
 
-xyplot(N2O.ppm ~ N2O | GC.Date , groups = Series , data=GC.standards, 
+xyplot(N2O.ppm ~ N2O | GC.Date , groups = ANAL.DATE , data=GC.standards, 
        
        panel = function(x, y) { panel.xyplot(x, y)
          
@@ -615,7 +606,7 @@ xyplot(N2O.ppm ~ N2O , data=GC.standards,
 
 ####   CH4  ####
 
-xyplot(CH4.ppm ~ CH4 | GC.Date , groups = Series , data=GC.standards, 
+xyplot(CH4.ppm ~ CH4 | GC.Date , groups = ANAL.DATE , data=GC.standards, 
        
        panel = function(x, y) { panel.xyplot(x, y)
          
@@ -803,6 +794,14 @@ summary(N2O.Calibration)
 # Multiple R-squared:  0.8895,	Adjusted R-squared:  0.8893 
 # F-statistic:  4790 on 1 and 595 DF,  p-value: < 2.2e-16
 # 
+
+abline(lm(N2O.ppm ~ N2O, data = GC.standards) , col = "red" , lwd = 2) 
+
+
+abline(lm(N2O.ppm ~ N2O + 0 , data = GC.standards) , col = "magenta" , lwd = 2) 
+
+
+
 
 #### CH4 standards calibration ####
 

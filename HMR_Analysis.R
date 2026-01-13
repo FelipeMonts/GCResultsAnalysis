@@ -53,9 +53,7 @@ library(lattice)
 
 # readClipboard() 
 
-setwd(paste0("D:\\Felipe\\Current_Projects\\CCC Based Experiments\\" ,
-             
-             "StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\"))
+setwd("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults")
 
 getwd()
 
@@ -63,9 +61,9 @@ getwd()
 #                           Select the N2O Sampling year
 ###############################################################################################################
 
-Year = 2021
+# Year = 2021
 
-# Year = 2022
+Year = 2022
 
 
 ###############################################################################################################

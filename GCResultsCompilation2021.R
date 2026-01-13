@@ -19,7 +19,7 @@
 #                             Tell the program where the package libraries are stored                        
 ###############################################################################################################
 
-.libPaths("C:\\Users\\frm10\\AppData\\Local\\R\\win-library\\4.2")  ;
+#.libPaths("C:\\Users\\frm10\\AppData\\Local\\R\\win-library\\4.2")  ;
 
 
 ###############################################################################################################
@@ -38,7 +38,7 @@
 
 # install.packages("utf8",  dependencies = T)
 
-
+#  install.packages("gtools",  dependencies = T)
 
 ###############################################################################################################
 #                           load the libraries that are needed   
@@ -52,6 +52,7 @@ library(pdftools)
 
 library(stringr)
 
+library(gtools)
 
 
 
@@ -72,16 +73,22 @@ library(stringr)
 #                            Load the function  ReadGCReportPDF2021.R
 ###############################################################################################################
 
+#source(file = "D:\\Felipe\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\ReadGCReportPDF2021.R", verbose =T)
 
-source(file = "D:\\Felipe\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\ReadGCReportPDF2021.R", verbose =T)
+source(file = "C:/Users/frm10/OneDrive - The Pennsylvania State University/Current_Projects/CCC Based Experiments/StrategicTillage_NitrogenLosses_OrganicCoverCrops/DataAnalysis/RCode/GCResultsAnalysis/ReadGCReportPDF2021.R", verbose =T)
+
+
 ###############################################################################################################
 #                           Explore the files and directory and files with the data
 ###############################################################################################################
 ### Read the Directories where the GC data are stored
 
-File.List.directory<-"C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results" ;
+# File.List.directory <- "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results" ;
 
-File.List<-list.files("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"); length(File.List) ; 
+
+File.List.directory <- "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data\\GasChromatograph\\Alli_Felipe2021\\Results" ;
+
+File.List <- list.files(File.List.directory); length(File.List) ; 
 
 # Only select the pdf files
 

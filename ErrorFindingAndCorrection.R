@@ -85,9 +85,9 @@ Gas = "N2O"
 #                           Select the Year
 ###############################################################################################################
 
-Year = 2021
+# Year = 2021
 
-# Year = 2022
+Year = 2022
 
 ###############################################################################################################
 #                         Load  results from the HMR Analysis
@@ -134,18 +134,22 @@ Flux.Data.Ord.f0[Flux.Data.Ord.f0 <= 100 ,  ]
 Flux.Data.Ord.f0[Flux.Data.Ord.f0$f0 >= 100 ,  ]  
 
 
+Flux.Data.Ord.f0[Flux.Data.Ord.f0$Sampling.Day == 20220609, c("BLOCK.F")] 
+
 
 xyplot(N2O.ppm ~ Sampling.Time  | BLOCK.F + CoverCrop.F, 
        
-       data = Flux.Data.Ord.f0[Flux.Data.Ord.f0$Sampling.Day == 20210629,]  , main = "20210629" ) ;
+       data = Flux.Data.Ord.f0[Flux.Data.Ord.f0$Sampling.Day == 20220609,]  , main = "20220609" ) ;
 
-plot(N2O.ppm ~ Sampling.Time , data = Flux.Data.Ord.f0[Flux.Data.Ord.f0$Series == "20210629_2_Clover_C",] , main = "20210629") ;
+plot(N2O.ppm ~ Sampling.Time , data = Flux.Data.Ord.f0[Flux.Data.Ord.f0$Series == "20220609_4_Trit_C",] , main = "20220609") ;
 
-text( x = 25, y = 8 , labels = paste0("f0 = ", Flux.Data.Ord.f0[Flux.Data.Ord.f0$Series == "20210629_2_Clover_C", c("f0")] [1] )) ;
+text( x = 25, y = 8 , labels = paste0("f0 = ", Flux.Data.Ord.f0[Flux.Data.Ord.f0$Series == "20220609_4_Trit_C", c("f0")] [1] )) ;
 
-text( x = 25, y = 6 , labels = paste0("f0 = ", Flux.Data.Ord.f0[Flux.Data.Ord.f0$Series == "20210629_2_Clover_C", c("LR.f0")] [1] )) ;
+text( x = 25, y = 6 , labels = paste0("LR.f0 = ", Flux.Data.Ord.f0[Flux.Data.Ord.f0$Series == "20220609_4_Trit_C", c("LR.f0")] [1] )) ;
 
-
+xyplot(N2O.ppm ~ Sampling.Time  | BLOCK.F + CoverCrop.F, 
+       
+       data = Flux.Data.Ord.f0[Flux.Data.Ord.f0$Sampling.Day == 20220630,]  , main = "20220630" ) ;
 
 
 ###### Order the data from high to low LR.f0 fluxes ############
@@ -389,142 +393,6 @@ text( x = Flux.Data.Corrected.1.Ord.Rev.LR.f0.2$Rev.LR.f0, labels = Flux.Data.Co
 
 
 
-###############################################################################################################
-#                         Read results from the Mass.Flux
-###############################################################################################################
 
-
-write.csv( x = Flux.Calc.Data.0 , file = paste0("FluxDataAnalysisResults\\" , Gas, "_Mass.Flux.Data_" , Year, ".csv")) ;
-
-Mass.Flux.Data.1 <- read.csv( file = paste0("FluxDataAnalysisResults\\" , Gas, "_Mass.Flux.Data_" , Year, ".csv"))  ; 
-
-
-str(Mass.Flux.Data.1)
-
-
-###### Order the data from high to low LR.f0 fluxes ############
-
-
-Mass.Flux.Data.2 <- Mass.Flux.Data.1[order(Mass.Flux.Data.1$LR.f0.KgElement.Ha.day , decreasing = T),]
-
-head(Mass.Flux.Data.2)
-
-tail(Mass.Flux.Data.2)
-
-plot(Mass.Flux.Data.2$LR.f0.KgElement.Ha.day)
-
-# Mass.Flux.Data.2[Mass.Flux.Data.2$LR.f0.KgElement.Ha.day >= 8, c("Sampling.Day" , "Exp.Unit.ID" , "LR.f0.KgElement.Ha.day")] ;
-                 
-Mass.Flux.Data.2[Mass.Flux.Data.2$LR.f0.KgElement.Ha.day >= 2, c("Sampling.Day" , "Exp.Unit.ID" , "LR.f0.KgElement.Ha.day")] ;
-
-                
-# Mass.Flux.Data.2[Mass.Flux.Data.2$Sampling.Day == 20210614 & Mass.Flux.Data.2$Exp.Unit.ID == "1.Trit.B" ,]
-# 
-# 
-# Mass.Flux.Data.2[Mass.Flux.Data.2$Sampling.Day == 20210614 & Mass.Flux.Data.2$Exp.Unit.ID == "2.3Spp.A" ,]
-# 
-# Mass.Flux.Data.2[Mass.Flux.Data.2$Sampling.Day == 20210614 & Mass.Flux.Data.2$Exp.Unit.ID == "2.Clover.C" ,]
-# 
-# 
-# Mass.Flux.Data.2[Mass.Flux.Data.2$LR.f0.KgElement.Ha.day >= 4 & Mass.Flux.Data.2$LR.f0.KgElement.Ha.day <= 6,
-#                  
-#                  c("Sampling.Day" , "Exp.Unit.ID" , "LR.f0.KgElement.Ha.day")] ;
-# 
-
-
-# Mass.Flux.Data.2[Mass.Flux.Data.2$Sampling.Day == 20210614,]
-
-Mass.Flux.Data.2[Mass.Flux.Data.2$Sampling.Day == 20220630,]
-
-# points(Mass.Flux.Data.2[Mass.Flux.Data.2$Sampling.Day == 20210614,c("LR.f0.KgElement.Ha.day")] , col = "red")
-
-points(Mass.Flux.Data.2[Mass.Flux.Data.2$Sampling.Day == 20220630,c("LR.f0.KgElement.Ha.day")] , col = "red")
-
-###############################################################################################################
-#                          Load results from the GC analysis and GC concentration data
-###############################################################################################################
-
-
-
-paste0("FluxDataAnalysisResults\\GCAnalysis" , Year , ".RData")
-
-load(paste0("GCAnalysis" , Year , ".RData"))
-
-
-ls()
-
-str(GC.Data.NoSTD)
-
-
-
-###### plotting the GC data ####
-
-boxplot(N2O ~ Treatment.F * CoverCrop.F , data =  GC.Data.NoSTD, main = Year)
-
-boxplot(CO2 ~ Treatment.F * CoverCrop.F , data =  GC.Data.NoSTD, main = Year)
-
-###### plotting the GC calibrated data ####
-
-boxplot(N2O.ppm ~ Treatment.F * CoverCrop.F   , data =  GC.Data.NoSTD, main = Year)
-
-boxplot(CO2.ppm ~ Treatment.F * CoverCrop.F , data =  GC.Data.NoSTD, main = Year)
-
-
-###############################################################################################################
-#                   Cases of particular interest  2021                     
-###############################################################################################################
-
-
-# DIMENSION UNITS      VALUE
-# 1       Length     m 0.52705000
-# 2        Width     m 0.32385000
-# 3       Height     m 0.10160000
-# 4       Volume     m 0.01734161
-# 5 Surface.Area     m 0.17068514
-
-# 20210629 2 clover c
-
-unique(GC.Data.NoSTD$Sample.Name)
-
-Case.20210614 <- GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Day == 20210614, ];
-
-levels(Case.20210614$Treatment.F)
-
-xyplot(CO2.ppm ~ Sampling.Time | BLOCK.F * CoverCrop.F, groups =  Treatment.F , 
-       
-       data = Case.20210614 , auto.key = T, type = c( "p" , "r"), main = as.character(Case.20210614$Sampling.Day[1])) ;
-
-
-Case.20210614[, c("Series.Sampling.Time" , "CH4" , "CO2" , "N2O")]
-
-Case.20210614[Case.20210614$BLOCK.F ==  2 & Case.20210614$CoverCrop.F == "Clover" &
-                
-                Case.20210614$Treatment.F == "B", c("Series.Sampling.Time" , "CH4" , "CO2" , "N2O")]
-
-###############################################################################################################
-#           Cases of particular interest  2022                    
-###############################################################################################################
-
-str(GC.Data.NoSTD)
-
-Case.20220630 <- GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Day == 20220630, ];
-
-levels(Case.20220630$Treatment.F)
-
-xyplot(CO2.ppm ~ Sampling.Time | BLOCK.F * CoverCrop.F, groups =  Treatment.F , 
-       
-       data = Case.20220630 , auto.key = T, type = c( "p" , "r"), main = as.character(Case.20220630$Sampling.Day[1])) ;
-
-levels(as.factor(GC.Data.NoSTD$Sampling.Day))
-
-Case.20220629 <- GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Day == 20220629, ] ;
-
-xyplot(CO2.ppm ~ Sampling.Time | BLOCK.F * CoverCrop.F, groups =  Treatment.F , 
-       
-       data = Case.20220629 , auto.key = T, type = c( "p" , "r"), main = as.character(Case.20220629$Sampling.Day[1])) ;
-
-GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Day == 20220629 , c("GC.Date") ]
-
-GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Day == 20220630 , c("GC.Date") ]
 
 

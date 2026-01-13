@@ -60,8 +60,7 @@ library(nls2)
 # readClipboard() 
 
 setwd(paste0("D:\\Felipe\\Current_Projects\\CCC Based Experiments\\" ,
-              
-              "StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\"))
+              "StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults"))
 
 getwd()
 
@@ -69,9 +68,9 @@ getwd()
 #                           Select the N2O Sampling year
 ###############################################################################################################
 
-Year = 2021
+# Year = 2021
 
-# Year = 2022
+Year = 2022
 
 
 ###############################################################################################################
@@ -80,11 +79,11 @@ Year = 2021
 
 
 # Gas = "CO2"
-# 
+#  
 Gas = "N2O"
-# 
+#  
 # Gas = "CH4"
-
+# 
 
 
 
@@ -93,7 +92,7 @@ Gas = "N2O"
 ###############################################################################################################
 
 
-load(paste0("FluxDataAnalysisResults\\" , Gas , "_GCAnalysis_" , Year, ".RData"))
+load(paste0(Gas , "_GCAnalysis_" , Year, ".RData"))
 
 
 
@@ -427,4 +426,4 @@ save.image(file = paste0(Gas,"_FelipesHMR2_" , Year, ".RData"))
 write.csv( x = Concentration.Flux.Data , file = paste0("FluxDataAnalysisResults\\" , Gas, "_Concentration.Flux.Data_", Year , ".csv")) ;
 
 
-Concentration.Flux.Data[order(Concentration.Flux.Data$LR.f0, decreasing = T),]
+
