@@ -76,6 +76,14 @@ getwd()
 
 # Year = 2022
 
+####### GAS  HMR analysis ############
+
+# Gas = "CO2"
+# 
+# Gas = "N2O"
+# 
+# Gas = "CH4"
+
 
 ###############################################################################################################
 #                           load the working data from GCANalysis 
@@ -213,14 +221,6 @@ str(Gas.Series)
 head(Gas.Series)
 
 
-
-####### GAS  HMR analysis ############
-
- # Gas = "CO2"
- # 
- # Gas = "N2O"
- # 
- # Gas = "CH4"
 
 Gas.Series <- data.frame(GC.Data.NoSTD[, c( "Series") ], Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Volume" , c("VALUE")],
                                      
