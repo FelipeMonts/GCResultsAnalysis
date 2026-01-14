@@ -135,21 +135,6 @@ Molar.Mass<-data.frame(GAS=c("CH4" , "CO2" , "N2O"), UNITS=c("g/mol"), VALUE=c(1
 Gas.Law<-data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K-Mol", "m3-atm/K-Mol"), VALUE=c(0.08205736, 8.314462,8.314462, 8.314462, 8.205736e-5 ))  ;
 
 
-# 
-# 
-# str(Chamber.Dimensions)
-# 
-# V <- Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Volume" , c("VALUE")]
-# 
-# A <- Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Surface.Area" , c("VALUE")] 
-# 
-# h = V / A
-#
-# Series.1 <- HMR.Test.Data[1:11, c( "Time" , "Concentration")];
-# 
-# plot(Concentration ~ Time , data = Series.1)
-#
-#  Ct = phi + f0(exp(-kt) / -kh ) 
 
 
 
@@ -214,31 +199,20 @@ Gas.Series <- data.frame(GC.Data.NoSTD[, c( "Series") ], Chamber.Dimensions[Cham
                          
                          Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Surface.Area" , c("VALUE")], 
                          
-                         GC.Data.NoSTD[, c( "Sampling.Time" , paste0(Gas,".ppm")) ])
+                         GC.Data.NoSTD[, c( "Sampling.Time" , paste0(Gas,".ppm")) ]) ;
+
+names(Gas.Series) <- c("Series" , "Volume.L" , "Surface.Area.m2" , "Sampling.Time" , paste0(Gas,".ppm") );
 
 str(Gas.Series)
 
 head(Gas.Series)
 
 
-
-Gas.Series <- data.frame(GC.Data.NoSTD[, c( "Series") ], Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Volume" , c("VALUE")],
-                                     
-                                     Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Surface.Area" , c("VALUE")], 
-                                     
-                                     GC.Data.NoSTD[, c( "Sampling.Time" , paste0(Gas,".ppm")) ])
-
-
-                         
-                        
-
-names(Gas.Series) <- c("Series" , "V" , "A" , "Time" , "Concentration") ;
-
 str(Gas.Series)
 
 head(Gas.Series)   ### Need to order the series 
 
-Gas.Series.HMR <- Gas.Series[order(Gas.Series$Series,Gas.Series$Time ),]
+Gas.Series.HMR <- Gas.Series[order(Gas.Series$Series,Gas.Series$"Sampling.Time" ),]
 
 head(Gas.Series.HMR)
 
@@ -262,11 +236,9 @@ bwplot(as.formula(paste0(Gas,".ppm", " ~ ", "Sampling.Day.F" )) ,
 bwplot(as.formula(paste0(" ~ ", Gas,".ppm")),  data = GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, ], horizontal = T )
 
 
-Gas.HRM.Results <- HMR(filename = paste0(Gas,"_" , Year , ".Series.csv") , sep = ";" , dec = "." ,Display.Message = F , FollowHMR = T, 
-                       
-                       pfvar = sigma02,  LR.always = T , IfNoValidHMR = 'LR', IfNoFlux = 'No flux', 
-                       
-                       IfNoSignal = 'No flux') ;
+Gas.HRM.Results <- HMR(filename = paste0(Gas,"_" , Year , ".Series.csv") , sep = ";" , dec = "." , SatPct = NA,
+                       SatTimeMin = NA, pfvar = sigma02, pfalpha = 0.05,  LR.always = T , FollowHMR = T,
+                       IfNoValidHMR = 'LR', IfNoFlux = 'No flux',  IfNoSignal = 'No flux') ;
 
 str(Gas.HRM.Results)
 
