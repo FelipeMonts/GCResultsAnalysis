@@ -34,9 +34,7 @@
 
 # readClipboard() 
 
-setwd(paste0("D:\\Felipe\\Current_Projects\\CCC Based Experiments\\" ,
-             
-             "StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\"))
+setwd("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis")
 
 getwd()
 
