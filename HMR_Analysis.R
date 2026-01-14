@@ -12,6 +12,17 @@
 # and the r package : 
 
 # Pedersen, Asger R. “HMR: Flux Estimation with Static Chamber Data,” May 20, 2020. https://CRAN.R-project.org/package=HMR.
+#
+# Version 1.0.5  	2025-12-17
+#
+# Updated on 2023 by :
+#
+#Pullens, Johannes Wilhelmus Maria, Diego Abalos, Søren O. Petersen, and Asger R. Pedersen. 
+#
+# “Identifying Criteria for Greenhouse Gas Flux Estimation with Automatic and Manual Chambers: 
+
+# A Case Study for N2O.” European Journal of Soil Science 74, no. 1 (2023): e13340. https://doi.org/10.1111/ejss.13340.
+
 # 
 # Felipe Montes 2023
 ###############################################################################################################

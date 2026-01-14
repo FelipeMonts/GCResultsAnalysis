@@ -93,11 +93,17 @@ head(Concentration.Flux.Data)
 ###############################################################################################################
 #           
 #                             CONSTANTS FOR MASS CALCULATIONS
-# 
-# 
-#    Universal Gas Constant R = 8.31446261815324   	m3⋅Pa⋅K−1⋅mol−1
 #    
-#    Atmospheric Pressure Patm = 101325 Pa
+#             Universal Gas Constant
+#
+#             https://en.wikipedia.org/wiki/Gas_constant
+# 
+#             R = 8.31446261815324   	m3⋅Pa⋅K−1⋅mol−1
+#
+#             R = 0.082057366080960   	L⋅atm⋅K−1⋅mol
+#
+#      
+#    Atmospheric Pressure Patm = 101325 Pa  ,  1 atm
 #    
 #    Degrees Kelvin  K = 273.15 + T °C
 #    
@@ -126,9 +132,9 @@ head(Concentration.Flux.Data)
 # 
 ############################################################################################################### 
 
-R = 8.31446261815324
+R = 0.082057366080960
 
-Patm = 101325
+Patm = 1  
 
 
 
