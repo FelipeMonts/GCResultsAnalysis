@@ -61,9 +61,9 @@ getwd()
 #                           Select the N2O Sampling year
 ###############################################################################################################
 
-# Year = 2021
+ Year = 2021
 
-Year = 2022
+# Year = 2022
 
 
 ###############################################################################################################
@@ -133,6 +133,8 @@ sigma02 <- var( GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, c(paste0(Gas,".p
 bwplot(as.formula(paste0(Gas,".ppm", " ~ ", "Sampling.Day.F" )) , 
        
        data = GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, ] )
+
+# The variance in sampling date 20220623 is an outlier and should be not included #
 
 bwplot(as.formula(paste0(" ~ ", Gas,".ppm")),  data = GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, ], horizontal = T )
 
