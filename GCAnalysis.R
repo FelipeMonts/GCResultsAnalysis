@@ -1106,7 +1106,7 @@ xyplot(CH4.ppm ~ Sampling.Time | Treatment.F * BLOCK.F * CoverCrop.F,
 
 ###############################################################################################################
 #
-#  Reference data taken from Allison Kohele's Calculations Excel Files
+#               Reference data taken from Allison Kohele's Calculations Excel Files
 #
 ###############################################################################################################
 

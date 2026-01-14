@@ -72,7 +72,7 @@ getwd()
 #                           Select the N2O Sampling year
 ###############################################################################################################
 
- Year = 2021
+# Year = 2021
 
 # Year = 2022
 
@@ -84,7 +84,50 @@ getwd()
 
 load(file = paste0("GCAnalysis" , Year , ".RData"))
 
-# ########### Ad chamber dimensions for the calculations
+
+###############################################################################################################
+#                           Flux Chamber dimensions for the calculations
+###############################################################################################################
+
+
+###############################################################################################################
+#                        HMR data and flux physical units
+###############################################################################################################
+#
+# HMR data and flux physical units:
+# For maximal flexibility, HMR has no requirements for the physical units of input data. 
+# The chosen units do, however, determine the unit of the estimated flux, 
+# which has the physical unit of (V C)/(At), where t and C denote, respectively, time and concentration. 
+# Some examples:  
+#   V [L], A [m2], t [h], C [μg/L] ⇒ f0 [μg/m2/h] 
+#   V [L], A [m2], t [min], C [μL/L] ⇒ f0 [μL/m2/min] 
+#   V [m2], A [km2], t [s], C [kg/m3] ⇒ f0 [kg/km2/s]
+#
+####  Using V [L], A [m2], t [min], C [μL/L] ⇒ f0 [μL/m2/min] #####
+#
+
+
+###############################################################################################################
+#
+#               Reference data taken from Allison Kohele's Calculations Excel Files
+#
+###############################################################################################################
+
+
+
+Chamber.Dimensions<-data.frame(DIMENSION=c("Length", "Width" , "Height", "Volume" , "Surface.Area"),UNITS = c(rep("cm",3), "1000 x cm3 or L" , "m2"), VALUE=c(52.705, 32.385, 10.16, 9999, 9999));
+
+Chamber.Dimensions[Chamber.Dimensions$DIMENSION =="Volume", c("VALUE")] <- Chamber.Dimensions[1,3]*Chamber.Dimensions[2,3]*Chamber.Dimensions[3,3] / 1000 ;
+
+
+Chamber.Dimensions[Chamber.Dimensions$DIMENSION =="Surface.Area", c("VALUE")] <- Chamber.Dimensions[1,3]*Chamber.Dimensions[2,3] / 10000;
+
+Molar.Mass<-data.frame(GAS=c("CH4" , "CO2" , "N2O"), UNITS=c("g/mol"), VALUE=c(16.04, 44.01, 44.013));
+
+Gas.Law<-data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K-Mol", "m3-atm/K-Mol"), VALUE=c(0.08205736, 8.314462,8.314462, 8.314462, 8.205736e-5 ))  ;
+
+
+# 
 # 
 # str(Chamber.Dimensions)
 # 
@@ -93,12 +136,81 @@ load(file = paste0("GCAnalysis" , Year , ".RData"))
 # A <- Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Surface.Area" , c("VALUE")] 
 # 
 # h = V / A
-
+#
 # Series.1 <- HMR.Test.Data[1:11, c( "Time" , "Concentration")];
 # 
 # plot(Concentration ~ Time , data = Series.1)
-
+#
 #  Ct = phi + f0(exp(-kt) / -kh ) 
+
+
+
+###############################################################################################################
+#           
+#                             CONSTANTS FOR MASS CALCULATIONS
+#    
+#             Universal Gas Constant
+#
+#             https://en.wikipedia.org/wiki/Gas_constant
+# 
+#             R = 8.31446261815324   	m3⋅Pa⋅K−1⋅mol−1
+#
+#             R = 0.082057366080960   	L⋅atm⋅K−1⋅mol
+#
+#      
+#    Atmospheric Pressure Patm = 101325 Pa  ,  1 atm
+#    
+#    Degrees Kelvin  K = 273.15 + T °C
+#    
+#    Day = 60 * 24 min = 1440 min
+#    
+#    Year = 1440 min * 365 days = 525600 min
+#    
+#    Hectare Ha = 100m * 100 m = 1000 m2 
+#    
+#    Fluxm kg X · ha-1 day-1 
+# 
+#    CO2 = 44.0095 g mol-1  https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Units=SI
+#    
+#    N2O = 44.0128 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?ID=C10024972&Units=SI
+#    
+#    CH4 = 16.0425 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?ID=C74828&Units=SI
+#    
+#    C = 12.0107  g mol-1  https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440440&Units=SI
+#    
+#    O = 15.9994 g mol-1   https://webbook.nist.gov/cgi/cbook.cgi?Formula=O&NoIon=on&Units=SI
+#    
+#    N = 14.0067 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?Formula=N&NoIon=on&Units=SI
+#    
+#    H = 1.00794 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?ID=C12385136&Units=SI
+# 
+# 
+############################################################################################################### 
+
+R = 0.082057366080960
+
+Patm = 1  
+
+Concentration.Flux.Data$Temp.K <- 293.15 ;
+
+
+
+
+###############################################################################################################
+#                           Format concentration data for HMR
+###############################################################################################################
+
+
+
+Gas.Series <- data.frame(GC.Data.NoSTD[, c( "Series") ], Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Volume" , c("VALUE")],
+                         
+                         Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Surface.Area" , c("VALUE")], 
+                         
+                         GC.Data.NoSTD[, c( "Sampling.Time" , paste0(Gas,".ppm")) ])
+
+str(Gas.Series)
+
+head(Gas.Series)
 
 
 
@@ -106,7 +218,7 @@ load(file = paste0("GCAnalysis" , Year , ".RData"))
 
  # Gas = "CO2"
  # 
- Gas = "N2O"
+ # Gas = "N2O"
  # 
  # Gas = "CH4"
 
