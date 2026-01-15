@@ -130,9 +130,8 @@ Chamber.Dimensions[Chamber.Dimensions$DIMENSION =="Volume", c("VALUE")] <- Chamb
 
 Chamber.Dimensions[Chamber.Dimensions$DIMENSION =="Surface.Area", c("VALUE")] <- Chamber.Dimensions[1,3]*Chamber.Dimensions[2,3] / 10000;
 
-Molar.Mass<-data.frame(GAS=c("CH4" , "CO2" , "N2O"), UNITS=c("g/mol"), VALUE=c(16.04, 44.01, 44.013));
 
-Gas.Law<-data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K-Mol", "m3-atm/K-Mol"), VALUE=c(0.08205736, 8.314462,8.314462, 8.314462, 8.205736e-5 ))  ;
+Gas.Law <- data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K-Mol", "m3-atm/K-Mol"), VALUE=c(0.08205736, 8.314462,8.314462, 8.314462, 8.205736e-5 ))  ;
 
 
 
@@ -180,11 +179,11 @@ Gas.Law<-data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K
 # 
 ############################################################################################################### 
 
-R = 0.082057366080960
+R = 0.082057366080960  # L-atm/Mol-K
 
-Patm = 1  
+Patm = 1  # atm 
 
-Concentration.Flux.Data$Temp.K <- 293.15 ;
+Concentration.Flux.Data$Temp.K <- 293.15 ; # K
 
 
 
@@ -217,39 +216,76 @@ Gas.Series.HMR <- Gas.Series[order(Gas.Series$Series,Gas.Series$"Sampling.Time" 
 head(Gas.Series.HMR)
 
 
-write.table(x = Gas.Series.HMR , sep = ";", dec = "." ,file = paste0(Gas,"_" , Year , ".Series.csv"), row.names = F)  ;
+write.table(x = Gas.Series.HMR , sep = ";", dec = "." , 
+            
+            file = paste0(Gas,"_" , Year , ".Series.csv"), row.names = F)  ;
+
+###############################################################################################################
+#   Calculate the Variance of the ambient concentration measurementsto estimate pfvar, 
+#   the assumed variance of replicate measurements of the ambient trace gas concentration
+#   at the chamber site in case of no gas emission used for prefiltering of data series before analysis
+###############################################################################################################
 
 ######### Variance of the ambient concentration measurements #############
 
 str(GC.Data.NoSTD)
 
+
 GC.Data.NoSTD$Sampling.Day.F <- as.factor(GC.Data.NoSTD$Sampling.Day );
 
-sigma02 <- var( GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, c(paste0(Gas,".ppm"))])
 
 bwplot(as.formula(paste0(Gas,".ppm", " ~ ", "Sampling.Day.F" )) , 
        
        data = GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, ] )
 
-# The variance in sampling date 20220623 is an outlier and should be not included #
+# Ambient data concentration on sampling date 20210715 is an outlier
+# and should not be included in the calculation of the variance  
 
-bwplot(as.formula(paste0(" ~ ", Gas,".ppm")),  data = GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, ], horizontal = T )
+# Ambient data concentration on sampling date 20220623 is an outlier
+# and should not be included in the calculation of the variance  
+
+# sigma02.1 <- var( GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, c(paste0(Gas,".ppm"))])
+# 
+# sigma02 <- var(GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0 & GC.Data.NoSTD$Sampling.Day.F != "20210715",
+# 
+#                                 c(paste0(Gas,".ppm"))]) ;
+# 
+# sigma02.n <- length(GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0 & GC.Data.NoSTD$Sampling.Day.F != "20210715",
+# 
+#                                   c(paste0(Gas,".ppm"))]) ;
+
+
+sigma02 <- var(GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0 & GC.Data.NoSTD$Sampling.Day.F != "20220623",
+
+                             c(paste0(Gas,".ppm"))]) ;
+
+sigma02.n <- length(GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0 & GC.Data.NoSTD$Sampling.Day.F != "20220623",
+
+                               c(paste0(Gas,".ppm"))]) ;
+
+
+
+assign(paste(Year, Gas,"sigma02", sep = "." ), sigma02 ) ;
+
+
+# Variance for Ambient data concentration year 2021 2021.N2O.sigma02 = 0.006041534 sigma02.n = 700
+# Variance for Ambient data concentration year 2022 2022.N2O.sigma02 = 0.01460439, sigma02.n = 442
+
+
+####### Pooled Variance 2021 & 2022 ##############
+
+Sigma02.all <- (((700-1) * 0.006041534) + ( (442-1) * 0.01460439 )) / (700 + 442 - 2) ;
+
+###############################################################################################################
+#                          Calculate flux with the HMR package
+###############################################################################################################
 
 
 Gas.HRM.Results <- HMR(filename = paste0(Gas,"_" , Year , ".Series.csv") , sep = ";" , dec = "." , SatPct = NA,
-                       SatTimeMin = NA, pfvar = sigma02, pfalpha = 0.05,  LR.always = T , FollowHMR = T,
+                       SatTimeMin = NA, pfvar = Sigma02.all, pfalpha = 0.05,  LR.always = T , FollowHMR = T,
                        IfNoValidHMR = 'LR', IfNoFlux = 'No flux',  IfNoSignal = 'No flux') ;
 
 str(Gas.HRM.Results)
-
-
-###### Transform flux data (F0) from text to number
-
-Gas.HRM.Results$Flux <- as.numeric(Gas.HRM.Results$f0)   ;
-
-######## Results that were processed  #########
-
-str(Gas.HRM.Results[!Gas.HRM.Results$Warning == "Data error" ,])
 
 
 
@@ -257,6 +293,29 @@ str(Gas.HRM.Results[!Gas.HRM.Results$Warning == "Data error" ,])
 
 str(Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" ,])
 
+
+Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")]
+
+
+
+###############################################################################################################
+#                   Calculate flux of records with Warning "Data error" 
+#                   using manual option of the  HMR package
+###############################################################################################################
+
+Gas.Series.HMR.Error <- Gas.Series.HMR[! Gas.Series.HMR$Series %in% Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")], ]
+
+
+write.table(x = Gas.Series.HMR , sep = ";", dec = "." , 
+            
+            file = paste0(Gas,"_" , Year , "_Series_Error.csv"), row.names = F)  ;
+
+
+Gas.HRM.Results.Error <- HMR(filename = paste0(Gas,"_" , Year , "_Series_Error.csv") , sep = ";" , dec = "." , SatPct = NA,
+                       SatTimeMin = NA, pfvar = Sigma02.all, pfalpha = 0.05,  LR.always = T , FollowHMR = F,
+                       IfNoValidHMR = 'LR', IfNoFlux = 'No flux',  IfNoSignal = 'No flux') ;
+
+str(Gas.HRM.Results)
 
 
 
