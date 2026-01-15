@@ -291,10 +291,10 @@ str(Gas.HRM.Results)
 
 ######## Results that have errors  #########
 
-str(Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" ,])
+str(Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" ,]) ;
 
 
-Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")]
+Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")] ;
 
 
 
@@ -303,20 +303,25 @@ Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")]
 #                   using manual option of the  HMR package
 ###############################################################################################################
 
-Gas.Series.HMR.Error <- Gas.Series.HMR[! Gas.Series.HMR$Series %in% Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")], ]
+Gas.Series.HMR.Error <- Gas.Series.HMR[Gas.Series.HMR$Series %in% Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")], ]
 
+str(Gas.Series.HMR.Error)
 
-write.table(x = Gas.Series.HMR , sep = ";", dec = "." , 
+write.table(x = Gas.Series.HMR.Error , sep = ";", dec = "." , 
             
             file = paste0(Gas,"_" , Year , "_Series_Error.csv"), row.names = F)  ;
 
+read.table(file = paste0(Gas,"_" , Year , "_Series_Error.csv"), header = T, sep = ";")
+
 
 Gas.HRM.Results.Error <- HMR(filename = paste0(Gas,"_" , Year , "_Series_Error.csv") , sep = ";" , dec = "." , SatPct = NA,
-                       SatTimeMin = NA, pfvar = Sigma02.all, pfalpha = 0.05,  LR.always = T , FollowHMR = F,
+                       SatTimeMin = NA, pfvar = Sigma02.all, pfalpha = 0.05,  LR.always = T , FollowHMR = T,
                        IfNoValidHMR = 'LR', IfNoFlux = 'No flux',  IfNoSignal = 'No flux') ;
 
 str(Gas.HRM.Results)
 
+#series that need revision:
+#
 
 
 ###############################################################################################################
