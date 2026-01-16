@@ -206,6 +206,8 @@ str(Gas.Series)
 
 head(Gas.Series)
 
+tail(Gas.Series)
+
 
 str(Gas.Series)
 
@@ -213,7 +215,16 @@ head(Gas.Series)   ### Need to order the series
 
 Gas.Series.HMR <- Gas.Series[order(Gas.Series$Series,Gas.Series$"Sampling.Time" ),]
 
+str(Gas.Series.HMR)
+
 head(Gas.Series.HMR)
+
+tail(Gas.Series.HMR,30)
+
+unique(Gas.Series.HMR[,"Series"])
+
+length(unique(Gas.Series.HMR[,"Series"]))
+
 
 
 write.table(x = Gas.Series.HMR , sep = ";", dec = "." , 
@@ -292,6 +303,8 @@ Gas.HRM.Results <- HMR(filename = paste0(Gas,"_" , Year , ".Series.csv") , sep =
 str(Gas.HRM.Results)
 
 
+str(Gas.HRM.Results$Series)
+
 
 ######## Results that have errors  #########
 
@@ -299,6 +312,47 @@ str(Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" ,]) ;
 
 
 Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")] ;
+
+
+###############################################################################################################
+#                   Calculate flux of records with Warning "Data error" 
+#                   using manual option of the  HMR package
+###############################################################################################################
+
+Gas.HRM.Results.Error <- Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")]  ;
+
+Gas.Series.HMR.Error <- unique(Gas.Series.HMR[Gas.Series.HMR$Series %in% Gas.HRM.Results.Error, ]) ;
+
+str(Gas.Series.HMR.Error)
+
+unique(Gas.Series.HMR.Error$Series)
+
+length(unique(Gas.Series.HMR.Error$Series))
+
+
+
+write.table(x = Gas.Series.HMR.Error , sep = ";", dec = "." , 
+            
+            file = paste0(Gas,"_" , Year , "_Series_Error.csv"), row.names = F)  ;
+
+read.table(file = paste0(Gas,"_" , Year , "_Series_Error.csv"), header = T, sep = ";")
+
+
+
+
+Gas.HRM.Results.Error <- HMR(filename = paste0(Gas,"_" , Year , "_Series_Error.csv") , sep = ";" , dec = "." , SatPct = NA,
+                             SatTimeMin = NA, pfvar = Sigma02.all, pfalpha = 0.05,  LR.always = T , FollowHMR = F,
+                             IfNoValidHMR = 'LR', IfNoFlux = 'No flux',  IfNoSignal = 'No flux') ;
+
+str(Gas.HRM.Results)
+
+#series that need revision:
+#
+
+
+
+
+
 
 
 
