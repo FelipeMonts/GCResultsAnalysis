@@ -220,6 +220,8 @@ write.table(x = Gas.Series.HMR , sep = ";", dec = "." ,
             
             file = paste0(Gas,"_" , Year , ".Series.csv"), row.names = F)  ;
 
+
+
 ###############################################################################################################
 #   Calculate the Variance of the ambient concentration measurementsto estimate pfvar, 
 #   the assumed variance of replicate measurements of the ambient trace gas concentration
@@ -280,6 +282,8 @@ Sigma02.all <- (((700-1) * 0.006041534) + ( (442-1) * 0.01460439 )) / (700 + 442
 #                          Calculate flux with the HMR package
 ###############################################################################################################
 
+read.table(file = paste0(Gas,"_" , Year , ".Series.csv"), header = T, sep = ";")
+
 
 Gas.HRM.Results <- HMR(filename = paste0(Gas,"_" , Year , ".Series.csv") , sep = ";" , dec = "." , SatPct = NA,
                        SatTimeMin = NA, pfvar = Sigma02.all, pfalpha = 0.05,  LR.always = T , FollowHMR = T,
@@ -296,32 +300,6 @@ str(Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" ,]) ;
 
 Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")] ;
 
-
-
-###############################################################################################################
-#                   Calculate flux of records with Warning "Data error" 
-#                   using manual option of the  HMR package
-###############################################################################################################
-
-Gas.Series.HMR.Error <- Gas.Series.HMR[Gas.Series.HMR$Series %in% Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")], ]
-
-str(Gas.Series.HMR.Error)
-
-write.table(x = Gas.Series.HMR.Error , sep = ";", dec = "." , 
-            
-            file = paste0(Gas,"_" , Year , "_Series_Error.csv"), row.names = F)  ;
-
-read.table(file = paste0(Gas,"_" , Year , "_Series_Error.csv"), header = T, sep = ";")
-
-
-Gas.HRM.Results.Error <- HMR(filename = paste0(Gas,"_" , Year , "_Series_Error.csv") , sep = ";" , dec = "." , SatPct = NA,
-                       SatTimeMin = NA, pfvar = Sigma02.all, pfalpha = 0.05,  LR.always = T , FollowHMR = T,
-                       IfNoValidHMR = 'LR', IfNoFlux = 'No flux',  IfNoSignal = 'No flux') ;
-
-str(Gas.HRM.Results)
-
-#series that need revision:
-#
 
 
 ###############################################################################################################
