@@ -68,10 +68,20 @@ setwd("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_P
 
 # Year = 2021
 
-Year = 2022
+# Year = 2022
 
 
-PeakArea.results <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults" , Year ,".csv" ) , header = T)
+PeakArea.results <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults" , Year ,".csv" ) , header = T) ;
+
+###############################################################################################################
+#                           
+#                              Checking for duplicated records
+#
+###############################################################################################################
+
+str(PeakArea.results)
+
+anyDuplicated(PeakArea.results, MARGIN = c(1,2))
 
 
 ###############################################################################################################
@@ -80,18 +90,8 @@ PeakArea.results <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledR
 #
 ###############################################################################################################
 
-str(PeakArea.results)
-
-unique(PeakArea.results$Sampling.Day)
-
-tail(unique(PeakArea.results$Sampling.Date))
 
 
-
-head(PeakArea.results)
-
-which(is.na(PeakArea.results))
-   
 # PeakArea.results$CH4<-as.double(PeakArea.results$CH4) ;
 # 
 # PeakArea.results$CO2<-as.double(PeakArea.results$CO2) ;
@@ -257,7 +257,9 @@ if(Year == 2021) {
     
   }
     
-    
+head(GC.standards)  
+
+tail(GC.standards)
   
 
 
