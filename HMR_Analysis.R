@@ -221,9 +221,13 @@ head(Gas.Series.HMR)
 
 tail(Gas.Series.HMR,30)
 
-unique(Gas.Series.HMR[,"Series"])
+dim(unique(Gas.Series.HMR))
 
 length(unique(Gas.Series.HMR[,"Series"]))
+
+which(duplicated(Gas.Series.HMR))
+
+Gas.Series.HMR[233:391,]
 
 
 

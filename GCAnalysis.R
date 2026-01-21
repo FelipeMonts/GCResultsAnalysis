@@ -81,8 +81,45 @@ PeakArea.results <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledR
 
 str(PeakArea.results)
 
+head(PeakArea.results)
+
 anyDuplicated(PeakArea.results, MARGIN = c(1,2))
 
+PeakArea.results[c(316:320) ,]
+
+PeakArea.results[PeakArea.results$CH4 == 4.048,]
+
+PeakArea.results[PeakArea.results$CH4 == 9.056,]
+
+PeakArea.results[PeakArea.results$CH4 == 10.521,]
+
+duplicated(PeakArea.results, MARGIN = c(1,2))
+
+################################## It seems that 2022 has some duplicates   ##################################
+
+which(duplicated(PeakArea.results, MARGIN = c(1,2)))
+
+PeakArea.results[c(316:320) ,]
+
+PeakArea.results[PeakArea.results$CH4 == 4.048,]
+
+PeakArea.results[PeakArea.results$CH4 == 9.056,]
+
+PeakArea.results[PeakArea.results$CH4 == 10.521,]
+
+duplicated(PeakArea.results, MARGIN = c(1,2))
+
+##################################  Remove duplicates  ######################################################
+
+PeakArea.results.1 <- PeakArea.results[!duplicated(PeakArea.results, MARGIN = c(1,2)),] ;
+
+str(PeakArea.results.1) 
+
+anyDuplicated(PeakArea.results.1, MARGIN = c(1,2))
+
+PeakArea.results <- PeakArea.results.1  ;
+
+str(PeakArea.results) 
 
 ###############################################################################################################
 #                           
@@ -255,8 +292,13 @@ if(Year == 2021) {
     GC.standards[GC.standards$Sample.Name == '0',c('CH4.ppm', 'CO2.ppm', 'N2O.ppm')] <- 1e-5 ;
     
     
-  }
-    
+}
+
+str(GC.standards)
+
+GC.standards
+
+
 head(GC.standards)  
 
 tail(GC.standards)
@@ -264,9 +306,13 @@ tail(GC.standards)
 
 
 
+###############################################################################################################
+#                           
+#                          Exploring the standards by date of analysis 
+#
+###############################################################################################################
 
 
-##### Exploring the standards by date of analysis Date Of Analysis
 
 GC.standards$ANAL.DATE<-as.factor(GC.standards$GC.Date)  ;
 
@@ -281,41 +327,88 @@ str(GC.standards)
 
 if (Year == 2021) {
   
+  ############################## CO2 Standards ############################################
+  
   plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  ])
   
+  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  ])
+  
   boxplot(CO2 ~ ANAL.DATE , data = GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  ]  )
+ 
+  hist(GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA", "CO2" ])
   
-  boxplot(CH4 ~ ANAL.DATE , data = GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  ]  )
-  
-  boxplot(N2O ~ ANAL.DATE , data = GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  ]  )
   
   plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "25PerSTDA" ,  ]) 
   
-  boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "25PerSTDA" ,  ]  )
+  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "25PerSTDA" ,  ] )
+  
+  hist(GC.standards[GC.standards$Factor.Name == "25PerSTDA" , "CO2" ])
+  
   
   plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ])
   
-  boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ]  )
+  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ]  )
   
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ])
+  hist(GC.standards[GC.standards$Factor.Name == "50PerSTD" , "CO2" ])
   
-  boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ]  )
   
   plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTD" ,  ])
   
-  boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "100PerSTD" ,  ]  )
+  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTD" ,  ]  )
+  
+  hist(GC.standards[GC.standards$Factor.Name == "100PerSTD" , "CO2" ])
+  
   
   plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTDA" ,  ]) 
   
-  boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "50PerSTDA" ,  ]  )
+  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTDA" ,  ]  )
+  
+  hist(GC.standards[GC.standards$Factor.Name == "50PerSTDA" , "CO2" ])
+  
   
   plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  ])
   
-  boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  ]  )
+  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  ]  )
   
-  boxplot(CH4 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  ]  )
+  hist(GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  "CO2"   ])
   
-  boxplot(N2O ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  ]  )
+  ############################## N2O Standards ############################################
+  
+  
+  plot(N2O ~ N2O.ppm, data = GC.standards[GC.standards$Factor.Name == "25PerSTDA" ,  ]) 
+  
+  boxplot(N2O ~ N2O.ppm, data = GC.standards[GC.standards$Factor.Name == "25PerSTDA" ,  ] )
+  
+  hist(GC.standards[GC.standards$Factor.Name == "25PerSTDA" , "CO2" ])
+  
+  
+  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ])
+  
+  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ]  )
+  
+  hist(GC.standards[GC.standards$Factor.Name == "50PerSTD" , "CO2" ])
+  
+  
+  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTD" ,  ])
+  
+  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTD" ,  ]  )
+  
+  hist(GC.standards[GC.standards$Factor.Name == "100PerSTD" , "CO2" ])
+  
+  
+  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTDA" ,  ]) 
+  
+  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTDA" ,  ]  )
+  
+  hist(GC.standards[GC.standards$Factor.Name == "50PerSTDA" , "CO2" ])
+  
+  
+  
+  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  ])
+  
+  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  ]  )
+  
+  hist(GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  "CO2"   ])
   
   
   xyplot(N2O~N2O.ppm, data=GC.standards, type="p",main="N2O")
@@ -363,6 +456,63 @@ if (Year == 2021) {
   
   
 }
+
+###############################################################################################################
+#                           
+#                          Exploring the standards standard level "Factor.Name"
+#
+###############################################################################################################
+
+GC.standards[GC.standards$Factor.Name == '100PerSTD', ]
+
+GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]
+
+
+
+if (Year == 2021) {
+  
+  ################################## Full standard 100% no dilution ##########################################
+  
+  plot(CO2 ~ CO2.ppm, data = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]) ;
+  
+  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CO2" ]) ;
+  
+  hist( x = GC.standards[GC.standards$Factor.Name == "100PerSTD", "CO2" ]) ; 
+  
+  hist( x = GC.standards[GC.standards$Factor.Name == "100PerSTDA", "CO2" ]) ; 
+  
+  boxplot(x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CO2" ]);
+  
+  boxplot(x =  GC.standards[GC.standards$Factor.Name == "100PerSTD", "CO2" ]) ;
+  
+  boxplot(x =  GC.standards[GC.standards$Factor.Name == "100PerSTDA", "CO2" ]) ;
+  
+  GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), 
+               
+               c("Sample.Name" , "CH4" , "CO2" , "N2O", "Sampling.Date" , 
+                 
+                 "GC.Date" , "CH4.ppm" , "CO2.ppm" , "N2O.ppm")];
+  
+  
+  plot(N2O ~ N2O.ppm, data = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]) ;
+  
+  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "N2O" ]) ;
+  
+  hist( x = GC.standards[GC.standards$Factor.Name == "100PerSTD", "N2O" ]) ; 
+  
+  hist( x = GC.standards[GC.standards$Factor.Name == "100PerSTDA", "N2O"]) ;
+  
+  
+  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTD" , ], col = "red")
+  
+  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" , ] ,col = "blue" )
+  
+  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CO2" ])
+  
+  boxplot(CO2 ~ ANAL.DATE , data = GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  ]  )
+
+
+
 
 
 
