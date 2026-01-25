@@ -503,16 +503,58 @@ if (Year == 2021) {
   hist( x = GC.standards[GC.standards$Factor.Name == "100PerSTDA", "N2O"]) ;
   
   
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTD" , ], col = "red")
+  plot(CH4 ~ CH4.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTD" , ], col = "red")
   
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" , ] ,col = "blue" )
+  plot(CH4 ~ CH4.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" , ] ,col = "blue" )
   
-  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CO2" ])
+  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CH4" ])
   
-  boxplot(CO2 ~ ANAL.DATE , data = GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  ]  )
+ 
 
 
 
+}  else { ###### 2022 ######
+  
+  
+  plot(CO2 ~ CO2.ppm, data = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]) ;
+  
+  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CO2" ]) ;
+  
+  hist( x = GC.standards[GC.standards$Factor.Name == "L100", "CO2" ]) ; 
+  
+  hist( x = GC.standards[GC.standards$Factor.Name == "H100", "CO2" ]) ; 
+  
+  boxplot(x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CO2" ]);
+  
+  boxplot(x =  GC.standards[GC.standards$Factor.Name == "L100", "CO2" ]) ;
+  
+  boxplot(x =  GC.standards[GC.standards$Factor.Name == "H100", "CO2" ]) ;
+  
+  # GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), 
+  #              
+  #              c("Sample.Name" , "CH4" , "CO2" , "N2O", "Sampling.Date" , 
+  #                
+  #                "GC.Date" , "CH4.ppm" , "CO2.ppm" , "N2O.ppm")];
+  # 
+  
+  plot(N2O ~ N2O.ppm, data = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]) ;
+  
+  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "N2O" ]) ;
+  
+  hist( x = GC.standards[GC.standards$Factor.Name == "L100", "N2O" ]) ; 
+  
+  hist( x = GC.standards[GC.standards$Factor.Name == "H100", "N2O"]) ;
+  
+  
+  plot(CH4 ~ CH4.ppm, data = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]) ;
+  
+  plot(CH4 ~ CH4.ppm, data = GC.standards[GC.standards$Factor.Name == "L100" , ], col = "red")
+  
+  plot(CH4 ~ CH4.ppm, data = GC.standards[GC.standards$Factor.Name == "H100" , ] ,col = "blue" )
+  
+  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CH4" ])
+  
+}
 
 
 
@@ -815,19 +857,19 @@ xyplot(CH4.ppm ~ CH4 , data=GC.standards,
 
 plot(CO2.ppm ~ CO2 , data = GC.standards)
 
-##### There is a point with 2500 ppm that has GC CO2 area greater than 2500
-
-GC.standards[GC.standards$CO2 >= 25000,]
-
-GC.standards.2 <- GC.standards[GC.standards$CO2<= 25000,] ;
-
-# Sample.Name Position Vial     CH4      CO2      N2O                      File Sampling.Day Sampling.Date    GC.Date
-# 1768    50PerSTD        5    1 583.846 25807.62 44608.26 20210720B3B4peakareas.pdf     20210720    2021-07-20 2021-08-06
-# AnalysisName Factor.Name CH4.ppm CO2.ppm N2O.ppm  ANAL.DATE
-# 1768 20210720B3B4peakareas.pdf    50PerSTD      25    2500      25 2021-08-06
-# This point appears in all of the gases as an outlier, therefore it is bets to remove it.
-
-GC.standards <- GC.standards.2 ;
+# ##### There is a point with 2500 ppm that has GC CO2 area greater than 2500
+# 
+# GC.standards[GC.standards$CO2 >= 25000,]
+# 
+# GC.standards.2 <- GC.standards[GC.standards$CO2<= 25000,] ;
+# 
+# # Sample.Name Position Vial     CH4      CO2      N2O                      File Sampling.Day Sampling.Date    GC.Date
+# # 1768    50PerSTD        5    1 583.846 25807.62 44608.26 20210720B3B4peakareas.pdf     20210720    2021-07-20 2021-08-06
+# # AnalysisName Factor.Name CH4.ppm CO2.ppm N2O.ppm  ANAL.DATE
+# # 1768 20210720B3B4peakareas.pdf    50PerSTD      25    2500      25 2021-08-06
+# # This point appears in all of the gases as an outlier, therefore it is bets to remove it.
+# 
+# GC.standards <- GC.standards.2 ;
 
 #################### Regression without forcing the intercept through 0 ####################
 
@@ -854,9 +896,9 @@ GC.standards <- GC.standards.2 ;
 # Multiple R-squared:  0.8661,	Adjusted R-squared:  0.8659 
 # F-statistic:  3874 on 1 and 599 DF,  p-value: < 2.2e-16
 
-#################### Regression forcing the intercept through 0 ####################
+#################### Regression without forcing the intercept through 0 ####################
 
-CO2.Calibration <- lm(CO2.ppm ~ CO2 + 0 , data = GC.standards) ;
+CO2.Calibration <- lm(CO2.ppm ~ CO2 , data = GC.standards) ;
 
 summary(CO2.Calibration)
 
