@@ -256,7 +256,10 @@ str(GC.standards)
 #
 ###############################################################################################################  
   
+str(GC.standards)
+
   ####### 0 STD   #######
+
   
   plot(CO2 ~ CO2.ppm, 
        
@@ -334,7 +337,13 @@ str(GC.standards)
        
        labels = GC.standards[GC.standards$Factor.Name == "25PerSTD" | GC.standards$Factor.Name == "25PerSTDA" , "ANAL.DATE" ],
        
-       srt= 90, cex = 0.5, pos = 3, offset = 2) ;    
+       srt= 90, cex = 0.5, pos = 3, offset = 2) ;   
+  
+  text(GC.standards[GC.standards$Factor.Name == "25PerSTD" | GC.standards$Factor.Name == "25PerSTDA" , "CO2" ],
+       
+       labels = GC.standards[GC.standards$Factor.Name == "25PerSTD" | GC.standards$Factor.Name == "25PerSTDA" , "Sample.Name" ],
+       
+       srt= 90, cex = 0.5, pos = 3, offset = 2) ; 
   
   grid(nx = 5, ny = 10 , col = "red")
   
@@ -403,6 +412,13 @@ str(GC.standards)
        srt= 90, cex = 0.5, pos = 3, offset = 2) ;
   
   grid(nx = 5, ny = 10 , col = "red")
+  
+  
+  text(GC.standards[GC.standards$Factor.Name == "50PerSTD" | GC.standards$Factor.Name == "50PerSTDA" , "CO2" ],
+       
+       labels = GC.standards[GC.standards$Factor.Name == "50PerSTD" | GC.standards$Factor.Name == "50PerSTDA" , "Sample.Name" ],
+       
+       srt= 90, cex = 0.5, pos = 3, offset = 2) ;
  
   
   ############  50% STANDARD < 6000 ####################
@@ -428,6 +444,8 @@ str(GC.standards)
        pos = 4, offset = 2);
   
   grid(nx = 5, ny = 10 , col = "red")
+  
+  
   
   
   
