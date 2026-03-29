@@ -105,14 +105,6 @@ str(PeakArea.results)
 ###############################################################################################################
 
 
-
-# PeakArea.results$CH4<-as.double(PeakArea.results$CH4) ;
-# 
-# PeakArea.results$CO2<-as.double(PeakArea.results$CO2) ;
-# 
-# PeakArea.results$N2O<-as.double(PeakArea.results$N2O) ;
-
-
 # getting the GC samples with standards together
 
 GC.standards <- PeakArea.results[grep( pattern = "B" , x = PeakArea.results$Sample.Name, invert = T) ,] ;
@@ -124,29 +116,15 @@ which(is.na(GC.standards))
 
 ###############################################################################################################
 #                           
-#                            Standards Data dispersion and variability 
+#                            Checking Standard Values manually because 
+#                The Standards Names PerSTDA and PerSTD are not consistent through out 2021, 
+#                                therefore need to be selected manually!!!!!!
 #
 ###############################################################################################################
 
 
 str(GC.standards)
 
-### group the data by the different standards
-
-GC.standards$Factor.Name <- as.factor(GC.standards$Sample.Name) ;
-
-str(GC.standards$Sample.Name)
-
-str(GC.standards$Factor.Name)
-
-
-GC.standards$CH4.ppm <- NaN
-
-GC.standards$CO2.ppm <- NaN
-
-GC.standards$N2O.ppm <- NaN
-
-levels(GC.standards$Factor.Name)
 
 ##############################################################################################################
 #                           
@@ -154,81 +132,300 @@ levels(GC.standards$Factor.Name)
 #
 ###############################################################################################################
 
+# 
+# GC.standards[GC.standards$Sample.Name == "100PerSTDA",c('CH4.ppm')] <- 5 ;
+# GC.standards[GC.standards$Sample.Name == "100PerSTDA",c('CO2.ppm')] <- 500 ;
+# GC.standards[GC.standards$Sample.Name == "100PerSTDA",c('N2O.ppm')] <- 1 ;
+
 head(GC.standards);
 
-  
-# Levels Names for 2021
-  
-# [1] "0PerSTD"    "0PerSTDA"   "100PerSTD"  "100PerSTDA" "25PerSTD"   "25PerSTDA"  "50PerSTD"   "50PerSTDA"  "75PerSTD"  
-# [10] "75PerSTDA"
-# CH4	CO2	N2O
-# 0perSTD	ppm 	uL/Lgas	0	0	0
-# 25perSTDA	ppm 	uL/Lgas	1.25	125	0.25
-# 50perSTDA	ppm 	uL/Lgas	2.5	250	0.5
-# 75perSTDA	ppm 	uL/Lgas	3.75	375	0.75
-# 100perSTDA	ppm 	uL/Lgas	5	500	1
-# 25perSTD	ppm  uL/Lgas 12.5 1250 1.25
-# 50PerSTD	ppm 	uL/Lgas	25	2500	25
-# 75perSTD	ppm 	uL/Lgas	37.5	3750	37.5
-# 100PerSTD	ppm 	uL/Lgas	50	5000	50
-  
-GC.standards[GC.standards$Sample.Name == "100PerSTDA",c('CH4.ppm')] <- 5 ;
-GC.standards[GC.standards$Sample.Name == "100PerSTDA",c('CO2.ppm')] <- 500 ;
-GC.standards[GC.standards$Sample.Name == "100PerSTDA",c('N2O.ppm')] <- 1 ;
-  
-  
-GC.standards[GC.standards$Sample.Name == '100PerSTD',c('CH4.ppm')] <- 50 ;
-GC.standards[GC.standards$Sample.Name == '100PerSTD',c('CO2.ppm')] <- 5000 ;
-GC.standards[GC.standards$Sample.Name == '100PerSTD',c('N2O.ppm')] <- 50 ;    
-  
-  
-GC.standards[GC.standards$Sample.Name == "50PerSTDA",c('CH4.ppm')] <- 2.5  ;
-GC.standards[GC.standards$Sample.Name == "50PerSTDA",c('CO2.ppm')] <- 250  ;
-GC.standards[GC.standards$Sample.Name == "50PerSTDA",c('N2O.ppm')] <- 0.5  ;
-  
-  
-GC.standards[GC.standards$Sample.Name == '50PerSTD',c('CH4.ppm')] <- 25 ;
-GC.standards[GC.standards$Sample.Name == '50PerSTD',c('CO2.ppm')] <- 2500 ;
-GC.standards[GC.standards$Sample.Name == '50PerSTD',c('N2O.ppm')] <- 25;
- 
-GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('CH4.ppm')] <- 3.75 ;
-GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('CO2.ppm')] <- 375  ;
-GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('N2O.ppm')] <- 0.75 ; 
-  
-GC.standards[GC.standards$Sample.Name == '75PerSTD',c('CH4.ppm')] <- 37.5 ;
-GC.standards[GC.standards$Sample.Name == '75PerSTD',c('CO2.ppm')] <- 3750  ;
-GC.standards[GC.standards$Sample.Name == '75PerSTD',c('N2O.ppm')] <- 37.5 ; 
-   
-GC.standards[GC.standards$Sample.Name == "25PerSTDA",c('CH4.ppm')] <- 1.25 ;
-GC.standards[GC.standards$Sample.Name == "25PerSTDA",c('CO2.ppm')] <- 125  ;
-GC.standards[GC.standards$Sample.Name == "25PerSTDA",c('N2O.ppm')] <- 0.25  ;
-  
-GC.standards[GC.standards$Sample.Name == "25PerSTD",c('CH4.ppm')] <- 12.5 ;
-GC.standards[GC.standards$Sample.Name == "25PerSTD",c('CO2.ppm')] <- 1250  ;
-GC.standards[GC.standards$Sample.Name == "25PerSTD",c('N2O.ppm')] <- 0.25  ;
-  
-GC.standards[GC.standards$Sample.Name == "0PerSTD" |  GC.standards$Sample.Name == "0PerSTDA" ,
-               
-               c('CH4.ppm', 'CO2.ppm', 'N2O.ppm')] <- 1e-5 
-  
-GC.standards[which(is.na(GC.standards[,c('CH4.ppm')])), ]
-                           
-GC.standards[which(is.na(GC.standards[,c('CO2.ppm')])), ]  
-  
-GC.standards[which(is.na(GC.standards[,c('N2O.ppm')])), c('Sample.Name')]  
-                          
- 
+GC.standards$CH4.ppm <- NaN
 
-str(GC.standards)
+GC.standards$CO2.ppm <- NaN
 
-GC.standards
+GC.standards$N2O.ppm <- NaN
 
 
-head(GC.standards)  
 
-tail(GC.standards)
+#################################    2021-05-28     ############################################
+
+GC.standards[GC.standards$Sampling.Date == "2021-05-28",]
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-05-28" & GC.standards$Sample.Name ==  "25PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(1.25 , 125 , 0.25 ) ;
+
+GC.standards[GC.standards$Sampling.Date == "2021-05-28" & GC.standards$Sample.Name ==  "50PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(2.5 , 250 , 0.5 ) ;
+
   
+GC.standards[GC.standards$Sampling.Date == "2021-05-28" & GC.standards$Sample.Name ==  "75PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(3.75 , 375 , 0.75 ) ;
 
+
+GC.standards[GC.standards$Sampling.Date == "2021-05-28" & GC.standards$Sample.Name ==  "100PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(5 , 500 , 1 ) ;
+
+GC.standards[GC.standards$Sampling.Date == "2021-05-28",]
+
+
+#################################    2021-06-01  Missing   ############################################
+
+#################################    2021-06-04     ############################################
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-04",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-04", "Sample.Name"]
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-04" & GC.standards$Sample.Name ==  "25PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(1.25 , 125 , 0.25 ), each = 2)  ; 
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-04" & GC.standards$Sample.Name ==  "50PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(2.5 , 250 , 0.5), each = 2 ) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-04" & GC.standards$Sample.Name ==  "75PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(3.75 , 375 , 0.75 ), each = 2) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-04" & GC.standards$Sample.Name ==  "100PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(5 , 500 , 1 ) , each = 2) ;
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-04",]
+
+
+#################################    2021-06-14     ############################################
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-14",]
+
+#### rows with file 20210614B1B2peakareasMERGED and 20210614B1B2summaryreport1 are duplicated
+#### removing rows 20210614B1B2summaryreport1 
+
+GC.standards[!GC.standards$File == "20210614B1B2summaryreport1.pdf" ,]
+
+GC.standards <- GC.standards[!GC.standards$File == "20210614B1B2summaryreport1.pdf" ,]
+
+GC.standards[GC.standards$File == "20210614B1B2summaryreport1.pdf" ,]
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-14",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-14", "Sample.Name"]
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-14" & GC.standards$Sample.Name ==  "25PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(1.25 , 125 , 0.25 ), each = 3)  ; 
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-14" & GC.standards$Sample.Name ==  "50PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(2.5 , 250 , 0.5), each = 3 ) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-14" & GC.standards$Sample.Name ==  "75PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(3.75 , 375 , 0.75 ), each = 3) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-14" & GC.standards$Sample.Name ==  "100PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(5 , 500 , 1 ) , each = 3) ;
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-04",]
+
+
+#################################    2021-06-16     ############################################
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-16",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-16" & GC.standards$Sample.Name ==  "25PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(1.25 , 125 , 0.25 ), each = 2)  ; 
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-16" & GC.standards$Sample.Name ==  "50PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(2.5 , 250 , 0.5), each = 2 ) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-16" & GC.standards$Sample.Name ==  "75PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(3.75 , 375 , 0.75 ), each = 2) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-16" & GC.standards$Sample.Name ==  "100PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(5 , 500 , 1 ) , each = 2) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-16",]
+
+
+#################################    2021-06-21     ############################################
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-21",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-21" & GC.standards$Sample.Name ==  "25PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(1.25 , 125 , 0.25 ), each = 2)  ; 
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-21" & GC.standards$Sample.Name ==  "50PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(2.5 , 250 , 0.5), each = 2 ) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-21" & GC.standards$Sample.Name ==  "75PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(3.75 , 375 , 0.75 ), each = 2) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-21" & GC.standards$Sample.Name ==  "100PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(5 , 500 , 1 ) , each = 2) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-21",]
+
+
+#################################    2021-06-23     ############################################
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-23",]
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-23" & GC.standards$Sample.Name ==  "25PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(1.25 , 125 , 0.25 ), each = 2)  ; 
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-23" & GC.standards$Sample.Name ==  "50PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(2.5 , 250 , 0.5), each = 2 ) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-23" & GC.standards$Sample.Name ==  "75PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(3.75 , 375 , 0.75 ), each = 2) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-23" & GC.standards$Sample.Name ==  "100PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(5 , 500 , 1 ) , each = 2) ;
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-23",]
+
+
+
+#################################    2021-06-29     ############################################
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-29",]
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-29" & GC.standards$Sample.Name ==  "25PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(1.25 , 125 , 0.25 ), each = 2)  ; 
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-29" & GC.standards$Sample.Name ==  "50PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(2.5 , 250 , 0.5), each = 2 ) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-29" & GC.standards$Sample.Name ==  "75PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(3.75 , 375 , 0.75 ), each = 2) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-29" & GC.standards$Sample.Name ==  "100PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(5 , 500 , 1 ) , each = 2) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-06-29",]
+
+
+#################################    2021-07-02     ############################################
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "25PerSTD",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "25PerSTD", 
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(1.25 , 125 , 0.25 )  ; 
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "50PerSTD",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "50PerSTD",
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(2.5 , 25 , 25 , 250 , 2500, 2500,  0.5, 25, 25) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "75PerSTD",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "75PerSTD",
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(3.75 , 375 ,  0.75) ;
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "100PerSTD",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "100PerSTD",
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(5, 50, 50, 500 , 5000, 5000, 1, 50 , 50);
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "25PerSTDA",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "25PerSTDA",
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(1.25 , 125 , 0.25 ), each = 2) 
+             
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "50PerSTDA",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "50PerSTDA",
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(2.5 , 250 , 0.5), each = 2 ) ;
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "75PerSTDA",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "75PerSTDA",
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(3.75 , 375 , 0.75 ), each = 2) ;
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "100PerSTDA",]
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02" & GC.standards$Sample.Name ==  "100PerSTDA",
+             
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(5 , 500 , 1 ) , each = 2) ;
+
+
+
+GC.standards[GC.standards$Sampling.Date == "2021-07-02",]
+             
+
+
+
+
+
+
+
+
+
+
+             
 
 
 ###############################################################################################################
