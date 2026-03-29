@@ -472,6 +472,10 @@ GC.standards[,c("Sampling.Date" , "GC.Date")]
 ###############    2021-07-07  Missing 20210702b3b407b2peakareas.pdf ????   ####################
 
 
+
+
+
+
 #################################    2021-07-15     ############################################
 
 
@@ -1076,6 +1080,10 @@ str(GC.standards)
 ###############################################################################################################  
   
 str(GC.standards)
+
+GC.standards$Factor.Name <-as.factor(GC.standards$Sample.Name) ;
+
+levels(GC.standards$Factor.Name)
 
   ####### 0 STD   #######
 
