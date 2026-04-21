@@ -172,6 +172,103 @@ GC.standards[GC.standards$Sampling.Date == "2021-05-28" & GC.standards$Sample.Na
 
 GC.standards[GC.standards$Sampling.Date == "2021-05-28",]
 
+####### Plot Calibration line  for  CO2 #######
+
+plot(CO2.ppm ~ CO2, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == "2021-05-28",],
+     
+     main = "2021-05-28",
+     
+     col = "blue",
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "CO2.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == "2021-05-28" , "Sample.Name"],
+      
+      pos = 3);
+
+
+
+###### Calculate calibration line CO2 #######
+
+CAL.CO2.2021_05_28 <- lm(CO2.ppm ~ CO2,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2021-05-28",],
+                         
+                         )
+
+
+     
+ summary(CAL.CO2.2021_05_28) 
+ 
+ abline(a = CAL.CO2.2021_05_28$coefficients[1] ,
+        
+        b = CAL.CO2.2021_05_28$coefficients[2] , 
+        
+        col = "red") ;
+ 
+ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("CO2")]),
+       
+       y = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("CO2.ppm")]),
+       
+       labels = paste(round(CAL.CO2.2021_05_28$coefficients[1],3), round(CAL.CO2.2021_05_28$coefficients[2],3), sep = "+")
+       
+ )
+
+ ####### Plot Calibration line  for N2O #######
+ 
+ plot(N2O.ppm ~ N2O, 
+      
+      data = GC.standards[GC.standards$Sampling.Date == "2021-05-28",],
+      
+      main = "2021-05-28",
+      
+      col = "blue",
+      
+      type = "p")  ;
+ 
+ text( x = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "N2O"],
+       
+       y = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "N2O.ppm"],
+       
+       labels = GC.standards[GC.standards$Sampling.Date == "2021-05-28" , "Sample.Name"],
+       
+       pos = 3);
+ 
+ 
+ 
+ ###### Calculate calibration line N2O #######
+ 
+ CAL.N2O.2021_05_28 <- lm(N2O.ppm ~ N2O,
+                          
+                          data = GC.standards[GC.standards$Sampling.Date == "2021-05-28",],
+                          
+ )
+ 
+ 
+ 
+ summary(CAL.N2O.2021_05_28) 
+ 
+ abline(a = CAL.N2O.2021_05_28$coefficients[1] ,
+        
+        b = CAL.N2O.2021_05_28$coefficients[2] , 
+        
+        col = "red") ;
+ 
+ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("N2O")]),
+       
+       y = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("N2O.ppm")]),
+       
+       labels = paste(round(CAL.N2O.2021_05_28$coefficients[1],3), round(CAL.N2O.2021_05_28$coefficients[2],3), sep = "+")
+       
+ )
+ 
+
 
 #################################    2021-06-01  Missing   ############################################
 
@@ -203,6 +300,127 @@ GC.standards[GC.standards$Sampling.Date == "2021-06-04" & GC.standards$Sample.Na
 
 GC.standards[GC.standards$Sampling.Date == "2021-06-04",]
 
+
+####### Plot Calibration line  CO2 #######
+
+plot(CO2.ppm ~ CO2, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == "2021-06-04",],
+     
+     main = "2021-06-04",
+     
+     col = "blue",
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2021-06-04", "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2021-06-04", "CO2.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == "2021-06-04" , "Sample.Name"],
+      
+      pos = 3);
+
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2021-06-04", "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2021-06-04", "CO2.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2021-06-04" ,]),
+      
+      pos = 1);
+
+
+GC.standards[rownames(GC.standards) == "118", c("CH4.ppm" , "CO2.ppm" , "N2O.ppm")] <- c(1.25,     125,    0.25) ;
+
+###### Calculate calibration line CO2 #######
+
+CAL.CO2.2021_06_04 <- lm(CO2.ppm ~ CO2,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2021-06-04",])
+
+
+
+summary(CAL.CO2.2021_06_04) 
+
+abline(a = CAL.CO2.2021_06_04$coefficients[1] ,
+       
+       b = CAL.CO2.2021_06_04$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-06-04", c("CO2")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2021-06-04", c("CO2.ppm")]),
+      
+      labels = paste(round(CAL.CO2.2021_06_04$coefficients[1],3), round(CAL.CO2.2021_06_04$coefficients[2],3), sep = "+"))
+      
+
+
+####### Plot Calibration line  N2O #######
+
+plot(N2O.ppm ~ N2O, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == "2021-06-04",],
+     
+     main = "2021-06-04",
+     
+     col = "blue",
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2021-06-04", "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2021-06-04", "N2O.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == "2021-06-04" , "Sample.Name"],
+      
+      pos = 3);
+
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2021-06-04", "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2021-06-04", "N2O.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2021-06-04" ,]),
+      
+      pos = 1);
+
+
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "118", ] ;
+
+###### Calculate calibration line #######
+
+CAL.N2O.2021_06_04 <- lm(N2O.ppm ~ N2O,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2021-06-04",])
+
+
+
+summary(CAL.N2O.2021_06_04) 
+
+abline(a = CAL.N2O.2021_06_04$coefficients[1] ,
+       
+       b = CAL.N2O.2021_06_04$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-06-04", c("N2O")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2021-06-04", c("N2O.ppm")]),
+      
+      labels = paste(round(CAL.N2O.2021_06_04$coefficients[1],3), round(CAL.N2O.2021_06_04$coefficients[2],3), sep = "+"))
+
+##### Remove outliers #######
+
+GC.standards[rownames(GC.standards) == "118", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "118", ] ;
+
+GC.standards[rownames(GC.standards) == "87", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "87", ] ;
 
 #################################    2021-06-14     ############################################
 
