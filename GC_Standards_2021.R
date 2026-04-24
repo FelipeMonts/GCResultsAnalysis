@@ -1460,9 +1460,9 @@ plot(CO2.ppm ~ CO2,
      
      col = "blue",
      
-     #ylim = c(0,600),
+     #ylim = c(0,1000),
      
-     #xlim = c(0,2500),
+     #xlim = c(0,2000),
      
      type = "p")  ; 
 
@@ -1520,6 +1520,10 @@ plot(N2O.ppm ~ N2O,
      
      col = "blue",
      
+     xlim = c(0,600) ,
+     
+     ylim = c(0,2),
+     
      type = "p")  ;
 
 text( x = GC.standards[GC.standards$Sampling.Date == "2021-07-07", "N2O"],
@@ -1571,11 +1575,11 @@ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-07-07", c("N2O")
 
 GC.standards[rownames(GC.standards) == "1424", ]
 
-GC.standards <- GC.standards[!rownames(GC.standards) == "1424", ] ;
+# GC.standards <- GC.standards[!rownames(GC.standards) == "1424", ] ;
 
 GC.standards[rownames(GC.standards) == "1435", ]
 
-GC.standards <- GC.standards[!rownames(GC.standards) == "1435", ] ;
+# GC.standards <- GC.standards[!rownames(GC.standards) == "1435", ] ;
 
 
 
@@ -1646,9 +1650,9 @@ plot(CO2.ppm ~ CO2,
      
      col = "blue",
      
-     #ylim = c(0,600),
+     ylim = c(0,600),
      
-     #xlim = c(0,2500),
+     xlim = c(1000,2000),
      
      type = "p")  ; 
 
@@ -1692,7 +1696,7 @@ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-07-15", c("CO2")
       
       y = mean(GC.standards[GC.standards$Sampling.Date == "2021-07-15", c("CO2.ppm")]),
       
-      labels = paste(round(CAL.CO2.2021_07_07$coefficients[1],3), round(CAL.CO2.2021_07_07$coefficients[2],3), sep = "+"))
+      labels = paste(round(CAL.CO2.2021_07_15$coefficients[1],3), round(CAL.CO2.2021_07_15$coefficients[2],3), sep = "+"))
 
 
 
@@ -1707,6 +1711,10 @@ plot(N2O.ppm ~ N2O,
      main = "2021-07-15",
      
      col = "blue",
+     
+     xlim = c(0,600),
+     
+     ylim = c(0,2),
      
      type = "p")  ;
 
@@ -1823,6 +1831,194 @@ GC.standards[GC.standards$Sampling.Date == "2021-07-20" & GC.standards$Sample.Na
 
 
 GC.standards[GC.standards$Sampling.Date == "2021-07-20",]
+
+str(GC.standards[GC.standards$Sampling.Date == "2021-07-20",])
+
+
+####### Plot Calibration line  CO2 #######
+
+plot(CO2.ppm ~ CO2, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == "2021-07-20",],
+     
+     main = "2021-07-20",
+     
+     col = "blue",
+     
+    # ylim = c(0,600),
+     
+    # xlim = c(1000,2000),
+     
+     type = "p")  ; 
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2021-07-20", "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2021-07-20", "CO2.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == "2021-07-20" , "Sample.Name"],
+      
+      pos = 3);
+
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2021-07-20", "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2021-07-20", "CO2.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2021-07-20" ,]),
+      
+      pos = 1);
+
+
+
+
+###### Calculate calibration line CO2 #######
+
+CAL.CO2.2021_07_20 <- lm(CO2.ppm ~ CO2,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2021-07-20",])
+
+
+
+summary(CAL.CO2.2021_07_20) 
+
+abline(a = CAL.CO2.2021_07_20$coefficients[1] ,
+       
+       b = CAL.CO2.2021_07_20$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-07-20", c("CO2")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2021-07-20", c("CO2.ppm")]),
+      
+      labels = paste(round(CAL.CO2.2021_07_20$coefficients[1],3), round(CAL.CO2.2021_07_20$coefficients[2],3), sep = "+"))
+
+
+
+
+####### Plot Calibration line  N2O #######
+
+plot(N2O.ppm ~ N2O, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == "2021-07-20",],
+     
+     main = "2021-07-20",
+     
+     col = "blue",
+     
+     #xlim = c(0,600),
+     
+     #ylim = c(0,2),
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2021-07-20", "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2021-07-20", "N2O.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == "2021-07-20" , "Sample.Name"],
+      
+      pos = 3);
+
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2021-07-20", "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2021-07-20", "N2O.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2021-07-20" ,]),
+      
+      pos = 1);
+
+
+
+
+###### Calculate calibration line  N2O #######
+
+CAL.N2O.2021_07_20 <- lm(N2O.ppm ~ N2O,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2021-07-20",])
+
+
+
+summary(CAL.N2O.2021_07_20) 
+
+abline(a = CAL.N2O.2021_07_20$coefficients[1] ,
+       
+       b = CAL.N2O.2021_07_20$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-07-20", c("N2O")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2021-07-20", c("N2O.ppm")]),
+      
+      labels = paste(round(CAL.N2O.2021_07_20$coefficients[1],3), round(CAL.N2O.2021_07_20$coefficients[2],3), sep = "+"))
+
+
+
+# there is a problem with  50PerSTD and 100PerSTD ?? #
+
+#       Sample.Name Position Vial     CH4      CO2      N2O                      File Sampling.Day Sampling.Date    GC.Date
+# 1682    50PerSTD        5    1 112.476  4034.716  4870.992 20210720B1B2peakareas.pdf     20210720    2021-07-20 2021-08-06
+# 1693   100PerSTD        6    1  15.614  2075.896   373.643 20210720B1B2peakareas.pdf     20210720    2021-07-20 2021-08-06
+# 1768    50PerSTD        5    1 583.846 25807.623 44608.263 20210720B3B4peakareas.pdf     20210720    2021-07-20 2021-08-06
+# 1779   100PerSTD        6    1 329.127 14744.544 24922.562 20210720B3B4peakareas.pdf     20210720    2021-07-20 2021-08-06
+# 
+#       AnalysisName CH4.ppm CO2.ppm N2O.ppm
+# 
+# 1682 20210720B1B2peakareas.pdf   25.00    2500   25.00
+# 1693 20210720B1B2peakareas.pdf   50.00    5000   50.00
+# 1768 20210720B3B4peakareas.pdf   25.00    2500   25.00
+# 1779 20210720B3B4peakareas.pdf   50.00    5000   50.00
+
+# 1682 and 1693 ;  1768 and 1779 seemed  switched; 50 is 100 and 100 is 50.
+# 
+
+
+# Switch records  1682, 1693,  1768 and 1779
+
+GC.standards[rownames(GC.standards) == "1682", ]
+
+GC.standards[rownames(GC.standards) == "1682", "Sample.Name"] <- "100PerSTD"
+
+GC.standards[rownames(GC.standards) == "1682", c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm") ] <- c( 50,  5000, 50 )
+
+
+GC.standards[rownames(GC.standards) == "1693", ]
+
+GC.standards[rownames(GC.standards) == "1693", "Sample.Name"] <- "50PerSTD"
+
+GC.standards[rownames(GC.standards) == "1682", c("CH4.ppm","CO2.ppm" ,"N2O.ppm") ] <- c( 25,  2500, 25 )
+
+
+GC.standards[rownames(GC.standards) == "1768", ]
+
+GC.standards[rownames(GC.standards) == "1768", c( "Sample.Name" )] <- "100PerSTD" 
+
+GC.standards[rownames(GC.standards) == "1768", c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm") ] <- c(50,  5000, 50 )
+
+
+GC.standards[rownames(GC.standards) == "1779", ]
+
+GC.standards[rownames(GC.standards) == "1779", c( "Sample.Name")] <- "50PerSTD"
+
+GC.standards[rownames(GC.standards) == "1779", c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm") ] <- c(25,  2500, 25)
+
+
+##### Remove 1693 and 1682 #####
+
+##### Remove outliers row names 1682 ,1693 #######
+
+GC.standards[rownames(GC.standards) == "1682", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "1682", ] ;
+
+GC.standards[rownames(GC.standards) == "1693", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "1693", ] ;
+
+
+
 
 
 
