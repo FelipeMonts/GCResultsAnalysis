@@ -34,6 +34,10 @@
 
 # install.packages("HMR",  dependencies = T)
 
+# install.packages("Viridis",  dependencies = T)
+
+# install.packages("paletteer", dependencies = T)
+
 ###############################################################################################################
 #                           load the libraries that are needed   
 ###############################################################################################################
@@ -50,7 +54,9 @@ library(quantreg)
 
 library(HMR)
 
+library(viridis)
 
+library(paletteer)
 
 ###############################################################################################################
 #                             Setting up working directory  Loading Packages and Setting up working directory                        
@@ -1377,7 +1383,12 @@ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-07-02", c("N2O")
 
 
 
-             
+##### Remove outliers row names 1376  #######
+
+GC.standards[rownames(GC.standards) == "1376", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "1376", ] ;
+
 
 
 #################################    2021-07-07     ############################################
@@ -1650,9 +1661,9 @@ plot(CO2.ppm ~ CO2,
      
      col = "blue",
      
-     ylim = c(0,600),
+    # ylim = c(0,600),
      
-     xlim = c(1000,2000),
+    # xlim = c(1000,2000),
      
      type = "p")  ; 
 
@@ -1712,9 +1723,9 @@ plot(N2O.ppm ~ N2O,
      
      col = "blue",
      
-     xlim = c(0,600),
+     #xlim = c(0,600),
      
-     ylim = c(0,2),
+     #ylim = c(0,2),
      
      type = "p")  ;
 
@@ -1762,21 +1773,15 @@ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-07-15", c("N2O")
 
 
 
-# there is a problem with  50PerSTD and 100PerSTD ?? #
+# there is a problem with  1477#
+
+##### Remove outliers row names 1477 #######
+
+GC.standards[rownames(GC.standards) == "1477", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "1477", ] ;
 
 
-#         Sample.Name Position Vial     CH4      CO2      N2O                      File Sampling.Day Sampling.Date    GC.Date
-# 1510    50PerSTD        5    1 100.784 4112.800 6124.135 20210715B1B2peakareas.pdf     20210715    2021-07-15 2021-08-01
-# 1521  100PerSTD        6    1  86.029 4418.585 5909.656 20210715B1B2peakareas.pdf     20210715    2021-07-15 2021-08-01
-
-# 1596    50PerSTD        5    1  91.759 3712.539 5320.536 20210715B3B4peakareas.pdf     20210715    2021-07-15 2021-08-01
-# 1607   100PerSTD        6    1  66.736 3858.772 4351.625 20210715B3B4peakareas.pdf     20210715    2021-07-15 2021-08-01
-
-#                    AnalysisName CH4.ppm CO2.ppm N2O.ppm
-# 1510 20210715B1B2peakareas.pdf   25.00    2500   25.00
-# 1521 20210715B1B2peakareas.pdf   50.00    5000   50.00
-# 1596 20210715B3B4peakareas.pdf   25.00    2500   25.00
-# 1607 20210715B3B4peakareas.pdf   50.00    5000   50.00
 
 
 
@@ -2820,7 +2825,7 @@ text( x = GC.standards[GC.standards$Sampling.Date == "2021-09-02", "CO2"],
       
       y = GC.standards[GC.standards$Sampling.Date == "2021-09-02", "CO2.ppm"],
       
-      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2021-09_02" ,]),
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2021-09-02",]),
       
       pos = 1);
 
@@ -2914,18 +2919,28 @@ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-09-02", c("N2O")
 
 ###### Record 2638 is an outlier ######
 
-##### Remove outlier row name 2638 #######
+##### Remove outlier row name 2638, 2552, 2541, 2530, 2605 #######
 
 GC.standards[rownames(GC.standards) == "2638", ]
 
 GC.standards <- GC.standards[!rownames(GC.standards) == "2638", ] ;
 
+GC.standards[rownames(GC.standards) == "2552", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "2552", ] ;
+
+GC.standards[rownames(GC.standards) == "2541", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "2541", ] ;
+
+GC.standards[rownames(GC.standards) == "2530", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "2530", ] ;
 
 
+GC.standards[rownames(GC.standards) == "2605", ]
 
-
-
-
+GC.standards <- GC.standards[!rownames(GC.standards) == "2605", ] ;
 
 #################################    2021-09-17     ############################################
 
@@ -3552,32 +3567,283 @@ any(is.na(GC.standards$CH4.ppm))
 
 
 
-GC.standards$ANAL.DATE<-as.factor(GC.standards$GC.Date)  ;
-
-xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data=GC.standards, type="b", main="CO2", auto.key = T)
-
-xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Position , data=GC.standards, type="p",main="CO2", auto.key = T)
-
-simpleKey(text = GC.standards$Position )
-
-
-str(GC.standards)
-
 ###############################################################################################################
 #                           
 #                                            CO2   Standards
 #
 ###############################################################################################################  
-  
 
-  
+GC.standards$ANAL.DATE<-as.factor(GC.standards$GC.Date)  ;
+
+xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards, 
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       color.palette = paletteer_d("ggsci::default_ucscgb"),
+       
+       key = simpleKey(
+         
+         text = levels(GC.standards$ANAL.DATE),
+          
+         points = TRUE,
+         
+         pch = 16,
+         
+         col = paletteer_d("ggsci::default_ucscgb") ,
+         
+         space = "right"
+         
+         ),
+       
+       panel  = function(x, y,...) {
+         
+         panel.xyplot(x, y,...)
+         
+         panel.text(x,y,
+                    
+                    labels = rownames(GC.standards))
+         
+         
+       })
+       
+ 
+GC.standards[rownames(GC.standards) == "2605", ]  # 2021-09-02
+
+GC.standards[rownames(GC.standards) == "2530", ]  # 2021-09-02
+
+GC.standards[rownames(GC.standards) == "2616", ]  # 2021-09-20
+
+GC.standards[rownames(GC.standards) == "2541", ]  # 2021-09-20
+
+
+
+GC.standards[rownames(GC.standards) == "1435", ]  # 2021-07-02 GC.Date 2021-08-01
+
+GC.standards[rownames(GC.standards) == "1310", ]  # 2021-07-02 GC.Date 2021-08-01
+
+GC.standards[rownames(GC.standards) == "2810", ] # 2021-09-17  GC.Date 2021-09-22
+
+GC.standards[rownames(GC.standards) == "2799", ] # 2021-09-17 GC.Date 2021-09-22
+
+GC.standards[rownames(GC.standards) == "2724", ] # 2021-09-17 GC.Date 2021-09-22
+
+GC.standards[rownames(GC.standards) == "2713", ] # 2021-09-17 GC.Date 2021-09-22
+ 
+ 
+###### with out  2021-09-02   ########
+
+xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards[!GC.standards$GC.Date == "2021-09-02",], 
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       color.palette = paletteer_d("ggsci::default_ucscgb"),
+       
+       key = simpleKey(
+         
+         text = levels(GC.standards[GC.standards$GC.Date != "2021-09-02", "ANAL.DATE"]),
+         
+         points = TRUE,
+         
+         pch = 16,
+         
+         col = paletteer_d("ggsci::default_ucscgb") ,
+         
+         space = "right"
+         
+       ),
+       
+       panel  = function(x, y,...) {
+         
+         panel.xyplot(x, y,...)
+         
+         panel.text(x,y,
+                    
+                    labels = rownames(GC.standards[GC.standards$GC.Date != "2021-09-02",]))
+         
+         
+       })
+
+
+
+###### with out  2021-08-01   ########
+
+xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards[!GC.standards$GC.Date == "2021-08-01",], 
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       color.palette = paletteer_d("ggsci::default_ucscgb"),
+       
+       key = simpleKey(
+         
+         text = levels(GC.standards[GC.standards$GC.Date != "2021-08-01", "ANAL.DATE"]),
+         
+         points = TRUE,
+         
+         pch = 16,
+         
+         col = paletteer_d("ggsci::default_ucscgb") ,
+         
+         space = "right"
+         
+       ),
+       
+       panel  = function(x, y,...) {
+         
+         panel.xyplot(x, y,...)
+         
+         panel.text(x,y,
+                    
+                    labels = rownames(GC.standards[GC.standards$GC.Date != "2021-08-01",]))
+         
+         
+       })
+
+
+
+###### with out  2021-09-22   ########
+
+xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards[!GC.standards$GC.Date == "2021-09-22",], 
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       color.palette = paletteer_d("ggsci::default_ucscgb"),
+       
+       key = simpleKey(
+         
+         text = levels(GC.standards[GC.standards$GC.Date != "2021-09-22", "ANAL.DATE"]),
+         
+         points = TRUE,
+         
+         pch = 16,
+         
+         col = paletteer_d("ggsci::default_ucscgb") ,
+         
+         space = "right"
+         
+       ),
+       
+       panel  = function(x, y,...) {
+         
+         panel.xyplot(x, y,...)
+         
+         panel.text(x,y,
+                    
+                    labels = rownames(GC.standards[GC.standards$GC.Date != "2021-09-22",]))
+         
+         
+       })
+
+########### Remove standards with outliers  ######
+
+# 2021-09-22 #
+# 2021-08-01 #
+# 2021-09-02 #
+
+GC.standards_No_2021_09_22 <- GC.standards[!GC.standards$GC.Date == "2021-09-22" , ] ;
+
+GC.standards_No_2021_09_22[GC.standards_No_2021_09_22$GC.Date == "2021-09-22" , ]
+
+GC.standards_No_2021_08_01 <- GC.standards_No_2021_09_22[!GC.standards_No_2021_09_22$GC.Date == "2021-08-01" , ]
+
+GC.standards_No_2021_08_01[GC.standards_No_2021_08_01$GC.Date == "2021-08-01" , ]
+
+GC.standards_No_2021_09_02 <- GC.standards_No_2021_08_01[! GC.standards_No_2021_08_01$GC.Date == "2021-09-02" , ]
+
+GC.standards_No_2021_09_02[GC.standards_No_2021_09_02$GC.Date == "2021-09-02" , ]
+
+
+GC.standards <- GC.standards_No_2021_09_02 ;
+
+
+rm(GC.standards_No_2021_09_22 , GC.standards_No_2021_08_01 ,  GC.standards_No_2021_09_02 )
+
+
+
+
+xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards, 
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       color.palette = paletteer_d("ggsci::default_ucscgb"),
+       
+       key = simpleKey(
+         
+         text = levels(GC.standards$ANAL.DATE),
+         
+         points = TRUE,
+         
+         pch = 16,
+         
+         col = paletteer_d("ggsci::default_ucscgb") ,
+         
+         space = "right"
+         
+       ),
+       
+       panel  = function(x, y,...) {
+         
+         panel.xyplot(x, y,...)
+         
+         panel.text(x,y,
+                    
+                    labels = rownames(GC.standards))
+         
+         
+       })
+
+
+
 ###############################################################################################################
 #                           
 #                                            N2O   Standards
 #
 ###############################################################################################################  
   
-  
+GC.standards$ANAL.DATE<-as.factor(GC.standards$GC.Date)  ;
+
+xyplot(N2O ~ N2O.ppm, groups = GC.Date, data= GC.standards, 
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       color.palette = paletteer_d("ggsci::default_ucscgb"),
+       
+       key = simpleKey(
+         
+         text = levels(GC.standards$ANAL.DATE),
+         
+         points = TRUE,
+         
+         pch = 16,
+         
+         col = paletteer_d("ggsci::default_ucscgb") ,
+         
+         space = "right"
+         
+       ),
+       
+       panel  = function(x, y,...) {
+         
+         panel.xyplot(x, y,...)
+         
+         panel.text(x,y,
+                    
+                    labels = rownames(GC.standards))
+         
+         
+       })
+
   
   
   
