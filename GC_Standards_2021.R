@@ -222,9 +222,9 @@ CAL.CO2.2021_05_28 <- lm(CO2.ppm ~ CO2,
        
        y = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("CO2.ppm")]),
        
-       labels = paste(round(CAL.CO2.2021_05_28$coefficients[1],3), round(CAL.CO2.2021_05_28$coefficients[2],3), sep = "+")
+       labels = paste(round(CAL.CO2.2021_05_28$coefficients[1],3), round(CAL.CO2.2021_05_28$coefficients[2],3), sep = "+"))
        
- )
+
 
  ####### Plot Calibration line  for N2O #######
  

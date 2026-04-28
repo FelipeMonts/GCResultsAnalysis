@@ -3,7 +3,7 @@
 # 
 # Program to Analyze and plot GC data collected from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
 # 
-#     This program is focused on analyzing standards for calibration
+#     This program is focused on analyzing standards for calibration obtained during 2022
 # 
 # 
 #  Felipe Montes 2022/08/23
@@ -68,7 +68,7 @@ setwd("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_P
 
 # Year = 2021
 
-# Year = 2022
+ Year = 2022
 
 
 PeakArea.results <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults" , Year ,".csv" ) , header = T) ;
@@ -174,81 +174,8 @@ levels(GC.standards$Factor.Name)
 
 
 
-
-
-###############################################################################################################
-#                           
-#                           Separating the standards by year because their names are different
-#
-###############################################################################################################
-
 head(GC.standards);
 
-if(Year == 2021) {
-  
-  # Levels Names for 2021
-  
-  # [1] "0PerSTD"    "0PerSTDA"   "100PerSTD"  "100PerSTDA" "25PerSTD"   "25PerSTDA"  "50PerSTD"   "50PerSTDA"  "75PerSTD"  
-  # [10] "75PerSTDA"
-  
-  # CH4	CO2	N2O
-  # 0perSTD	ppm 	uL/Lgas	0	0	0
-  # 25perSTDA	ppm 	uL/Lgas	1.25	125	0.25
-  # 50perSTDA	ppm 	uL/Lgas	2.5	250	0.5
-  # 75perSTDA	ppm 	uL/Lgas	3.75	375	0.75
-  # 100perSTDA	ppm 	uL/Lgas	5	500	1
-  # 25perSTD	ppm  uL/Lgas 12.5 1250 1.25
-  # 50PerSTD	ppm 	uL/Lgas	25	2500	25
-  # 75perSTD	ppm 	uL/Lgas	37.5	3750	37.5
-  # 100PerSTD	ppm 	uL/Lgas	50	5000	50
-  
-  GC.standards[GC.standards$Sample.Name == "100PerSTDA",c('CH4.ppm')] <- 5 ;
-  GC.standards[GC.standards$Sample.Name == "100PerSTDA",c('CO2.ppm')] <- 500 ;
-  GC.standards[GC.standards$Sample.Name == "100PerSTDA",c('N2O.ppm')] <- 1 ;
-  
-  
-  GC.standards[GC.standards$Sample.Name == '100PerSTD',c('CH4.ppm')] <- 50 ;
-  GC.standards[GC.standards$Sample.Name == '100PerSTD',c('CO2.ppm')] <- 5000 ;
-  GC.standards[GC.standards$Sample.Name == '100PerSTD',c('N2O.ppm')] <- 50 ;    
-  
-  
-  GC.standards[GC.standards$Sample.Name == "50PerSTDA",c('CH4.ppm')] <- 2.5  ;
-  GC.standards[GC.standards$Sample.Name == "50PerSTDA",c('CO2.ppm')] <- 250  ;
-  GC.standards[GC.standards$Sample.Name == "50PerSTDA",c('N2O.ppm')] <- 0.5  ;
-  
-  
-  GC.standards[GC.standards$Sample.Name == '50PerSTD',c('CH4.ppm')] <- 25 ;
-  GC.standards[GC.standards$Sample.Name == '50PerSTD',c('CO2.ppm')] <- 2500 ;
-  GC.standards[GC.standards$Sample.Name == '50PerSTD',c('N2O.ppm')] <- 25;
- 
-  GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('CH4.ppm')] <- 3.75 ;
-  GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('CO2.ppm')] <- 375  ;
-  GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('N2O.ppm')] <- 0.75 ; 
-  
-   GC.standards[GC.standards$Sample.Name == '75PerSTD',c('CH4.ppm')] <- 37.5 ;
-   GC.standards[GC.standards$Sample.Name == '75PerSTD',c('CO2.ppm')] <- 3750  ;
-   GC.standards[GC.standards$Sample.Name == '75PerSTD',c('N2O.ppm')] <- 37.5 ; 
-   
-  GC.standards[GC.standards$Sample.Name == "25PerSTDA",c('CH4.ppm')] <- 1.25 ;
-  GC.standards[GC.standards$Sample.Name == "25PerSTDA",c('CO2.ppm')] <- 125  ;
-  GC.standards[GC.standards$Sample.Name == "25PerSTDA",c('N2O.ppm')] <- 0.25  ;
-  
-  GC.standards[GC.standards$Sample.Name == "25PerSTD",c('CH4.ppm')] <- 12.5 ;
-  GC.standards[GC.standards$Sample.Name == "25PerSTD",c('CO2.ppm')] <- 1250  ;
-  GC.standards[GC.standards$Sample.Name == "25PerSTD",c('N2O.ppm')] <- 0.25  ;
-  
-  GC.standards[GC.standards$Sample.Name == "0PerSTD" |  GC.standards$Sample.Name == "0PerSTDA" ,
-               
-               c('CH4.ppm', 'CO2.ppm', 'N2O.ppm')] <- 1e-5 
-  
-  GC.standards[which(is.na(GC.standards[,c('CH4.ppm')])), ]
-                           
-  GC.standards[which(is.na(GC.standards[,c('CO2.ppm')])), ]  
-  
-  GC.standards[which(is.na(GC.standards[,c('N2O.ppm')])), c('Sample.Name')]  
-                          
-  
-} else {
     
     # Levels Names for 2022
     
@@ -262,37 +189,38 @@ if(Year == 2021) {
     # L75 perSTDA	ppm 	uL/Lgas	3.75	375	0.75
     # L100 perSTDA	ppm 	uL/Lgas	5	500	1
     # H50 PerSTD	ppm 	uL/Lgas	25	2500	25
-    # H100 PerSTD	ppm 	uL/Lgas	100	5000	50
+    # H100 PerSTD	ppm 	uL/Lgas	50	5000	50
     
-    GC.standards[GC.standards$Sample.Name == 'L100',c('CH4.ppm')] <- 5 ;
-    GC.standards[GC.standards$Sample.Name == 'L100',c('CO2.ppm')] <- 500 ;
-    GC.standards[GC.standards$Sample.Name == 'L100',c('N2O.ppm')] <- 1 ;
-    
-    
-    GC.standards[GC.standards$Sample.Name == 'H100',c('CH4.ppm')] <- 50 ;
-    GC.standards[GC.standards$Sample.Name == 'H100',c('CO2.ppm')] <- 5000 ;
-    GC.standards[GC.standards$Sample.Name == 'H100',c('N2O.ppm')] <- 50 ;    
+GC.standards[GC.standards$Sample.Name == 'L100',c('CH4.ppm')] <- 5 ;
+GC.standards[GC.standards$Sample.Name == 'L100',c('CO2.ppm')] <- 500 ;
+GC.standards[GC.standards$Sample.Name == 'L100',c('N2O.ppm')] <- 1 ;
     
     
-    GC.standards[GC.standards$Sample.Name == 'L50',c('CH4.ppm')] <- 2.5  ;
-    GC.standards[GC.standards$Sample.Name == 'L50',c('CO2.ppm')] <- 250  ;
-    GC.standards[GC.standards$Sample.Name == 'L50',c('N2O.ppm')] <- 0.5  ;
+GC.standards[GC.standards$Sample.Name == 'H100',c('CH4.ppm')] <- 50 ;
+GC.standards[GC.standards$Sample.Name == 'H100',c('CO2.ppm')] <- 5000 ;
+GC.standards[GC.standards$Sample.Name == 'H100',c('N2O.ppm')] <- 50 ;    
     
     
-    GC.standards[GC.standards$Sample.Name == 'H50',c('CH4.ppm')] <- 25 ;
-    GC.standards[GC.standards$Sample.Name == 'H50',c('CO2.ppm')] <- 2500 ;
-    GC.standards[GC.standards$Sample.Name == 'H50',c('N2O.ppm')] <- 25;
+GC.standards[GC.standards$Sample.Name == 'L50',c('CH4.ppm')] <- 2.5  ;
+GC.standards[GC.standards$Sample.Name == 'L50',c('CO2.ppm')] <- 250  ;
+GC.standards[GC.standards$Sample.Name == 'L50',c('N2O.ppm')] <- 0.5  ;
     
     
-    GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('CH4.ppm')] <-3.75 ;
-    GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('CO2.ppm')] <- 375  ;
-    GC.standards[GC.standards$Sample.Name == '75PerSTDA',c('N2O.ppm')] <- 0.75 ;
+GC.standards[GC.standards$Sample.Name == 'H50',c('CH4.ppm')] <- 25 ;
+GC.standards[GC.standards$Sample.Name == 'H50',c('CO2.ppm')] <- 2500 ;
+GC.standards[GC.standards$Sample.Name == 'H50',c('N2O.ppm')] <- 25;
+    
+GC.standards[GC.standards$Sample.Name == 'L25',c('CH4.ppm')] <- 1.25 ;
+GC.standards[GC.standards$Sample.Name == 'L25',c('CO2.ppm')] <- 125 ;
+GC.standards[GC.standards$Sample.Name == 'L25',c('N2O.ppm')] <- 0.25;
+
+
+
+    
+GC.standards[GC.standards$Sample.Name == '0',c('CH4.ppm', 'CO2.ppm', 'N2O.ppm')] <- 0 ;
     
     
-    GC.standards[GC.standards$Sample.Name == '0',c('CH4.ppm', 'CO2.ppm', 'N2O.ppm')] <- 1e-5 ;
-    
-    
-}
+
 
 str(GC.standards)
 
@@ -325,401 +253,914 @@ simpleKey(text = GC.standards$Position )
 
 str(GC.standards)
 
-if (Year == 2021) {
   
-  ############################## CO2 Standards ############################################
-  
-  ####### 0 STD   #######
-  
-  plot(CO2 ~ CO2.ppm, 
-       
-       data = GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  ])
-  
-  
-  boxplot(CO2 ~ CO2.ppm, 
-          
-          data = GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  ])
-  
-  
-  plot(CO2 ~ ANAL.DATE, 
-        
-        data = GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  ])
-   
-   
-  boxplot(CO2 ~ ANAL.DATE , 
-          
-          data = GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  ]  )
-  
- 
-  hist(GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA", "CO2" ])
-  
-  range(GC.standards[GC.standards$Factor.Name == "0PerSTD" | GC.standards$Factor.Name == "0PerSTDA",  c("CO2")])
-  
-    ####### 25 STD   #######
-  
-  plot(CO2 ~ CO2.ppm, 
-       
-       data = GC.standards[GC.standards$Factor.Name == "25PerSTDA" | GC.standards$Factor.Name == "25PerSTD" ,  ]) 
-  
-  
-  boxplot(CO2 ~ CO2.ppm, 
-          
-          data = GC.standards[GC.standards$Factor.Name == "25PerSTDA" ,  ] )
-  
-  
-  plot(CO2 ~ ANAL.DATE, 
-       
-       data = GC.standards[GC.standards$Factor.Name == "25PerSTDA" | GC.standards$Factor.Name == "25PerSTD" ,  ], 
-       
-       main = ("25% STANDARD"));
-       
-      
-  
-  
-  
-  hist(GC.standards[GC.standards$Factor.Name == "25PerSTDA" , "CO2" ])
-  
-  
-  
-  ####### 50 STD   #######
-  
-  plot(CO2 ~ CO2.ppm,
-       
-       data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ])
-  
-  
-  boxplot(CO2 ~ CO2.ppm,
-          
-          data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ]  )
-  
-  
-  plot(CO2 ~ ANAL.DATE,
-       
-       data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ])
-  
-  
-  hist(GC.standards[GC.standards$Factor.Name == "50PerSTD" , "CO2" ])
-  
-  
-  plot(CO2 ~ CO2.ppm, 
-       
-       data = GC.standards[GC.standards$Factor.Name == "50PerSTDA" ,  ]) 
-  
-  
-  boxplot(CO2 ~ CO2.ppm, 
-          
-          data = GC.standards[GC.standards$Factor.Name == "50PerSTDA" ,  ]  )
-  
-  
-  hist(GC.standards[GC.standards$Factor.Name == "50PerSTDA" , "CO2" ])
-  
-  
-  #### Combined "50PerSTDA" and "50PerSTD"  #
-  
-  
-  plot(CO2 ~ ANAL.DATE,
-       
-       data = GC.standards[GC.standards$Factor.Name == "50PerSTD" | GC.standards$Factor.Name == "50PerSTDA" ,  ],
-       
-       main = "50% STANDARD")
-  
-  
-  ####### 100 STD   #######
-  
-  plot(CO2 ~ CO2.ppm, 
-       
-       data = GC.standards[GC.standards$Factor.Name == "100PerSTD" ,  ])
-  
-  
-  boxplot(CO2 ~ CO2.ppm, 
-          
-          data = GC.standards[GC.standards$Factor.Name == "100PerSTD" ,  ]  )
-  
-  hist(GC.standards[GC.standards$Factor.Name == "100PerSTD" , "CO2" ])
-  
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  ])
-  
-  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  ]  )
-  
-  hist(GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  "CO2"   ])
-  
-  #### Combined "100PerSTDA" and "100PerSTD"  #
-  
-  plot(CO2 ~ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" | GC.standards$Factor.Name == "100PerSTD",  ],
-       
-       main= "100% STANDARD");
-  
-  
-  ############################## N2O Standards ############################################
-  
-  
-  plot(N2O ~ N2O.ppm, data = GC.standards[GC.standards$Factor.Name == "25PerSTDA" ,  ]) 
-  
-  boxplot(N2O ~ N2O.ppm, data = GC.standards[GC.standards$Factor.Name == "25PerSTDA" ,  ] )
-  
-  hist(GC.standards[GC.standards$Factor.Name == "25PerSTDA" , "CO2" ])
-  
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ])
-  
-  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTD" ,  ]  )
-  
-  hist(GC.standards[GC.standards$Factor.Name == "50PerSTD" , "CO2" ])
-  
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTD" ,  ])
-  
-  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTD" ,  ]  )
-  
-  hist(GC.standards[GC.standards$Factor.Name == "100PerSTD" , "CO2" ])
-  
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTDA" ,  ]) 
-  
-  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "50PerSTDA" ,  ]  )
-  
-  hist(GC.standards[GC.standards$Factor.Name == "50PerSTDA" , "CO2" ])
-  
-  
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  ])
-  
-  boxplot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  ]  )
-  
-  hist(GC.standards[GC.standards$Factor.Name == "100PerSTDA" ,  "CO2"   ])
-  
-  
-  xyplot(N2O~N2O.ppm, data=GC.standards, type="p",main="N2O")
-  
-  xyplot(CH4~CH4.ppm, data=GC.standards, type="b",main="CH4")
-  
-}  else {
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "0" ,  ])
-  
-  boxplot(CO2 ~ ANAL.DATE , data = GC.standards[GC.standards$Factor.Name == "0" ,  ]  )
-  
-  boxplot(CH4 ~ ANAL.DATE , data = GC.standards[GC.standards$Factor.Name == "0" ,  ]  )
-  
-  boxplot(N2O ~ ANAL.DATE , data = GC.standards[GC.standards$Factor.Name == "0" ,  ]  )
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "L25" ,  ]) 
-  
-  boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "L25" ,  ]  )
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "L50" ,  ])
-  
-  boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "L50" ,  ]  )
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "L100" ,  ])
-  
-  boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "L100" ,  ]  )
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "H50" ,  ]) 
-  
-  boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "H50" ,  ]  )
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[GC.standards$Factor.Name == "H100" ,  ])
-  
-  boxplot(CO2 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "H100" ,  ]  )
-  
-  boxplot(CH4 ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "H100" ,  ]  )
-  
-  boxplot(N2O ~ ANAL.DATE, data = GC.standards[GC.standards$Factor.Name == "H100" ,  ]  )
-  
-  
-  xyplot(N2O~N2O.ppm, data=GC.standards, type="p",main="N2O")
-  
-  xyplot(CH4~CH4.ppm, data=GC.standards, type="b",main="CH4")  
-  
-  
-}
 
-###############################################################################################################
+##############################################################################################################
 #                           
-#                          Exploring the standards standard level "Factor.Name"
+#                           Working with Standards obtained in 2022
 #
 ###############################################################################################################
 
-GC.standards[GC.standards$Factor.Name == '100PerSTD', ]
 
-GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]
+str(GC.standards$Sample.Name)
+
+unique(GC.standards$Sample.Name)
 
 
 
-if (Year == 2021) {
-  
-  ################################## Full standard 100% no dilution ##########################################
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]) ;
-  
-  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CO2" ]) ;
-  
-  hist( x = GC.standards[GC.standards$Factor.Name == "100PerSTD", "CO2" ]) ; 
-  
-  hist( x = GC.standards[GC.standards$Factor.Name == "100PerSTDA", "CO2" ]) ; 
-  
-  boxplot(x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CO2" ]);
-  
-  boxplot(x =  GC.standards[GC.standards$Factor.Name == "100PerSTD", "CO2" ]) ;
-  
-  boxplot(x =  GC.standards[GC.standards$Factor.Name == "100PerSTDA", "CO2" ]) ;
-  
-  GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), 
-               
-               c("Sample.Name" , "CH4" , "CO2" , "N2O", "Sampling.Date" , 
-                 
-                 "GC.Date" , "CH4.ppm" , "CO2.ppm" , "N2O.ppm")];
-  
-  
-  plot(N2O ~ N2O.ppm, data = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]) ;
-  
-  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "N2O" ]) ;
-  
-  hist( x = GC.standards[GC.standards$Factor.Name == "100PerSTD", "N2O" ]) ; 
-  
-  hist( x = GC.standards[GC.standards$Factor.Name == "100PerSTDA", "N2O"]) ;
-  
-  
-  plot(CH4 ~ CH4.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTD" , ], col = "red")
-  
-  plot(CH4 ~ CH4.ppm, data = GC.standards[GC.standards$Factor.Name == "100PerSTDA" , ] ,col = "blue" )
-  
-  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CH4" ])
-  
+################################# GC Date [2022-07-13]  Sampling.Date [2022-06-30]  ############################################
+
+GC.standards[GC.standards$GC.Date == "2022-07-13",]
+
+
+####### Plot Calibration line  for  CO2 #######
+
+plot(CO2.ppm ~ CO2, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == "2022-06-30",],
+     
+     main = "2022-06-30",
+     
+     col = "blue",
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "CO2.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-30" , "Sample.Name"],
+      
+      pos = 3);
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "CO2.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-30" ,]),
+      
+      pos = 1);
+
+
+###### Calculate calibration line CO2 #######
+
+CAL.CO2.2022_06_30 <- lm(CO2.ppm ~ CO2,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-30",])
+
+
+
+summary(CAL.CO2.2022_06_30) 
+
+abline(a = CAL.CO2.2022_06_30$coefficients[1] ,
+       
+       b = CAL.CO2.2022_06_30$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-30", c("CO2")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-30", c("CO2.ppm")]),
+      
+      labels = paste(round(CAL.CO2.2022_06_30$coefficients[1],3), round(CAL.CO2.2022_06_30$coefficients[2],3), sep = "+"))
+
+
+
+####### Plot Calibration line  for N2O #######
+
+plot(N2O.ppm ~ N2O, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == "2022-06-30",],
+     
+     main = "2022-06-30",
+     
+     col = "blue",
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "N2O.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-30" , "Sample.Name"],
+      
+      pos = 3);
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "N2O.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-30" ,]),
+      
+      pos = 1);
+
+###### Calculate calibration line N2O #######
+
+CAL.N2O.2022_06_30 <- lm(N2O.ppm ~ N2O,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-30",],
+                         
+)
+
+
+
+summary(CAL.N2O.2022_06_30) 
+
+abline(a = CAL.N2O.2022_06_30$coefficients[1] ,
+       
+       b = CAL.N2O.2022_06_30$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-30", c("N2O")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-30", c("N2O.ppm")]),
+      
+      labels = paste(round(CAL.N2O.2022_06_30$coefficients[1],3), round(CAL.N2O.2022_06_30$coefficients[2],3), sep = "+")
+      
+)
+
+
+
+################################# GC Date [2022-08-09]  Sampling.Date [2022-06-09]  ############################################
+
+GC.standards[GC.standards$GC.Date == "2022-08-09",]
+
+
+####### Plot Calibration line  for  CO2 #######
+
+plot(CO2.ppm ~ CO2, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == "2022-06-09",],
+     
+     main = "2022-06-09",
+     
+     col = "blue",
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "CO2.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-09" , "Sample.Name"],
+      
+      pos = 3);
+
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "CO2.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-09" ,]),
+      
+      pos = 1);
+
+
+###### Calculate calibration line CO2 #######
+
+CAL.CO2.2022_06_09 <- lm(CO2.ppm ~ CO2,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-09",])
+
+
+
+summary(CAL.CO2.2022_06_09) 
+
+abline(a = CAL.CO2.2022_06_09$coefficients[1] ,
+       
+       b = CAL.CO2.2022_06_09$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-09", c("CO2")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-09", c("CO2.ppm")]),
+      
+      labels = paste(round(CAL.CO2.2022_06_09$coefficients[1],3), round(CAL.CO2.2022_06_09$coefficients[2],3), sep = "+"))
+
+
+
+####### Plot Calibration line  for N2O #######
+
+plot(N2O.ppm ~ N2O, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == "2022-06-09",],
+     
+     main = "2022-06-09",
+     
+     col = "blue",
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "N2O.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-09" , "Sample.Name"],
+      
+      pos = 3);
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "N2O.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-09" ,]),
+      
+      pos = 1);
+
+###### Calculate calibration line N2O #######
+
+CAL.N2O.2022_06_09 <- lm(N2O.ppm ~ N2O,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-09",],
+                         
+)
+
+
+
+summary(CAL.N2O.2022_06_09) 
+
+abline(a = CAL.N2O.2022_06_09$coefficients[1] ,
+       
+       b = CAL.N2O.2022_06_09$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-09", c("N2O")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-09", c("N2O.ppm")]),
+      
+      labels = paste(round(CAL.N2O.2022_06_09$coefficients[1],3), round(CAL.N2O.2022_06_09$coefficients[2],3), sep = "+")
+      
+)
+
+
+points(N2O.ppm ~ N2O, 
+       
+       data = GC.standards[rownames(GC.standards) == "454", ],
+       
+       main = "2022-06-09",
+       
+       col = "red",
+       
+       cex = 2,
+       
+       pch = 19) ;
+
+##### Remove outliers row names 454 ####### 
+
+GC.standards[rownames(GC.standards) == "454", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "454", ] ;
+
+##############################################################################################################
+#                           
+#                           Cumulative plot for 2022
+#
+###############################################################################################################
+
+##### data to plot  CO2 #####
+
+str(GC.standards$Sampling.Date)
+
+Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09")
+
+
+Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
+
+str(Cum.Plot.Data)
+
+xyplot(CO2 ~ CO2.ppm, 
+       
+       groups = GC.Date, 
+       
+       data = Cum.Plot.Data, 
+       
+       pch =16, 
+       
+       main="CO2", 
+       
+       auto.key = T, 
+
+      panel=function(x, y, ...){
+        
+        panel.xyplot(x, y, ...)
+        
+        panel.text(x=x, y=y, 
+                   
+                   labels= rownames(Cum.Plot.Data), 
+                   
+                   pos=1)
+        
+      })
+
+
+text( x = Cum.Plot.Data$CO2.ppm,
+      
+      y = Cum.Plot.Data$CO2,
+      
+      labels = rownames(Cum.Plot.Data),
+      
+      pos = 1);
+
+
+
+##### data to plot  N20 #####
+
+str(GC.standards$Sampling.Date)
+
+Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09")
+
+
+Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
+
+str(Cum.Plot.Data)
+
+xyplot(N2O ~ N2O.ppm, 
+       
+       groups = GC.Date, 
+       
+       data = Cum.Plot.Data, 
+       
+       pch =16, 
+       
+       main = "N2O", 
+       
+       auto.key = T, 
+       
+       panel=function(x, y, ...){
+         
+         panel.xyplot(x, y, ...)
+         
+         panel.text(x=x, y=y, 
+                    
+                    labels= rownames(Cum.Plot.Data), 
+                    
+                    pos=1)
+         
+       }
+       
+)
+       
+
+
+GC.standards[rownames(GC.standards) == "421", ]
+
+
+##### Remove outliers row names 421 ####### 
+
+GC.standards[rownames(GC.standards) == "421", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "421", ] ;
+
+
+##### data to plot  CO2 #####
+
+str(GC.standards$Sampling.Date)
+
+Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09")
+
+
+Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
+
+str(Cum.Plot.Data)
+
+xyplot(CO2 ~ CO2.ppm, 
+       
+       groups = GC.Date, 
+       
+       data = Cum.Plot.Data, 
+       
+       pch =16, 
+       
+       main="CO2", 
+       
+       auto.key = T, 
+
+      panel=function(x, y, ...){
+        
+        panel.xyplot(x, y, ...)
+        
+        panel.text(x=x, y=y, 
+                   
+                   labels= rownames(Cum.Plot.Data), 
+                   
+                   pos=1)
+        
+      })
+
+
+
+
+################################# GC Date [2022-08-10]  Sampling.Date [2022-06-23]  ############################################
+
+GC.standards[GC.standards$GC.Date == "2022-08-10",]
+
+
+####### Plot Calibration line  for  CO2 #######
+
+plot(CO2.ppm ~ CO2, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == "2022-06-23",],
+     
+     main = "2022-06-23",
+     
+     col = "blue",
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "CO2.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-23" , "Sample.Name"],
+      
+      pos = 3);
+
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "CO2.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-23" ,]),
+      
+      pos = 1);
+
+
+###### Calculate calibration line CO2 #######
+
+CAL.CO2.2022_06_23 <- lm(CO2.ppm ~ CO2,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-23",])
+
+
+
+summary(CAL.CO2.2022_06_23) 
+
+abline(a = CAL.CO2.2022_06_23$coefficients[1] ,
+       
+       b = CAL.CO2.2022_06_23$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-23", c("CO2")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-23", c("CO2.ppm")]),
+      
+      labels = paste(round(CAL.CO2.2022_06_23$coefficients[1],3), round(CAL.CO2.2022_06_23$coefficients[2],3), sep = "+"))
+
+
+
+####### Plot Calibration line  for N2O #######
+
+plot(N2O.ppm ~ N2O, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == "2022-06-23",],
+     
+     main = "2022-06-23",
+     
+     col = "blue",
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "N2O.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-23" , "Sample.Name"],
+      
+      pos = 3);
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "N2O.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-23" ,]),
+      
+      pos = 1);
+
+###### Calculate calibration line N2O #######
+
+CAL.N2O.2022_06_23 <- lm(N2O.ppm ~ N2O,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-23",],
+                         
+)
+
+
+
+summary(CAL.N2O.2022_06_23) 
+
+abline(a = CAL.N2O.2022_06_23$coefficients[1] ,
+       
+       b = CAL.N2O.2022_06_23$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-23", c("N2O")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-23", c("N2O.ppm")]),
+      
+      labels = paste(round(CAL.N2O.2022_06_23$coefficients[1],3), round(CAL.N2O.2022_06_23$coefficients[2],3), sep = "+")
+      
+)
+
+
+
+
+
+points(N2O.ppm ~ N2O, 
+       
+       data = GC.standards[rownames(GC.standards) == "716", ],
+       
+       col = "red",
+       
+       cex = 2,
+       
+       pch = 19) ;
+
+##### Remove outliers row names 454 ####### 
+
+GC.standards[rownames(GC.standards) == "454", ]
+
+GC.standards <- GC.standards[!rownames(GC.standards) == "454", ] ;
+
+##############################################################################################################
+#                           
+#                           Cumulative plot for 2022
+#
+###############################################################################################################
+
+##### data to plot  CO2 #####
+
+str(GC.standards$Sampling.Date)
+
+Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09", "2022-06-23")
+
+
+Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
+
+str(Cum.Plot.Data)
+
+xyplot(CO2 ~ CO2.ppm, 
+       
+       groups = GC.Date, 
+       
+       data = Cum.Plot.Data, 
+       
+       pch =16, 
+       
+       main="CO2", 
+       
+       auto.key = T, 
+       
+       panel=function(x, y, ...){
+         
+         panel.xyplot(x, y, ...)
+         
+         panel.text(x=x, y=y, 
+                    
+                    labels= rownames(Cum.Plot.Data), 
+                    
+                    pos=1)
+         
+       })
+
+
+
+
+##### data to plot  N20 #####
+
+str(GC.standards$Sampling.Date)
+
+
+str(Cum.Plot.Data)
+
+xyplot(N2O ~ N2O.ppm, 
+       
+       groups = GC.Date, 
+       
+       data = Cum.Plot.Data, 
+       
+       pch =16, 
+       
+       main = "N2O", 
+       
+       auto.key = T, 
+       
+       panel=function(x, y, ...){
+         
+         panel.xyplot(x, y, ...)
+         
+         panel.text(x=x, y=y, 
+                    
+                    labels= rownames(Cum.Plot.Data), 
+                    
+                    pos=1)
+         
+       }
+       
+)
+
+
+
+
+
+
+##### Remove outliers row names  ####### 
+
+# GC.standards[rownames(GC.standards) == "421", ]
+
+# GC.standards <- GC.standards[!rownames(GC.standards) == "421", ] ;
+
+
+
+
+
+
+
+
+################################# GC Date [2022-08-19 & 2022-08-30]  Sampling.Date [2022-06-29]   ############################################
+
+GC.standards[GC.standards$GC.Date == "2022-08-19",]
+
+
+i = "2022-06-29" 
+
+j = "2022_06_29"
+
+####### Plot Calibration line  for  CO2 #######
+
+plot(CO2.ppm ~ CO2, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == i,],
+     
+     main = i ,
+     
+     col = "blue",
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
+      
+      pos = 3);
+
+
+text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
+      
+      pos = 1);
+
+
+
+###### Calculate calibration line CO2 #######
+
+assign(paste("CAL.CO2.", j, sep = ""), lm(CO2.ppm ~ CO2,
+                                   
+                                   data = GC.standards[GC.standards$Sampling.Date == i , ]))
+
+
+summary(get(paste("CAL.CO2.", j, sep = "")))
+
+get(paste("CAL.CO2.", j,sep = ""))[[1]][1]
+
+abline(a = get(paste("CAL.CO2.", j,sep = ""))[[1]][1] ,
+       
+       b = get(paste("CAL.CO2.", j,sep = ""))[[1]][2], 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2.ppm")]),
+      
+      labels = paste(round(get(paste("CAL.CO2.", j,sep = ""))[[1]][1],3), 
+                     
+                     round(get(paste("CAL.CO2.", j,sep = ""))[[1]][2],3), 
+                     
+                     sep = "+")
+      )
+
+
+
+####### Plot Calibration line  for N2O #######
+
+plot(N2O.ppm ~ N2O, 
+     
+     data = GC.standards[GC.standards$Sampling.Date == i,],
+     
+     main = i,
+     
+     col = "blue",
+     
+     type = "p")  ;
+
+text( x = GC.standards[GC.standards$Sampling.Date == i , "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == i , "N2O.ppm"],
+      
+      labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
+      
+      pos = 3);
+
+text( x = GC.standards[GC.standards$Sampling.Date == i, "N2O"],
+      
+      y = GC.standards[GC.standards$Sampling.Date == i, "N2O.ppm"],
+      
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
+      
+      pos = 1);
+
+###### Calculate calibration line N2O #######
+
+assign(paste("CAL.N2O.", j, sep = ""), lm(N2O.ppm ~ N2O,
+                                          
+                                          data = GC.standards[GC.standards$Sampling.Date == i,]))
+
+
+
+summary(get(paste("CAL.N2O.", j, sep = "")))
+
+abline(a = get(paste("CAL.N2O.", j, sep = ""))[[1]][1] ,
+       
+       b = get(paste("CAL.N2O.", j, sep = ""))[[1]][2], 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O")]),
+      
+      y = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O.ppm")]),
+      
+      labels = paste(round(get(paste("CAL.N2O.", j, sep = ""))[[1]][1],3), round(get(paste("CAL.N2O.", j, sep = ""))[[1]][2],3), sep = "+")
+      
+)
+
+
+
+
+
+
+
+points(N2O.ppm ~ N2O, 
+       
+       data = GC.standards[rownames(GC.standards) == "716", ],
+       
+       col = "red",
+       
+       cex = 2,
+       
+       pch = 19) ;
+
+##### Remove outliers row names 454 ####### 
+
+# GC.standards[rownames(GC.standards) == "454", ]
+
+# GC.standards <- GC.standards[!rownames(GC.standards) == "454", ] ;
+
+##############################################################################################################
+#                           
+#                           Cumulative plot for 2022
+#
+###############################################################################################################
+
+##### data to plot  CO2 #####
+
+i
+
+str(GC.standards$Sampling.Date)
+
+Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09", "2022-06-23" , "2022-06-29")
+
+
+Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
+
+str(Cum.Plot.Data)
+
+xyplot(CO2 ~ CO2.ppm, 
+       
+       groups = GC.Date, 
+       
+       data = Cum.Plot.Data, 
+       
+       pch =16, 
+       
+       main="CO2", 
+       
+       auto.key = T, 
+       
+       panel=function(x, y, ...){
+         
+         panel.xyplot(x, y, ...)
+         
+         panel.text(x=x, y=y, 
+                    
+                    labels= rownames(Cum.Plot.Data), 
+                    
+                    pos=1)
+         
+       })
+
+
+
+
+##### data to plot  N20 #####
+
+str(GC.standards$Sampling.Date)
+
+
+str(Cum.Plot.Data)
+
+xyplot(N2O ~ N2O.ppm, 
+       
+       groups = GC.Date, 
+       
+       data = Cum.Plot.Data, 
+       
+       pch =16, 
+       
+       main = "N2O", 
+       
+       auto.key = T, 
+       
+       panel=function(x, y, ...){
+         
+         panel.xyplot(x, y, ...)
+         
+         panel.text(x=x, y=y, 
+                    
+                    labels= rownames(Cum.Plot.Data), 
+                    
+                    pos=1)
+         
+       }
+       
+)
+
+
+
+
+
+
+##### Remove outliers row names  ####### 
+
+ GC.standards[rownames(GC.standards) == "924", ]
+
+ GC.standards <- GC.standards[!rownames(GC.standards) == "924", ] ;
+
+
+ GC.standards[rownames(GC.standards) == "842", ]
  
+ GC.standards <- GC.standards[!rownames(GC.standards) == "842", ] ;
 
+ GC.standards[rownames(GC.standards) == "888", ]
+ 
+ GC.standards <- GC.standards[!rownames(GC.standards) == "888", ] ;
 
+ GC.standards[rownames(GC.standards) == "1319", ]
+ 
+ GC.standards <- GC.standards[!rownames(GC.standards) == "1319", ] ;
 
-}  else { ###### 2022 ######
-  
-  
-  plot(CO2 ~ CO2.ppm, data = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]) ;
-  
-  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CO2" ]) ;
-  
-  hist( x = GC.standards[GC.standards$Factor.Name == "L100", "CO2" ]) ; 
-  
-  hist( x = GC.standards[GC.standards$Factor.Name == "H100", "CO2" ]) ; 
-  
-  boxplot(x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CO2" ]);
-  
-  boxplot(x =  GC.standards[GC.standards$Factor.Name == "L100", "CO2" ]) ;
-  
-  boxplot(x =  GC.standards[GC.standards$Factor.Name == "H100", "CO2" ]) ;
-  
-  # GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), 
-  #              
-  #              c("Sample.Name" , "CH4" , "CO2" , "N2O", "Sampling.Date" , 
-  #                
-  #                "GC.Date" , "CH4.ppm" , "CO2.ppm" , "N2O.ppm")];
-  # 
-  
-  plot(N2O ~ N2O.ppm, data = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]) ;
-  
-  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "N2O" ]) ;
-  
-  hist( x = GC.standards[GC.standards$Factor.Name == "L100", "N2O" ]) ; 
-  
-  hist( x = GC.standards[GC.standards$Factor.Name == "H100", "N2O"]) ;
-  
-  
-  plot(CH4 ~ CH4.ppm, data = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), ]) ;
-  
-  plot(CH4 ~ CH4.ppm, data = GC.standards[GC.standards$Factor.Name == "L100" , ], col = "red")
-  
-  plot(CH4 ~ CH4.ppm, data = GC.standards[GC.standards$Factor.Name == "H100" , ] ,col = "blue" )
-  
-  hist( x = GC.standards[grep("100",GC.standards$Factor.Name , ignore.case = T), "CH4" ])
-  
-}
+ GC.standards[rownames(GC.standards) == "877", ]
+ 
+ GC.standards <- GC.standards[!rownames(GC.standards) == "877", ] ;
 
+ GC.standards[rownames(GC.standards) == "893", ]
+ 
+ GC.standards <- GC.standards[!rownames(GC.standards) == "893", ] ;
 
+ GC.standards[rownames(GC.standards) == "842", ]
+ 
+ GC.standards <- GC.standards[!rownames(GC.standards) == "842", ] ;
 
-#### Adding an factor identification for each of the different standards in a run (2022 data)
+ GC.standards[rownames(GC.standards) == "924", ]
+ 
+ GC.standards <- GC.standards[!rownames(GC.standards) == "924", ] ;
 
-# GC.standards$Series <- "None" ;
-# 
-# GC.standards[GC.standards$Position %in% c(1:5), c("Series")] <- 1 ;
-# 
-# GC.standards[GC.standards$Position %in% c(30:34), c("Series")] <- 2 ;
-# 
-# GC.standards[GC.standards$Position %in% c(51:55), c("Series")] <- 3 ;
-# 
-# GC.standards[GC.standards$Position %in% c(80:84), c("Series")] <- 4 ;
-# 
-# GC.standards[GC.standards$Position %in% c(101:105), c("Series")] <- 5 ;
-# 
-# 
-# head(GC.standards)
-# 
-# GC.standards$Series <- as.factor(GC.standards$Series) ;
-# 
-# str(GC.standards)
-# 
-# 
-# xyplot(CO2 ~ CO2.ppm | GC.Date , groups = Series , data=GC.standards, 
-#        
-#        type="b",main="CO2", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
-# 
-# 
-# xyplot(CH4 ~ CH4.ppm | GC.Date , groups = Series , data=GC.standards, 
-#        
-#        type="b",main="CH4", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
-# 
-# xyplot(N2O ~ N2O.ppm | GC.Date , groups = Series , data=GC.standards, 
-#        
-#        type="b",main="N2O", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3);
-# 
-# levels(GC.standards$Factor.Name)
+ GC.standards[rownames(GC.standards) == "1308", ]
+ 
+ GC.standards <- GC.standards[!rownames(GC.standards) == "1308", ] ;
 
 
 
 
-#### Adding ablines to the lattice xyplot using the panel.abline parameter in the panel function.
 
 
-# #### Testing lm to add the ablines ##
-# 
-# plot(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] )
-# 
-# lm(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] )
-# 
-# str(lm(CO2.ppm ~ CO2, data = GC.standards[GC.standards$Series == "1" & GC.standards$GC.Date == "2022-09-02",] ))
-# 
-# by(data = GC.standards, INDICES = GC.standards[, c("ANAL.DATE" , "Series")], function(x) lm(CO2.ppm ~ CO2, data = x))
-
-# An example from from https://stackoverflow.com/questions/11949766/how-to-add-abline-with-lattice-xyplot-function
-# 
-# xyplot(Neff ~ Eeff, data = phuong,
-#        panel = function(x, y) {
-#          panel.xyplot(x, y)
-#          panel.abline(lm(y ~ x))
-#        }, 
-#        xlab = "Energy efficiency (%)", 
-#        ylab = "Nitrogen efficiency (%)")
 
 
-# xyplot(N2O.ppm ~ N2O | GC.Date , groups = Series , data=GC.standards, 
-#        
-#        panel = function(x, y) { panel.xyplot(x, y)
-#          
-#          panel.xyplot(x, y) 
-#          
-#          panel.abline(lm(y ~ x))
-#          
-#          panel.text(3000, 30,labels = signif(lm(y ~ x)$coefficients[2], digits = 3))
-#          
-#          panel.abline(a= 30, b=0, col="RED")
-#        },
-#        
-#        type="b",main="N2O", auto.key = T, col = c("BLACK" , "RED" , "BLUE", "CYAN", "MAGENTA"),  lwd=3)
-#        
-#        
-# 
-# 
-# 
+
+
+
+
+
+
 
 
 
