@@ -3706,7 +3706,7 @@ xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards[!GC.standards$GC.Date
 
 
 
-###### with out  2021-09-22   ########
+###### without  2021-09-22   ########
 
 xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards[!GC.standards$GC.Date == "2021-09-22",], 
        
@@ -3844,8 +3844,149 @@ xyplot(N2O ~ N2O.ppm, groups = GC.Date, data= GC.standards,
          
        })
 
+###############################################################################################################
+#                           
+#                                           Final set for CO2 Standards Calibration
+#
+###############################################################################################################  
+
+
+
+
+####### Plot Calibration line  CO2 #######
+
+plot(CO2.ppm ~ CO2, 
+     
+     data = GC.standards,
+     
+     main = "CO2 Calibration Set 2021",
+     
+     col = "blue",
+     
+     # ylim = c(0,600),
+     
+     # xlim = c(8000,11000),
+     
+     type = "p")  ; 
+
+# text( x = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2"],
+#       
+#       y = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2.ppm"],
+#       
+#       labels = GC.standards[GC.standards$Sampling.Date == "2021-10-27" , "Sample.Name"],
+#       
+#       pos = 3);
+# 
+# 
+# text( x = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2"],
+#       
+#       y = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2.ppm"],
+#       
+#       labels = rownames(GC.standards[GC.standards$Sampling.Date == "2021-10-27" ,]),
+#       
+#       pos = 1);
+# 
+
+
+
+###### Calculate calibration line CO2 #######
+
+CAL.CO2.FinalSet <- lm(CO2.ppm ~ CO2,
+                         
+                         data = GC.standards)
+
+
+
+summary(CAL.CO2.FinalSet) 
+
+abline(a = CAL.CO2.FinalSet$coefficients[1] ,
+       
+       b = CAL.CO2.FinalSet$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards$CO2),
+      
+      y = mean(GC.standards$CO2.ppm),
+      
+      labels = paste(round(CAL.CO2.FinalSet$coefficients[1],3), round(CAL.CO2.FinalSet$coefficients[2],3), sep = "+"))
+
+
+
+
+###############################################################################################################
+#                           
+#                                           Final set for N2O Standards Calibration
+#
+###############################################################################################################  
+
   
-  
-  
-  
-  
+####### Plot Calibration line  N2O #######
+
+plot(N2O.ppm ~ N2O, 
+     
+     data = GC.standards,
+     
+     main = "N2O Calibration Set 2021",
+     
+     col = "blue",
+     
+     # ylim = c(0,600),
+     
+     # xlim = c(8000,11000),
+     
+     type = "p")  ; 
+
+# text( x = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2"],
+#       
+#       y = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2.ppm"],
+#       
+#       labels = GC.standards[GC.standards$Sampling.Date == "2021-10-27" , "Sample.Name"],
+#       
+#       pos = 3);
+# 
+# 
+# text( x = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2"],
+#       
+#       y = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2.ppm"],
+#       
+#       labels = rownames(GC.standards[GC.standards$Sampling.Date == "2021-10-27" ,]),
+#       
+#       pos = 1);
+# 
+
+
+
+###### Calculate calibration line CO2 #######
+
+CAL.N2O.FinalSet <- lm(N2O.ppm ~ N2O,
+                       
+                       data = GC.standards)
+
+
+
+summary(CAL.N2O.FinalSet) 
+
+abline(a = CAL.N2O.FinalSet$coefficients[1] ,
+       
+       b = CAL.N2O.FinalSet$coefficients[2] , 
+       
+       col = "red") ;
+
+text( x = mean(GC.standards$N2O),
+      
+      y = mean(GC.standards$N2O.ppm),
+      
+      labels = paste(round(CAL.N2O.FinalSet$coefficients[1],3), round(CAL.N2O.FinalSet$coefficients[2],3), sep = "+"))
+
+
+
+
+###############################################################################################################
+#                           
+#                                 Write curated Standards Calibration Data Set
+#
+###############################################################################################################  
+
+write.csv(x = GC.standards, file = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\StandardsDataset2021.csv")
+
