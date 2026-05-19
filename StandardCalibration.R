@@ -199,7 +199,7 @@ xyplot(N2O.ppm ~ N2O,
 
 ###############################################################################################################
 #                           
-#        Do a regresion with Ordinary least squares OLS
+#        Do a regression with Ordinary least squares OLS
 #
 ###############################################################################################################
 
@@ -355,10 +355,10 @@ xyplot(CO2.ppm ~ CO2 ,
          
            panel.text(x = 4000,  y = 4000, 
                     
-                    labels = paste(round(OLS.regression$coefficients[1],3),
+                    labels = paste(round(OLS.regression$coefficients[1],3), "+",
                                    
-                                   round(OLS.regression$coefficients[2],3),
-                                   sep = " + "),
+                                   round(OLS.regression$coefficients[2],3), "X",
+                                   sep = " "),
                     
                     col = "black" ,
                     
@@ -369,7 +369,76 @@ xyplot(CO2.ppm ~ CO2 ,
        }
         
        )
-    
+
+
+#################### Ordinary least square regression for N2O #######################
+
+OLS.regression.N2O <- lm(N2O.ppm ~ N2O, 
+                     
+                     data = C.GC.Standards.All) ;
+
+
+summary(OLS.regression.N2O)
+
+plot(OLS.regression.N2O)
+
+
+xyplot(N2O.ppm ~ N2O ,
+       
+       data = C.GC.Standards.All, 
+       
+       main = "N2O",
+       
+       groups = YEAR,
+       
+       pch = c(16, 1),
+       
+       cex = c(1, 1.5),
+       
+       col = c("red" , "blue"),
+       
+       key = list(
+         
+         space = "top",
+         
+         columns = 2,
+         
+         text = list(c("2021" , "2022")),
+         
+         points = list(pch = c(16, 1),
+                       
+                       col = c("red" , "blue"))),
+       
+       panel = function(x,y,...) {
+         
+         panel.xyplot(x,y, ...)
+         
+         # panel.lmline(CO2,CO2.ppm, col = "blue", lwd =2)
+         
+         panel.abline(a = OLS.regression.N2O$coefficients[1] , b = OLS.regression.N2O$coefficients[2],
+                      
+                      col = "red" , lwd = 1.5)
+         
+         panel.text(x = 2000,  y = 40, 
+                    
+                    labels = paste(round(OLS.regression.N2O$coefficients[1],3),"+",
+                                   
+                                   round(OLS.regression.N2O$coefficients[2],3), "X",
+                                   sep = " "),
+                    
+                    col = "black" ,
+                    
+                    cex = 2)
+         
+         
+         
+       }
+       
+)
+
+
+
+
 
 ###############################################################################################################
 #                           
@@ -378,7 +447,7 @@ xyplot(CO2.ppm ~ CO2 ,
 ###############################################################################################################
 
 
-############## quantile regression
+############## quantile regression  CO2 ###########
 
 Quantile.Reg.2 <- rq( CO2.ppm ~ CO2, data = C.GC.Standards.All, tau = seq(from = 0.1, to = 0.9 , by = 0.1) )
 
@@ -476,6 +545,110 @@ xyplot(CO2.ppm ~ CO2 ,
        
 )
 
+
+############## quantile regression  N2O ###########
+
+Quantile.Reg.N2O <- rq( N2O.ppm ~ N2O, data = C.GC.Standards.All, tau = seq(from = 0.1, to = 0.9 , by = 0.1) )
+
+str(Quantile.Reg.N2O )
+
+plot(Quantile.Reg.N2O)
+
+summary(Quantile.Reg.N2O)
+
+coefficients(Quantile.Reg.N2O)[,1]
+
+
+
+xyplot(N2O.ppm ~ N2O ,
+       
+       data = C.GC.Standards.All, 
+       
+       main = "N2O",
+       
+       groups = YEAR,
+       
+       pch = c(16, 1),
+       
+       cex = c(1, 1.5),
+       
+       col = c("red" , "blue"),
+       
+       key = list(
+         
+         space = "top",
+         
+         columns = 2,
+         
+         text = list(c("2021" , "2022")),
+         
+         points = list(pch = c(16, 1),
+                       
+                       col = c("red" , "blue"))),
+       
+       panel = function(x,y,...) {
+         
+         panel.xyplot(x,y, ...)
+         
+         panel.lmline(C.GC.Standards.All$N2O , C.GC.Standards.All$N2O.ppm, col = "blue", lwd =2)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O)[1,1] , b = coefficients(Quantile.Reg.N2O)[2,1],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O)[1,2] , b = coefficients(Quantile.Reg.N2O)[2,2],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O)[1,3] , b = coefficients(Quantile.Reg.N2O)[2,3],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O)[1,4] , b = coefficients(Quantile.Reg.N2O)[2,4],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O)[1,5] , b = coefficients(Quantile.Reg.N2O)[2,5],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O)[1,6] , b = coefficients(Quantile.Reg.N2O)[2,6],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O)[1,7] , b = coefficients(Quantile.Reg.N2O)[2,7],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O)[1,8] , b = coefficients(Quantile.Reg.N2O)[2,8],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O)[1,9] , b = coefficients(Quantile.Reg.N2O)[2,9],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.text(x = 2000,  y = 40, 
+                    
+                    labels = paste(round(OLS.regression.N2O$coefficients[1],3), "+",
+                                   
+                                   round(OLS.regression.N2O$coefficients[2],3), "X",
+                                   sep = " "),
+                    
+                    col = "black" ,
+                    
+                    cex = 2)
+         
+         
+         
+       }
+       
+)
+
+
+
+
+
 ######### It seems that two extreme points are moving the regression and the quantile regression to the right
 
 C.GC.Standards.All[C.GC.Standards.All$CO2.ppm == 5000 & C.GC.Standards.All$CO2 >= 25000 ,]
@@ -507,7 +680,7 @@ str(Quantile.Reg.2 )
 
 ###############################################################################################################
 #                           
-#        Comparison between ordinary least squares regression and quantile regresson for the standards
+#        Comparison between ordinary least squares regression and quantile regression for the CO2 standards
 #
 ###############################################################################################################
 
