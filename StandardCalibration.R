@@ -675,7 +675,12 @@ OLS.regression.2 <- lm(CO2.ppm ~ CO2,
 
 Quantile.Reg.2 <- rq( CO2.ppm ~ CO2, data = C.GC.Standards.All, tau = seq(from = 0.1, to = 0.9 , by = 0.1) )
 
-str(Quantile.Reg.2 )
+str(Quantile.Reg.2)
+
+str(coef(Quantile.Reg.2))
+
+coef(Quantile.Reg.2)[c(1:2),"tau= 0.1"]
+
 
 
 ###############################################################################################################
@@ -716,59 +721,189 @@ xyplot(CO2.ppm ~ CO2 ,
          
          panel.lmline(C.GC.Standards.All$CO2 , C.GC.Standards.All$CO2.ppm, col = "blue", lwd =2)
          
-         panel.abline(a = coefficients(Quantile.Reg)[1,1] , b = coefficients(Quantile.Reg)[2,1],
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,1] , b = coefficients(Quantile.Reg.2)[2,1],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg)[1,2] , b = coefficients(Quantile.Reg)[2,2],
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,2] , b = coefficients(Quantile.Reg.2)[2,2],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg)[1,3] , b = coefficients(Quantile.Reg)[2,3],
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,3] , b = coefficients(Quantile.Reg.2)[2,3],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg)[1,4] , b = coefficients(Quantile.Reg)[2,4],
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,4] , b = coefficients(Quantile.Reg.2)[2,4],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg)[1,5] , b = coefficients(Quantile.Reg)[2,5],
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,5] , b = coefficients(Quantile.Reg.2)[2,5],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg)[1,6] , b = coefficients(Quantile.Reg)[2,6],
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,6] , b = coefficients(Quantile.Reg.2)[2,6],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg)[1,7] , b = coefficients(Quantile.Reg)[2,7],
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,7] , b = coefficients(Quantile.Reg.2)[2,7],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg)[1,8] , b = coefficients(Quantile.Reg)[2,8],
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,8] , b = coefficients(Quantile.Reg.2)[2,8],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg)[1,9] , b = coefficients(Quantile.Reg)[2,9],
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,9] , b = coefficients(Quantile.Reg.2)[2,9],
                       
                       col = "gray" , lwd = 1.5)
          
          panel.text(x = 4000,  y = 4000, 
                     
-                    labels = paste(round(OLS.regression$coefficients[1],3),
-                                   
-                                   round(OLS.regression$coefficients[2],3),
-                                   sep = " + "),
+                    labels = paste0("OLS - CO2ppm = " , round(OLS.regression$coefficients[1],3),
+                                    
+                                    " + " , round(OLS.regression$coefficients[2],3),"CO2"),
                     
                     col = "black" ,
                     
                     cex = 2)
          
+       
+         panel.text(x = 4000,  y = 3000, 
+
+                    labels = paste0("Quant - CO2ppm = " , round(coef(Quantile.Reg.2)[1, "tau= 0.5"],3),
+
+                                    " + " , round(coef(Quantile.Reg.2)[2, "tau= 0.5"],3),"CO2"),
+
+                    col = "black" ,
+
+                    cex = 2)
+
          
          
        }
        
 )
 
+
+###############################################################################################################
+#                           
+#        Comparison between ordinary least squares regression and quantile regression for the N2O standards
+#
+###############################################################################################################
+
+######## OLS regression with out the outliers ################
+
+
+OLS.regression.N2O.2 <- lm(N2O.ppm ~ N2O, 
+                       
+                       data = C.GC.Standards.All) ;
+
+######## quantile regression with out the outliers ################
+
+
+Quantile.Reg.N2O.2 <- rq( N2O.ppm ~ N2O, data = C.GC.Standards.All, tau = seq(from = 0.1, to = 0.9 , by = 0.1) )
+
+str(Quantile.Reg.N2O.2 )
+
+
+######## quantile regression with out the outliers ################
+
+
+xyplot(N2O.ppm ~ N2O ,
+       
+       data = C.GC.Standards.All, 
+       
+       main = "N2O",
+       
+       groups = YEAR,
+       
+       pch = c(16, 1),
+       
+       cex = c(1, 1.5),
+       
+       col = c("red" , "blue"),
+       
+       key = list(
+         
+         space = "top",
+         
+         columns = 2,
+         
+         text = list(c("2021" , "2022")),
+         
+         points = list(pch = c(16, 1),
+                       
+                       col = c("red" , "blue"))),
+       
+       panel = function(x,y,...) {
+         
+         panel.xyplot(x,y, ...)
+         
+         panel.lmline(C.GC.Standards.All$N2O , C.GC.Standards.All$N2O.ppm, col = "blue", lwd =2)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O.2)[1,1] , b = coefficients(Quantile.Reg.N2O.2)[2,1],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O.2)[1,2] , b = coefficients(Quantile.Reg.N2O.2)[2,2],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O.2)[1,3] , b = coefficients(Quantile.Reg.N2O.2)[2,3],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O.2)[1,4] , b = coefficients(Quantile.Reg.N2O.2)[2,4],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O.2)[1,5] , b = coefficients(Quantile.Reg.N2O.2)[2,5],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O.2)[1,6] , b = coefficients(Quantile.Reg.N2O.2)[2,6],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O.2)[1,7] , b = coefficients(Quantile.Reg.N2O.2)[2,7],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O.2)[1,8] , b = coefficients(Quantile.Reg.N2O.2)[2,8],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.N2O.2)[1,9] , b = coefficients(Quantile.Reg.N2O.2)[2,9],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.text(x = 10000,  y = 50, 
+                    
+                    labels = paste0("OLS - N2Oppm = ", round(OLS.regression.N2O$coefficients[1],3), "+",
+                                   
+                                   round(OLS.regression.N2O$coefficients[2],3), "N2O"),
+                    
+                    col = "black" ,
+                    
+                    cex = 2)
+         
+         
+         panel.text(x = 10000,  y = 40, 
+
+                    labels = paste0("Quant - N2Oppm = " , round(coef(Quantile.Reg.N2O.2)[1, "tau= 0.5"],3),
+
+                                    " + " , round(coef(Quantile.Reg.N2O.2)[2, "tau= 0.5"],3),"N2O"),
+
+                    col = "black" ,
+
+                    cex = 2)
+
+         
+         
+         
+       }
+       
+)
 
 
 
