@@ -759,9 +759,9 @@ xyplot(CO2.ppm ~ CO2 ,
          
          panel.text(x = 4000,  y = 4000, 
                     
-                    labels = paste0("OLS - CO2ppm = " , round(OLS.regression$coefficients[1],3),
+                    labels = paste0("OLS - CO2ppm = " , round(OLS.regression$coefficients[1],5),
                                     
-                                    " + " , round(OLS.regression$coefficients[2],3),"CO2"),
+                                    " + " , round(OLS.regression$coefficients[2],5),"CO2"),
                     
                     col = "black" ,
                     
@@ -879,9 +879,9 @@ xyplot(N2O.ppm ~ N2O ,
          
          panel.text(x = 10000,  y = 50, 
                     
-                    labels = paste0("OLS - N2Oppm = ", round(OLS.regression.N2O$coefficients[1],3), "+",
+                    labels = paste0("OLS - N2Oppm = ", round(OLS.regression.N2O$coefficients[1],5), "+",
                                    
-                                   round(OLS.regression.N2O$coefficients[2],3), "N2O"),
+                                   round(OLS.regression.N2O$coefficients[2],5), "N2O"),
                     
                     col = "black" ,
                     
@@ -890,9 +890,9 @@ xyplot(N2O.ppm ~ N2O ,
          
          panel.text(x = 10000,  y = 40, 
 
-                    labels = paste0("Quant - N2Oppm = " , round(coef(Quantile.Reg.N2O.2)[1, "tau= 0.5"],3),
+                    labels = paste0("Quant - N2Oppm = " , round(coef(Quantile.Reg.N2O.2)[1, "tau= 0.5"],5),
 
-                                    " + " , round(coef(Quantile.Reg.N2O.2)[2, "tau= 0.5"],3),"N2O"),
+                                    " + " , round(coef(Quantile.Reg.N2O.2)[2, "tau= 0.5"],5),"N2O"),
 
                     col = "black" ,
 
