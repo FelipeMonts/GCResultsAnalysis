@@ -1,9 +1,9 @@
 ##############################################################################################################
 # 
 # 
-# Program to Analyze and plot GC data collected from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
+# Program to collect 2022 GC data  from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
 # 
-#     This program is focused on analyzing standards for calibration
+#     
 # 
 # 
 #  Felipe Montes 2022/08/23
@@ -19,7 +19,7 @@
 #                             Tell the program where the package libraries are stored                        
 ###############################################################################################################
 
-.libPaths("C:\\Users\\frm10\\AppData\\Local\\R\\win-library\\4.2")  ;
+#.libPaths("C:\\Users\\frm10\\AppData\\Local\\R\\win-library\\4.2")  ;
 
 
 ###############################################################################################################
@@ -79,11 +79,15 @@ library(HMR)
 ###############################################################################################################
 ### Read the Directories where the GC data are stored
 
-File.List.directory.path <- "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Felipe2022\\Results" ;
+File.List.directory.path <- paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects",
+                                   
+                                   "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data",
+                                   
+                                   "\\GasChromatograph\\Felipe2022\\Results") ;
 
 File.List.directory <- list.files(File.List.directory.path); length(File.List.directory) ; 
 
-File.List.Sub.directory <- list.files(paste0(File.List.directory.path , "\\" ,File.List.directory [[1]] )); length(File.List.Sub.directory) ;
+File.List.Sub.directory <- list.files(paste0(File.List.directory.path , "\\" , File.List.directory [1] )); length(File.List.Sub.directory) ;
 
 Summary.directory <- grep("Sum", File.List.Sub.directory, value = T) ;
 
