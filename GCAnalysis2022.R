@@ -3,7 +3,7 @@
 # 
 # Program to Analyze and plot GC data collected from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
 # 
-#     This program is focused on measurements on year 2021
+#     This program is focused on measurements on year 2022
 # 
 # 
 #  Felipe Montes 2026/06/02
@@ -67,7 +67,7 @@ setwd("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_P
 #### Read data  #####
 
 
-PeakArea.results.2021 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults2021.csv" ) , header = T) ;
+PeakArea.results.2022 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults2022.csv" ) , header = T) ;
 
 ###############################################################################################################
 #                           
@@ -75,21 +75,35 @@ PeakArea.results.2021 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcomp
 #
 ###############################################################################################################
 
-str(PeakArea.results.2021)
+str(PeakArea.results.2022)
 
-head(PeakArea.results.2021)
+head(PeakArea.results.2022)
 
-anyDuplicated(PeakArea.results.2021, MARGIN = c(1,2))
+anyDuplicated(PeakArea.results.2022, MARGIN = c(1,2))
+
+which(anyDuplicated(PeakArea.results.2022, MARGIN = c(1,2)))
+
+PeakArea.results.2022[duplicated(PeakArea.results.2022, MARGIN = c(1,2)),]
+
+PeakArea.results.2022[PeakArea.results.2022$CH4 == 4.048 , ]
+
+PeakArea.results.2022.Duplicated <- PeakArea.results.2022[PeakArea.results.2022$File == "Results20220630.pdf" , ];
+
+PeakArea.results.2022.Duplicated[order(PeakArea.results.2022.Duplicated$CO2, PeakArea.results.2022.Duplicated$N2O),]
+
+##### It seems that the File "Results20220630.pdf" was read two times ######
 
 
 
 ##################################  Remove duplicates  ######################################################
 
-PeakArea.results.2021.1 <- PeakArea.results[!duplicated(PeakArea.results, MARGIN = c(1,2)),] ;
+PeakArea.results.2022.1 <- PeakArea.results[!duplicated(PeakArea.results, MARGIN = c(1,2)),] ;
 
 str(PeakArea.results.2021.1) 
 
 anyDuplicated(PeakArea.results.2021.1, MARGIN = c(1,2))
+
+
 
 PeakArea.results.2021 <- PeakArea.results.2021.1  ;
 

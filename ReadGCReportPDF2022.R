@@ -104,8 +104,8 @@ ReadGCReportPDF2022<-function(GCPDF.File.path, GCPDF.File.name ){
   
   # Report.PDF.1<-pdf_text(pdf=paste0(File.List.directory,"\\",PDF.Results.Files[1])) ;
   
-  Report.PDF.1<-pdf_text(pdf=paste0(GCPDF.File.path,"\\",GCPDF.File.name)) ;
-  
+  Report.PDF.1 <- pdf_text( pdf = paste0(GCPDF.File.path,"\\",GCPDF.File.name)) ;
+   
   # str(Report.PDF.1)
   
   # separate each page and each line using strsplit() and "\n" as the separation pattern

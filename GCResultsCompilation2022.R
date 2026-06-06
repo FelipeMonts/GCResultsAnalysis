@@ -1,14 +1,16 @@
 ##############################################################################################################
 # 
 # 
-# Program to collect 2022 GC data  from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
+# Program to read and collect 2022 GC Analysis results data from Professor Lauren McPhillips
+# 
+#                Agilent 8890 Gas Chromatograph summary results reports
 # 
 #     
 # 
 # 
 #  Felipe Montes 2022/08/23
 # 
-# 
+#  Updated 2026/06/03
 # 
 # 
 ############################################################################################################### 
@@ -79,17 +81,46 @@ library(HMR)
 ###############################################################################################################
 ### Read the Directories where the GC data are stored
 
-File.List.directory.path <- paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects",
+#File.List.directory.path <- paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects",
                                    
                                    "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data",
                                    
                                    "\\GasChromatograph\\Felipe2022\\Results") ;
 
-File.List.directory <- list.files(File.List.directory.path); length(File.List.directory) ; 
+File.List.directory.path <- "C:\\Users\\frm10\\Results"  ;
+
+
+list.files(File.List.directory.path)
+
+#### "Trouble" and "FelipeGCN2O20220808" do not have data. Need to be removed from the list.files   ####
+
+#### "FelipeGCN2O-20220609_B1B2" is a duplicate of FelipeGCN2O_20220629_B1B2 
+
+list.files(File.List.directory.path)[which(list.files(File.List.directory.path) != "Trouble" &
+                                             
+                                             list.files(File.List.directory.path) != "FelipeGCN2O20220808" &
+                                             
+                                             list.files(File.List.directory.path) != "FelipeGCN2O-20220609_B1B2" &
+                                             
+                                             list.files(File.List.directory.path) != "FelipeGNN2O20220808_Aborted") ]
+
+
+
+File.List.directory <- list.files(File.List.directory.path)[which(list.files(File.List.directory.path) != "Trouble" &
+                                                              
+                                                              list.files(File.List.directory.path) != "FelipeGCN2O20220808" &
+                                                              
+                                                              list.files(File.List.directory.path) != "FelipeGCN2O-20220609_B1B2" &
+                                                              
+                                                              list.files(File.List.directory.path) != "FelipeGNN2O20220808_Aborted") ]
+File.List.directory
+
 
 File.List.Sub.directory <- list.files(paste0(File.List.directory.path , "\\" , File.List.directory [1] )); length(File.List.Sub.directory) ;
 
 Summary.directory <- grep("Sum", File.List.Sub.directory, value = T) ;
+
+Summary.directory
 
 
 ###############################################################################################################
@@ -131,13 +162,18 @@ PeakArea.results.0<-data.frame(Sample.Name = character(), Position = integer() ,
 
 
 
-# i = 1
+
+##### load the ReadGCReportPDF function ###
+
+source("ReadGCReportPDF2022.R")
+
+# i = 3
 
 #for (i in seq(1,length(File.List.directory)))
 
-for (i in seq(1,length(File.List.directory)-2)){
+for (i in seq(1,length(File.List.directory))){
   
-  File.List.Sub.directory <- list.files(paste0(File.List.directory.path , "\\" ,File.List.directory [[i]] ));
+  File.List.Sub.directory <- list.files(paste0(File.List.directory.path , "\\" , File.List.directory [[i]] ));
   
   Summary.directory <- grep("Sum", File.List.Sub.directory, value = T) ;
   
@@ -154,7 +190,7 @@ for (i in seq(1,length(File.List.directory)-2)){
   
   for (j in seq(1, length(PDF.Results.Files))) {
     
-    PeakArea.results.1<-ReadGCReportPDF2022(GCPDF.File.path = paste0(File.List.directory.path , "\\" , File.List.directory [[i]] , "\\" , 
+    PeakArea.results.1 <- ReadGCReportPDF2022(GCPDF.File.path = paste0(File.List.directory.path , "\\" , File.List.directory [[i]] , "\\" , 
                                                                      
                                                                      Summary.directory ), GCPDF.File.name = PDF.Results.Files[j]) ;
     
@@ -179,5 +215,12 @@ for (i in seq(1,length(File.List.directory)-2)){
 }
 
 
-write.csv(x = PeakArea.results, file = "D:\\Felipe\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults2022.csv", row.names = F )
+write.csv(x = PeakArea.results, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University",
+
+"\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+
+"DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults2022.csv") )  ;
+
+
+
 
