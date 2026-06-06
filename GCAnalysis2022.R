@@ -81,35 +81,35 @@ head(PeakArea.results.2022)
 
 anyDuplicated(PeakArea.results.2022, MARGIN = c(1,2))
 
-which(anyDuplicated(PeakArea.results.2022, MARGIN = c(1,2)))
 
-PeakArea.results.2022[duplicated(PeakArea.results.2022, MARGIN = c(1,2)),]
-
-PeakArea.results.2022[PeakArea.results.2022$CH4 == 4.048 , ]
-
-PeakArea.results.2022.Duplicated <- PeakArea.results.2022[PeakArea.results.2022$File == "Results20220630.pdf" , ];
-
-PeakArea.results.2022.Duplicated[order(PeakArea.results.2022.Duplicated$CO2, PeakArea.results.2022.Duplicated$N2O),]
-
-##### It seems that the File "Results20220630.pdf" was read two times ######
+# PeakArea.results.2022[duplicated(PeakArea.results.2022, MARGIN = c(1,2)),]
+# 
+# PeakArea.results.2022[PeakArea.results.2022$CH4 == 4.048 , ]
+# 
+# PeakArea.results.2022.Duplicated <- PeakArea.results.2022[PeakArea.results.2022$File == "Results20220630.pdf" , ];
+# 
+# PeakArea.results.2022.Duplicated[order(PeakArea.results.2022.Duplicated$CO2, PeakArea.results.2022.Duplicated$N2O),]
+# 
+# ##### It seems that the File "Results20220630.pdf" was read two times ######
 
 
 
 ##################################  Remove duplicates  ######################################################
 
-PeakArea.results.2022.1 <- PeakArea.results[!duplicated(PeakArea.results, MARGIN = c(1,2)),] ;
+PeakArea.results.2022.2 <- PeakArea.results.2022[!duplicated(PeakArea.results.2022, MARGIN = c(1,2)),] ;
 
-str(PeakArea.results.2021.1) 
+str(PeakArea.results.2022.2) 
 
-anyDuplicated(PeakArea.results.2021.1, MARGIN = c(1,2))
+anyDuplicated(PeakArea.results.2022.2, MARGIN = c(1,2))
 
 
 
-PeakArea.results.2021 <- PeakArea.results.2021.1  ;
+PeakArea.results.2022 <- PeakArea.results.2022.2  ;
 
-str(PeakArea.results.2021) 
 
-rm(PeakArea.results.2021.1)
+str(PeakArea.results.2022) 
+
+rm(PeakArea.results.2022.2)
 
 
 #################################################################################################################
@@ -118,19 +118,19 @@ rm(PeakArea.results.2021.1)
 #
 ###############################################################################################################
 
-names(PeakArea.results.2021)
+names(PeakArea.results.2022)
 
-anyDuplicated(PeakArea.results.2021[, c(4,5,6,8)], MARGIN = c(1,2))
+anyDuplicated(PeakArea.results.2022[, c(4,5,6,8)], MARGIN = c(1,2))
 
-which(duplicated(PeakArea.results.2021[, c(4,5,6)], MARGIN = c(1,2)))
+which(duplicated(PeakArea.results.2022[, c(4,5,6)], MARGIN = c(1,2)))
 
-PeakArea.results.2021.Repeated <- PeakArea.results.2021[duplicated(PeakArea.results.2021[, c(4,5,6)], MARGIN = c(1,2)),c(4,5,6) ]
+PeakArea.results.2022.Repeated <- PeakArea.results.2022[duplicated(PeakArea.results.2022[, c(4,5,6)], MARGIN = c(1,2)),c(4,5,6) ]
 
-PeakArea.results.2021[PeakArea.results.2021$CH4 %in% PeakArea.results.2021.Repeated$CH4 &
+PeakArea.results.2022[PeakArea.results.2022$CH4 %in% PeakArea.results.2022.Repeated$CH4 &
                         
-                        PeakArea.results.2021$CO2 %in% PeakArea.results.2021.Repeated$CO2 &
+                        PeakArea.results.2022$CO2 %in% PeakArea.results.2022.Repeated$CO2 &
                         
-                        PeakArea.results.2021$N2O %in% PeakArea.results.2021.Repeated$N2O,]
+                        PeakArea.results.2022$N2O %in% PeakArea.results.2022.Repeated$N2O,]
 
 
 
