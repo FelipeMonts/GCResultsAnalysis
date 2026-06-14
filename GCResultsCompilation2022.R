@@ -79,13 +79,26 @@ library(HMR)
 ###############################################################################################################
 #                           Explore the files and directory and files with the data
 ###############################################################################################################
-### Read the Directories where the GC data are stored
+
+
+# Read the Directories where the GC data are stored.
+
+# #### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!########
+
+# 
+# Data stored in one drive is not immediately accessible and therefore create problems when trying to read it directly
+# 
+# A good option is to download the data to the computer and read it from there
+
+# #### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!######## 
+
 
 #File.List.directory.path <- paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects",
-                                   
-                                   "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data",
-                                   
-                                   "\\GasChromatograph\\Felipe2022\\Results") ;
+                                   # 
+                                   # "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data",
+                                   # 
+                                   # "\\GasChromatograph\\Felipe2022\\Results") ;
+
 
 File.List.directory.path <- "C:\\Users\\frm10\\Results"  ;
 
@@ -167,7 +180,7 @@ PeakArea.results.0<-data.frame(Sample.Name = character(), Position = integer() ,
 
 source("ReadGCReportPDF2022.R")
 
-# i = 3
+# i = 2
 
 #for (i in seq(1,length(File.List.directory)))
 
@@ -184,7 +197,14 @@ for (i in seq(1,length(File.List.directory))){
   
   
   
-  PDF.Results.Files<-File.List[grep(".pdf", x = File.List)] ;
+  PDF.Results.Files <- File.List[grep(".pdf", x = File.List)] ;
+  
+  print(PDF.Results.Files)
+  
+  print(File.List.directory[i])
+  
+  print(i)
+  
   
   # j = 1
   
@@ -213,6 +233,18 @@ for (i in seq(1,length(File.List.directory))){
   }
   
 }
+
+
+# #### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!########
+
+# 
+# The directory "FelipeGCN20_20220802_B3B4" does not have the GC data corresponding to 20220802_B3B4
+# 
+# It has the data duplicated from 2O20220910_B1B2. It appears that the data for 20220802_B3B4 has been lost
+
+# #### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!######## 
+
+
 
 
 write.csv(x = PeakArea.results, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University",

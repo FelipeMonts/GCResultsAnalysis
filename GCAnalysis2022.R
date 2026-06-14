@@ -67,7 +67,9 @@ setwd("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_P
 #### Read data  #####
 
 
-PeakArea.results.2022 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults2022.csv" ) , header = T) ;
+PeakArea.results.2022 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults2022.csv") , header = T) ;
+
+
 
 ###############################################################################################################
 #                           
@@ -76,6 +78,11 @@ PeakArea.results.2022 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcomp
 ###############################################################################################################
 
 str(PeakArea.results.2022)
+
+names(PeakArea.results.2022)
+
+names(PeakArea.results.2022)[1] <- c("RowName") ;
+
 
 head(PeakArea.results.2022)
 
@@ -119,12 +126,13 @@ rm(PeakArea.results.2022.2)
 ###############################################################################################################
 
 names(PeakArea.results.2022)
+head(PeakArea.results.2022)
 
-anyDuplicated(PeakArea.results.2022[, c(4,5,6,8)], MARGIN = c(1,2))
+anyDuplicated(PeakArea.results.2022[, c(5,6,7)], MARGIN = c(1,2))
 
-which(duplicated(PeakArea.results.2022[, c(4,5,6)], MARGIN = c(1,2)))
+which(duplicated(PeakArea.results.2022[, c(5,6,7)], MARGIN = c(1,2)))
 
-PeakArea.results.2022.Repeated <- PeakArea.results.2022[duplicated(PeakArea.results.2022[, c(4,5,6)], MARGIN = c(1,2)),c(4,5,6) ]
+PeakArea.results.2022.Repeated <- PeakArea.results.2022[duplicated(PeakArea.results.2022[, c(5,6,7)], MARGIN = c(1,2)),c(5,6,7) ]
 
 PeakArea.results.2022[PeakArea.results.2022$CH4 %in% PeakArea.results.2022.Repeated$CH4 &
                         
@@ -133,25 +141,31 @@ PeakArea.results.2022[PeakArea.results.2022$CH4 %in% PeakArea.results.2022.Repea
                         PeakArea.results.2022$N2O %in% PeakArea.results.2022.Repeated$N2O,]
 
 
-
-#### All the duplicated measurements are in 20210614B1B2summaryreport1.pdf  and in 20210614B1B2peakareasMERGED.pdf ###################################
-
-#### The 20210614B1B2peakareasMERGED.pdf GC analyxix was doen on 06/30/2021 and the 20210614B1B2peakareasMERGED.pdf on 07/01/2021
-
-### Comparing the two data sets 20210614B1B2summaryreport1.pdf and 20210614B1B2peakareasMERGED.pdf #############
+PeakArea.results.2022[PeakArea.results.2022$CH4 == 6.340 ,]
 
 
-D.20210614B1B2summaryreport1 <- PeakArea.results.2021[PeakArea.results.2021$File == "20210614B1B2summaryreport1.pdf" ,] ;
+#### All the duplicated measurements are in SummaryGCN2O20220910_B1B2.pdf  
 
-D.20210614B1B2peakareasMERGED <- PeakArea.results.2021[PeakArea.results.2021$File == "20210614B1B2peakareasMERGED.pdf" ,] ;
-
-
-str(D.20210614B1B2summaryreport1)
-
-str(D.20210614B1B2peakareasMERGED)
+#### It seems that SummaryGCN2O20220910_B1B2.pdf was read two times 
 
 
-###  CH4  #### 
+
+D.SummaryGCN2O20220910_B1B2.pdf <- PeakArea.results.2022[PeakArea.results.2022$File == "SummaryGCN2O20220910_B1B2.pdf" ,] ;
+
+D.SummaryGCN2O20220910_B1B2.pdf[order(D.SummaryGCN2O20220910_B1B2.pdf$CH4),]
+
+D.SummaryGCN2O20220910_B1B2.pdf.2 <- D.SummaryGCN2O20220910_B1B2.pdf[which(!duplicated(D.SummaryGCN2O20220910_B1B2.pdf[,-1], 
+                                                                                 
+                                                                                 MARGIN = c(1,2))),] ;
+
+# Removing duplicates in D.SummaryGCN2O20220910_B1B2.pdf.2
+
+str(D.SummaryGCN2O20220910_B1B2.pdf.2)
+
+anyDuplicated(D.SummaryGCN2O20220910_B1B2.pdf.2, MARGIN = c(1,2))
+
+
+ ###  CH4  #### 
 
 range(D.20210614B1B2summaryreport1$CH4)
 
