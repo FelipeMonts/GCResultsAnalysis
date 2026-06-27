@@ -100,7 +100,7 @@ library(HMR)
                                    # "\\GasChromatograph\\Felipe2022\\Results") ;
 
 
-File.List.directory.path <- "C:\\Users\\frm10\\Results"  ;
+File.List.directory.path <- "C:\\Users\\frm10\\Results\\Results_2022"  ;
 
 
 list.files(File.List.directory.path)

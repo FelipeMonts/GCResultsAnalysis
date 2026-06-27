@@ -3,12 +3,12 @@
 # 
 # Program to Analyze and plot GC data collected from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
 # 
-#     This program is focused on analyzing standards for calibration
+#     This program is focused agregating the curated data set of GC measurements from 2021
 # 
 # 
 #  Felipe Montes 2022/08/23
 # 
-# 
+# Updated  2026/06/27
 # 
 # 
 ############################################################################################################### 
@@ -75,7 +75,11 @@ library(gtools)
 
 #source(file = "D:\\Felipe\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\ReadGCReportPDF2021.R", verbose =T)
 
-source(file = "C:/Users/frm10/OneDrive - The Pennsylvania State University/Current_Projects/CCC Based Experiments/StrategicTillage_NitrogenLosses_OrganicCoverCrops/DataAnalysis/RCode/GCResultsAnalysis/ReadGCReportPDF2021.R", verbose =T)
+source(file = paste0("C:/Users/frm10/OneDrive - The Pennsylvania State University/Current_Projects/" , 
+
+                      "CCC Based Experiments/StrategicTillage_NitrogenLosses_OrganicCoverCrops/" , 
+                      
+                      "DataAnalysis/RCode/GCResultsAnalysis/ReadGCReportPDF2021.R"), verbose =T)
 
 
 ###############################################################################################################
@@ -83,16 +87,24 @@ source(file = "C:/Users/frm10/OneDrive - The Pennsylvania State University/Curre
 ###############################################################################################################
 ### Read the Directories where the GC data are stored
 
+
 # File.List.directory <- "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results" ;
 
 
-File.List.directory <- "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data\\GasChromatograph\\Alli_Felipe2021\\Results" ;
+File.List.directory <- paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects",
+                              
+                             "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data" , 
+                             
+                             "\\GasChromatograph\\Alli_Felipe2021\\Results") ;
 
 File.List <- list.files(File.List.directory); length(File.List) ; 
 
 # Only select the pdf files
 
 PDF.Results.Files.1 <- File.List[grep(".pdf", File.List)] ;
+
+PDF.Results.Files.1
+
 
 # PDF.Results.Files.1[40]
 
