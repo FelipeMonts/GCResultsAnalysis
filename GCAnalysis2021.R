@@ -85,7 +85,7 @@ anyDuplicated(PeakArea.results.2021, MARGIN = c(1,2))
 
 ##################################  Remove duplicates  ######################################################
 
-PeakArea.results.2021.1 <- PeakArea.results.2021[!duplicated(PeakArea.results, MARGIN = c(1,2)),] ;
+PeakArea.results.2021.1 <- PeakArea.results.2021[!duplicated(PeakArea.results.2021, MARGIN = c(1,2)),] ;
 
 str(PeakArea.results.2021.1) 
 
@@ -122,7 +122,7 @@ PeakArea.results.2021[PeakArea.results.2021$CH4 %in% PeakArea.results.2021.Repea
 
 #### All the duplicated measurements are in 20210614B1B2summaryreport1.pdf  and in 20210614B1B2peakareasMERGED.pdf ###################################
 
-#### The 20210614B1B2peakareasMERGED.pdf GC analyxix was doen on 06/30/2021 and the 20210614B1B2peakareasMERGED.pdf on 07/01/2021
+#### The 20210614B1B2peakareasMERGED.pdf GC analyxix was done on 06/30/2021 and the 20210614B1B2peakareasMERGED.pdf on 07/01/2021
 
 ### Comparing the two data sets 20210614B1B2summaryreport1.pdf and 20210614B1B2peakareasMERGED.pdf #############
 
