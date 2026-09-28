@@ -373,11 +373,6 @@ GC.Data.NoSTD.2021$CoverCrop.F <- as.factor(GC.Data.NoSTD.2021$CoverCrop) ;
 
 
 
-
-
-
-
-
 ###############################################################################################################
 #                           
 #                               Exploratory Data visualization

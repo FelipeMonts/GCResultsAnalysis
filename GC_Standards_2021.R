@@ -67,7 +67,9 @@ library(paletteer)
 
 # readClipboard() 
 
-setwd("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis");
+setwd(paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\",
+
+"CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis"));
 
 
 #### N2O Sampling year  #####
@@ -78,6 +80,11 @@ Year = 2021
 
 
 PeakArea.results <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults" , Year ,".csv" ) , header = T) ;
+
+
+PeakArea.results <- read.csv(file = "FluxDataAnalysisResults\\GCcompiledResults20265702Sep091788375422.csv" , header = T) ;
+
+
 
 ###############################################################################################################
 #                           
@@ -277,6 +284,9 @@ CAL.CO2.2021_05_28 <- lm(CO2.ppm ~ CO2,
 
 
 #################################    2021-06-01  Missing   ############################################
+ 
+ GC.standards[GC.standards$Sampling.Date == "2021-06-01",]
+ 
 
 #################################    2021-06-04     ############################################
 

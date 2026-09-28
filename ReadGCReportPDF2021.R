@@ -4,7 +4,7 @@
 # 
 #    Felipe Montes 2022/10/13 
 #   
-#    Rev 2023/07/17
+#    Rev 2026/09/24
 # 
 # 
 # 
@@ -83,12 +83,16 @@ library(stringr)
 #  
 #  in the code below GCPDF.File=paste0(File.List.directory,"\\",PDF.Results.Files[1])
 # 
-#    GCPDF.File.path = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results"
+   # GCPDF.File.path = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects",
+   # 
+   #                    "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\",
+   # 
+   #                    "Data\\GasChromatograph\\Alli_Felipe2021\\Results")
 #  
 #  2-> GCPDF.File.name= Name of the Gas Cromatograph analysis report in pdf format
 # 
 # 
-#    GCPDF.File.name="20210812B3B4peakareas2.pdf" 
+#    GCPDF.File.name="20210929B1B2peakareas2.pdf" 
 # 
 # 
 # 
@@ -104,7 +108,7 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   
   # Report.PDF.1<-pdf_text(pdf=paste0(File.List.directory,"\\",PDF.Results.Files[1])) ;
   
-  Report.PDF.1<-pdf_text(pdf=paste0(GCPDF.File.path,"\\",GCPDF.File.name)) ;
+  Report.PDF.1 <- pdf_text(pdf=paste0(GCPDF.File.path,"\\",GCPDF.File.name)) ;
   
   # str(Report.PDF.1)
   
@@ -150,7 +154,7 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   
   
   
-  Report.PDF.5<-grep(pattern="Koehle*|Sequence|CH4|Peak", x=Report.PDF.4, value=T, invert=T)
+  Report.PDF.5 <- grep(pattern="Koehle*|Sequence|CH4|Peak", x=Report.PDF.4, value=T, invert=T)
   
   
   
@@ -177,7 +181,7 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   
   # strsplit(x=Report.PDF.5, split=c(" "))
   
-  Report.PDF.6<-strsplit(x=Report.PDF.5, split=c(" ")) ;
+  Report.PDF.6 <-strsplit(x=Report.PDF.5, split=c(" ")) ;
   
   # str(Report.PDF.6) ; head(Report.PDF.6,3 )
   
@@ -202,9 +206,9 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   # 
   # t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))
   
-  Report.PDF.7<-data.frame(t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))) ;
+  Report.PDF.7 <-data.frame(t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))) ;
   
-  Report.PDF.7<-data.frame(t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))) ;
+ 
   # Names of the pdf report columns c("Sample", "Position", "Vial", "CH4" , "CO2" , "N2O" )
   
   names(Report.PDF.7)<-c("Sample.Name", "Position" , "Vial", "CH4" , "CO2" , "N2O" );
