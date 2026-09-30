@@ -61,7 +61,9 @@ library(HMR)
 
 # readClipboard() 
 
-setwd("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis");
+setwd(paste0( "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\" , 
+
+     "CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis"));
 
 
 #### Read data  #####

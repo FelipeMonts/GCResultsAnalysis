@@ -1,7 +1,7 @@
 ##############################################################################################################
 # 
 # 
-# Program to Analyze and plot GC data collected from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
+# Program to collect and curate GC data from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
 # 
 #     This program is focused agregating the curated data set of GC measurements from 2021
 # 
@@ -79,7 +79,7 @@ source(file = paste0("C:/Users/frm10/OneDrive - The Pennsylvania State Universit
 
                       "CCC Based Experiments/StrategicTillage_NitrogenLosses_OrganicCoverCrops/" , 
                       
-                      "DataAnalysis/RCode/GCResultsAnalysis/ReadGCReportPDF2021.R"), verbose =T)
+                      "DataAnalysis/RCode/GCResultsAnalysis/ReadGCReportPDF2021.R"))
 
 
 ###############################################################################################################
@@ -247,9 +247,20 @@ PeakArea.results.20210929B1B2peakareas1 <- ReadGCReportPDF2021(GCPDF.File.path =
                                         
                                         , GCPDF.File.name = "20210929B1B2peakareas1.pdf");
 
+# File "20210929B1B2peakareas1.pdf"  does not have a methane (CH4) data in the first row and that 
+# messed up the dataframe and the sapply function. To correct for it, line 1 is read separately 
+# and cbind with the rest of the data frame later. The incomplete data of the first row of "20210929B1B2peakareas1.pdf
+# is; c("0PerSTDA", 1, 1, 9999, 119.969, 102.005)
 
 
-# Data from 20210601 does not have names for the samples. The data is collected from the data curate curation that
+PeakArea.results.20210929B1B2peakareas1 <- read.csv( file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+                                                                          
+                                                           "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+                                                                          
+                                                           "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\Data20210929B1B2peakareas12026_09_30_15_19_11.csv"))
+
+
+# Data from 20210601 does not have names for the samples. The data is collected from the data curation that
 # 
 # that Alli did to perform the calculations for her thesis.  The file location is:
 # 
@@ -302,7 +313,7 @@ str(Data.20210601)
 
 ##### Grouping all the results together
 
-PeakArea.Results.All <-rbind(PeakArea.results.0 , PeakArea.results.20210929B1B2peakareas1, Data.20210601 )  ;
+PeakArea.Results.All <-rbind(PeakArea.results.0 ,PeakArea.results.20210929B1B2peakareas1,  Data.20210601 )  ;
 
 
 
