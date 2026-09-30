@@ -85,7 +85,9 @@ source(file = paste0("C:/Users/frm10/OneDrive - The Pennsylvania State Universit
 ###############################################################################################################
 #                           Explore the files and directory and files with the data
 ###############################################################################################################
+
 ### Read the Directories where the GC data are stored
+
 
 
 # File.List.directory <- "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\GCResults\\Alli_Felipe2021\\Results" ;
