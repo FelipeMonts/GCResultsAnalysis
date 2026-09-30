@@ -313,13 +313,13 @@ names(PeakArea.Results.All)
 
 
 
-Working.Date <- format(Sys.time() , "%Y%M%d%h%m%s") ; 
+Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ; 
 
 # write.csv(x = PeakArea.Results.All, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
 # 
 # "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
 # 
-# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults",
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults_2021",
 # 
 # Working.Date , ".csv"), row.names = F )
 

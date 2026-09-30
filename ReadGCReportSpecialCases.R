@@ -127,7 +127,7 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   
   Report.PDF.3 <- unlist(Report.PDF.2);
   
-  # str(Report.PDF.3)
+  # str(Report.PDF.3) ; head(Report.PDF.3, 10)
   
   # remove all the blank components of the vector
   
@@ -143,6 +143,7 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   
   Report.PDF.4 <- grep(pattern="^$",x=Report.PDF.3, value=T, invert=T) ;
   
+  # str(Report.PDF.4) ; head(Report.PDF.4, 10)
   
   ## Remove lines of the report that do not contain data
   
@@ -158,7 +159,7 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   
   Report.PDF.5 <- grep(pattern="Koehle*|Sequence|CH4|Peak", x=Report.PDF.4, value=T, invert=T)
   
-  
+  # str(Report.PDF.5) ; head(Report.PDF.5, 10)
   
   # # use  str_squish from the package stringr to get rid of the spaces between characters
   # 
@@ -185,7 +186,7 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   
   Report.PDF.6 <- strsplit(x=Report.PDF.5, split=c(" ")) ;
   
-  # str(Report.PDF.6) ; head(Report.PDF.6,3 )
+  # str(Report.PDF.6) ; head(Report.PDF.6,10 )
   
   
   ### in regular  expressions "^" means start of a string, and $ means end of a string. Subsequently, ^$ means empty or ""
@@ -194,7 +195,7 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   # 
   # grep(pattern="^$",x=Report.PDF.6[[1]], value=T)
   # 
-  # grep(pattern="^$",x=Report.PDF.6[[1]], value=T, invert=T)
+  # grep(pattern="^$",x=Report.PDF.6[[2]], value=T, invert=T)
   # 
   # ### using sapply to apply the grep function to all the elements in the Report.PDF.6 list
   # 
@@ -209,6 +210,34 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
   # t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))
   
   Report.PDF.7 <- data.frame(t(sapply(Report.PDF.6, function(x) grep(pattern="^$",x, value=T, invert=T)))) ;
+  
+  
+  # File "20210929B1B2peakareas1.pdf"  does not have a methane (CH4) data in the first row and that 
+  # messed up the dataframe and the sapply function. To correct for it, line 1 is read separately 
+  # and cbind with the rest of the data frame later. The incomplete data of the first row of "20210929B1B2peakareas1.pdf
+  # is; c("0PerSTDA", 1, 1, 9999, 119.969, 102.005)
+  
+  # Report.PDF.6[-1]
+  # 
+  # Report.PDF.6[1]
+  # 
+  # Report.PDF.7_1 <- data.frame(t(sapply(Report.PDF.6[-1], function(x) grep(pattern="^$",x, value=T, invert=T)))) ;
+  # 
+  # str(Report.PDF.7_1) ; head(Report.PDF.7_1,10 )
+  # 
+  # Report.PDF.7.1 <- data.frame("0PerSTDA"," 1", "1", "9999", "119.969", "102.005") ;
+  # 
+  # names(Report.PDF.7.1) <- names(Report.PDF.7_1) ;
+  # 
+  # str(Report.PDF.7.1) ; head(Report.PDF.7.1,10 )
+  # 
+  # Report.PDF.7 <- rbind(Report.PDF.7.1, Report.PDF.7_1)
+  # 
+  # str(Report.PDF.7) ; head(Report.PDF.7,10 ) ;
+  # 
+  
+ 
+  
   
  
   # Names of the pdf report columns c("Sample", "Position", "Vial", "CH4" , "CO2" , "N2O" )
@@ -282,4 +311,15 @@ ReadGCReportPDF2021<-function(GCPDF.File.path, GCPDF.File.name ){
 }
 
 
+Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ; 
+
+# write.csv(x = Report.PDF.7, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# 
+# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+# 
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\Data20210929B1B2peakareas1",
+# 
+# Working.Date , ".csv") , row.names = F )
+# 
+# readClipboard()
 
