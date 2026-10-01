@@ -242,19 +242,28 @@ unique(PeakArea.results.2021.Repeated.measures$File)
 # 
 # Check which records are duplicated and remove them.
 
-PeakArea.results.2021[PeakArea.results.2021$File == "20210601B1B2sample24-84summaryreport.pdf",] 
+PeakArea.results.2021[PeakArea.results.2021$File == "20210601B1B2sample24-84summaryreport.pdf" |
+                        
+                        PeakArea.results.2021$File == "20210601B1B2sample1-22summaryreport.pdf",] 
+
                       
 Data.20210601B1B2sample24_84summaryreport <- PeakArea.results.2021[PeakArea.results.2021$File == "20210601B1B2sample24-84summaryreport.pdf",] ;
+
+Data.20210601B1B2sample1_22summaryreport <- PeakArea.results.2021[PeakArea.results.2021$File == "20210601B1B2sample1-22summaryreport.pdf",] ;
 
 Data.20210601calculations <- PeakArea.results.2021[PeakArea.results.2021$File == "20210601calculations.xlsx",] ;
 
 str(Data.20210601B1B2sample24_84summaryreport)
+
+str(Data.20210601B1B2sample1_22summaryreport)
 
 str(Data.20210601calculations)
 
 ###  CH4  #### 
 
 range(Data.20210601B1B2sample24_84summaryreport$CH4)
+
+range(Data.20210601B1B2sample1_22summaryreport$CH4)
 
 range(Data.20210601calculations$CH4, na.rm = T)
 
@@ -270,24 +279,28 @@ points(Data.20210601B1B2sample24_84summaryreport$CH4,Data.20210601B1B2sample24_8
 
 range(Data.20210601B1B2sample24_84summaryreport$CO2)
 
-range(Data.20210601calculations$CO2)
+range(Data.20210601B1B2sample1_22summaryreport$CO2)
 
-plot(Data.20210601calculations$CO2, Data.20210601calculations$N2O,  col = "red" ,  cex = 1.2)
+range(Data.20210601calculations$CO2, na.rm = T)
 
-points(Data.20210601B1B2sample24_84summaryreport$CO2,Data.20210601B1B2sample24_84summaryreport$N2O, 
+plot(Data.20210601calculations$CO2,Data.20210601calculations$N2O, col = "red", cex = 1.2) ;
+
+points(Data.20210601B1B2sample1_22summaryreport$CO2,Data.20210601B1B2sample1_22summaryreport$N2O,
        
-       pch = 19 , col = "blue", cex = 0.9)
+       pch = 19 , col = "blue" ,  cex = 0.9) ;
+
+### The data from Data.20210601calculations contains all the data from 20210601B1B2sample1-22summaryreport.pdf
+###  and 20210601B1B2sample24-84summaryreport.pdf, therefore the data from 20210601B1B2sample1-22summaryreport.pdf
+###  and 20210601B1B2sample24-84summaryreport.pdf can be removed 
 
 
-### The data from Data.20210601calculations contains all the data from 20210601B1B2sample1-22summaryreport.pdf,
-### therefore the data from 20210601B1B2sample1-22summaryreport.pdf can be removed 
-
+### removing data from 20210601B1B2sample1-22summaryreport.pdf
 
 PeakArea.results.2021.3 <- PeakArea.results.2021 ;
 
 str(PeakArea.results.2021.3)
 
-str(PeakArea.results.2021.3[PeakArea.results.2021.3$File == "20210601B1B2sample1-22summaryreport.pdf" ,])
+str(PeakArea.results.2021.3[PeakArea.results.2021.3$File == "20210601B1B2sample1-22summaryreport.pdf",])
 
 
 PeakArea.results.2021 <- PeakArea.results.2021.3[PeakArea.results.2021.3$File != "20210601B1B2sample1-22summaryreport.pdf" ,] 
@@ -297,6 +310,107 @@ str(PeakArea.results.2021)
 PeakArea.results.2021[PeakArea.results.2021$File == "20210601B1B2sample1-22summaryreport.pdf" ,]
 
 rm(PeakArea.results.2021.3)
+
+
+### removing data from 20210601B1B2sample24-84summaryreport.pdf
+
+
+PeakArea.results.2021.4 <- PeakArea.results.2021 ;
+
+str(PeakArea.results.2021.4)
+
+str(PeakArea.results.2021.4[PeakArea.results.2021.4$File == "20210601B1B2sample24-84summaryreport.pdf",])
+
+
+PeakArea.results.2021 <- PeakArea.results.2021.4[PeakArea.results.2021.4$File != "20210601B1B2sample24-84summaryreport.pdf" ,] 
+
+str(PeakArea.results.2021)
+
+PeakArea.results.2021[PeakArea.results.2021$File == "20210601B1B2sample24-84summaryreport.pdf" ,]
+
+rm(PeakArea.results.2021.4)
+
+
+# #################################################################################################################
+# 
+#### After removing the duplicates from 20210601B1B2sample1-22summaryreport.pdf  and 20210601B1B2sample24-84summaryreport.pdf,
+# 
+#### what repeated measures are still remain in the data set?
+#  
+# #################################################################################################################
+
+PeakArea.results.2021.Repeated <- PeakArea.results.2021[duplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = c(1,2)),c(4,5,6,7,8) ] ;
+
+str(PeakArea.results.2021.Repeated)
+
+str(PeakArea.results.2021)
+
+PeakArea.results.2021[,6] %in% PeakArea.results.2021.Repeated[,3]
+
+PeakArea.results.2021[which(PeakArea.results.2021[,6] %in% PeakArea.results.2021.Repeated[,3]), ]
+
+PeakArea.results.2021.Repeated.measures <- PeakArea.results.2021[which(PeakArea.results.2021[,6] %in%
+                                                                         
+                                                                         PeakArea.results.2021.Repeated[,3]), ] ;
+PeakArea.results.2021.Repeated.measures[order(PeakArea.results.2021.Repeated.measures$N2O),]
+
+unique(PeakArea.results.2021.Repeated.measures$File)
+
+
+# The next repeated measures are the ones from 20210528. The repeated samples are in datasets 
+# sets 20210528B1B4peakareasMERGED.pdf and 20210528peakareas.pdf
+# 
+# Check which records are duplicated and remove them.
+
+PeakArea.results.2021[PeakArea.results.2021$File == "20210528B1B4peakareasMERGED.pdf" |
+                        
+                        PeakArea.results.2021$File == "20210528peakareas.pdf",] 
+
+
+Data.20210528B1B4peakareasMERGED <- PeakArea.results.2021[PeakArea.results.2021$File == "20210528B1B4peakareasMERGED.pdf",] ;
+
+Data.20210528peakareas.pdf <- PeakArea.results.2021[PeakArea.results.2021$File == "20210528peakareas.pdf",] ;
+
+
+str(Data.20210528B1B4peakareasMERGED)
+
+str(Data.20210528peakareas.pdf)
+
+
+###  CH4  #### 
+
+range(Data.20210528B1B4peakareasMERGED$CH4)
+
+range(Data.20210528peakareas.pdf)
+
+
+plot(Data.20210528B1B4peakareasMERGED$CH4, Data.20210528B1B4peakareasMERGED$N2O, col = "red", cex = 1.2)
+
+points(Data.20210528peakareas.pdf$CH4,Data.20210528peakareas.pdf$N2O,
+       
+       pch = 19 , col = "blue" ,  cex = 0.9)
+
+
+
+### CO2 ####
+
+range(Data.20210528B1B4peakareasMERGED$CO2)
+
+range(Data.20210528peakareas.pdf$CO2)
+
+
+plot(Data.20210528B1B4peakareasMERGED$CO2,Data.20210528B1B4peakareasMERGED$N2O, col = "red", cex = 1.2) ;
+
+points(Data.20210528peakareas.pdf$CO2,Data.20210528peakareas.pdf$N2O,
+       
+       pch = 19 , col = "blue" ,  cex = 0.9) ;
+
+
+
+
+
+
+
 
 
 
