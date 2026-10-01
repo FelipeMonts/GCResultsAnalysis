@@ -69,7 +69,7 @@ setwd(paste0( "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\C
 #### Read data  #####
 
 
-PeakArea.results.2021 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults2021.csv" ) , header = T) ;
+PeakArea.results.2021 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults_2021_2026_09_30_18_21_47.csv" ) , header = T) ;
 
 ###############################################################################################################
 #                           
@@ -89,7 +89,8 @@ anyDuplicated(PeakArea.results.2021, MARGIN = c(1,2))
 
 PeakArea.results.2021.1 <- PeakArea.results.2021[!duplicated(PeakArea.results.2021, MARGIN = c(1,2)),] ;
 
-str(PeakArea.results.2021.1) 
+str(PeakArea.results.2021.1)
+
 
 anyDuplicated(PeakArea.results.2021.1, MARGIN = c(1,2))
 
@@ -108,23 +109,42 @@ rm(PeakArea.results.2021.1)
 
 names(PeakArea.results.2021)
 
-anyDuplicated(PeakArea.results.2021[, c(4,5,6,8)], MARGIN = c(1,2))
+anyDuplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = c(1,2))
 
-which(duplicated(PeakArea.results.2021[, c(4,5,6)], MARGIN = c(1,2)))
+# There are 174 duplicate measurements. Not duplicate records, but GC measurements 
+# 
+# that were repeated in two different analysis
 
-PeakArea.results.2021.Repeated <- PeakArea.results.2021[duplicated(PeakArea.results.2021[, c(4,5,6)], MARGIN = c(1,2)),c(4,5,6) ]
+which(duplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = c(1,2)))
 
-PeakArea.results.2021[PeakArea.results.2021$CH4 %in% PeakArea.results.2021.Repeated$CH4 &
-                      
-                        PeakArea.results.2021$CO2 %in% PeakArea.results.2021.Repeated$CO2 &
+duplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = 0)
+
+which(duplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = 0))
+
+#  Find out which measurements are repeated and why
+
+str(PeakArea.results.2021)
+
+PeakArea.results.2021.Repeated <- PeakArea.results.2021[duplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = c(1,2)),c(4,5,6,7,8) ] ;
+
+str(PeakArea.results.2021.Repeated)
+
+PeakArea.results.2021[,6] %in% PeakArea.results.2021.Repeated[,3]
+
+PeakArea.results.2021[which(PeakArea.results.2021[,6] %in% PeakArea.results.2021.Repeated[,3]), ]
+
+PeakArea.results.2021.Repeated.measures <- PeakArea.results.2021[which(PeakArea.results.2021[,6] %in%
+                                                                         
+                                                                         PeakArea.results.2021.Repeated[,3]), ] ;
+
+
+PeakArea.results.2021.Repeated.measures[order(PeakArea.results.2021.Repeated.measures$N2O),]
+
                         
-                        PeakArea.results.2021$N2O %in% PeakArea.results.2021.Repeated$N2O,]
-                        
-                        
 
-#### All the duplicated measurements are in 20210614B1B2summaryreport1.pdf  and in 20210614B1B2peakareasMERGED.pdf ###################################
+#### Some of the duplicated measurements are in 20210614B1B2summaryreport1.pdf  and in 20210614B1B2peakareasMERGED.pdf ###################################
 
-#### The 20210614B1B2peakareasMERGED.pdf GC analyxix was done on 06/30/2021 and the 20210614B1B2peakareasMERGED.pdf on 07/01/2021
+#### The 20210614B1B2peakareasMERGED.pdf GC analysis was done on 06/30/2021 and the 20210614B1B2peakareasMERGED.pdf on 07/01/2021
 
 ### Comparing the two data sets 20210614B1B2summaryreport1.pdf and 20210614B1B2peakareasMERGED.pdf #############
 
@@ -179,16 +199,105 @@ PeakArea.results.2021.2 <- PeakArea.results.2021 ;
 
 str(PeakArea.results.2021.2)
 
-str(PeakArea.results.2021.2[PeakArea.results.2021.2$AnalysisName == "20210614B1B2peakareasMERGED.pdf" ,])
+str(PeakArea.results.2021.2[PeakArea.results.2021.2$File == "20210614B1B2peakareasMERGED.pdf" ,])
 
 
-PeakArea.results.2021 <- PeakArea.results.2021.2[PeakArea.results.2021.2$AnalysisName != "20210614B1B2peakareasMERGED.pdf" ,] 
+PeakArea.results.2021 <- PeakArea.results.2021.2[PeakArea.results.2021.2$File != "20210614B1B2peakareasMERGED.pdf" ,] 
 
 str(PeakArea.results.2021)
 
-PeakArea.results.2021[PeakArea.results.2021$AnalysisName == "20210614B1B2peakareasMERGED.pdf" ,]
+PeakArea.results.2021[PeakArea.results.2021$File == "20210614B1B2peakareasMERGED.pdf" ,]
 
 rm(PeakArea.results.2021.2)
+
+# #################################################################################################################
+# 
+# ### After removing the duplicates from 20210614B1B2, what repeated measures are still remain in the data set?
+# 
+# #################################################################################################################
+
+
+PeakArea.results.2021.Repeated <- PeakArea.results.2021[duplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = c(1,2)),c(4,5,6,7,8) ] ;
+
+str(PeakArea.results.2021.Repeated)
+
+str(PeakArea.results.2021)
+
+PeakArea.results.2021[,6] %in% PeakArea.results.2021.Repeated[,3]
+
+PeakArea.results.2021[which(PeakArea.results.2021[,6] %in% PeakArea.results.2021.Repeated[,3]), ]
+
+PeakArea.results.2021.Repeated.measures <- PeakArea.results.2021[which(PeakArea.results.2021[,6] %in%
+                                                                         
+                                                                         PeakArea.results.2021.Repeated[,3]), ] ;
+
+
+PeakArea.results.2021.Repeated.measures[order(PeakArea.results.2021.Repeated.measures$N2O),]
+
+unique(PeakArea.results.2021.Repeated.measures$File)
+
+# The next repreated measures are the ones from 20210601. Mosty of them are repeated because 
+# the original data sets20210601B1B2sample24-84summaryreport and 20210601B1B2sample1-22summaryreport.pdf
+# does not have sample names. The sample names were taken from the 20210601calculations.xls file.
+# 
+# Check which records are duplicated and remove them.
+
+PeakArea.results.2021[PeakArea.results.2021$File == "20210601B1B2sample24-84summaryreport.pdf",] 
+                      
+Data.20210601B1B2sample24_84summaryreport <- PeakArea.results.2021[PeakArea.results.2021$File == "20210601B1B2sample24-84summaryreport.pdf",] ;
+
+Data.20210601calculations <- PeakArea.results.2021[PeakArea.results.2021$File == "20210601calculations.xlsx",] ;
+
+str(Data.20210601B1B2sample24_84summaryreport)
+
+str(Data.20210601calculations)
+
+###  CH4  #### 
+
+range(Data.20210601B1B2sample24_84summaryreport$CH4)
+
+range(Data.20210601calculations$CH4, na.rm = T)
+
+plot(Data.20210601calculations$CH4, Data.20210601calculations$N2O, col = "red", cex = 1.2)
+
+points(Data.20210601B1B2sample24_84summaryreport$CH4,Data.20210601B1B2sample24_84summaryreport$N2O,
+       
+       pch = 19 , col = "blue" ,  cex = 0.9)
+
+
+
+### CO2 ####
+
+range(Data.20210601B1B2sample24_84summaryreport$CO2)
+
+range(Data.20210601calculations$CO2)
+
+plot(Data.20210601calculations$CO2, Data.20210601calculations$N2O,  col = "red" ,  cex = 1.2)
+
+points(Data.20210601B1B2sample24_84summaryreport$CO2,Data.20210601B1B2sample24_84summaryreport$N2O, 
+       
+       pch = 19 , col = "blue", cex = 0.9)
+
+
+### The data from Data.20210601calculations contains all the data from 20210601B1B2sample1-22summaryreport.pdf,
+### therefore the data from 20210601B1B2sample1-22summaryreport.pdf can be removed 
+
+
+PeakArea.results.2021.3 <- PeakArea.results.2021 ;
+
+str(PeakArea.results.2021.3)
+
+str(PeakArea.results.2021.3[PeakArea.results.2021.3$File == "20210601B1B2sample1-22summaryreport.pdf" ,])
+
+
+PeakArea.results.2021 <- PeakArea.results.2021.3[PeakArea.results.2021.3$File != "20210601B1B2sample1-22summaryreport.pdf" ,] 
+
+str(PeakArea.results.2021)
+
+PeakArea.results.2021[PeakArea.results.2021$File == "20210601B1B2sample1-22summaryreport.pdf" ,]
+
+rm(PeakArea.results.2021.3)
+
 
 
 #################################################################################################################
