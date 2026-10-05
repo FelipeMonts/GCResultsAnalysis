@@ -763,7 +763,7 @@ Comment.B1 <- grep(pattern =  "B1",  x = GC.Data.NoSTD.2021$Sample.Name )
 
 str(Comment.B1)
 
-#  Select samples with Sampling date "2021","-06-04"
+#  Select samples with Sampling date "2021-06-04"
 
 which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
 
@@ -772,6 +772,8 @@ str(which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")))
 Comment.06_04 <- which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
 
 str(Comment.06_04)
+
+# Select samples with  Sampling date "2021-06-04" and Block 1 (B1) 
 
 Comment.06_04[which(Comment.06_04 %in% Comment.B1)]
 
@@ -789,16 +791,159 @@ rm(Comment.B1,Comment.06_04 )
 
 
 
-which(which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")) %in% grep(pattern =  "B1",  x = GC.Data.NoSTD.2021$Sample.Name))
+### Sampling.Date == 2021-06-04  ; Sample.Name == B1CloverB.. ;
+
+# Selecting set with the conditions 
+
+#unique(GC.Data.NoSTD.2021$Sample.Name)
+
+#  Select samples with Sampling date "2021","-06-04"
+
+which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
+
+str(which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")))
+
+GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")),]
+
+Comment.06_04 <- which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
+
+
+#  Select Samples with B1CloverB..
+
+grep(pattern =  "B1CloverB",  x = GC.Data.NoSTD.2021$Sample.Name )
+
+str(grep(pattern =  "B1CloverB",  x = GC.Data.NoSTD.2021$Sample.Name ))
+
+GC.Data.NoSTD.2021[grep(pattern =  "B1CloverB",  x = GC.Data.NoSTD.2021$Sample.Name ),]
+
+Comment.B1CloverB <- grep(pattern =  "B1CloverB",  x = GC.Data.NoSTD.2021$Sample.Name )
+
+
+Comment.B1CloverB
+
+
+# Select samples with  Sampling date "2021-06-04" and B1CloverB 
+
+Comment.B1CloverB[which(Comment.B1CloverB %in% Comment.06_04)]
+
+# There are no samples with both  Sampling date "2021-06-04" and B1CloverB  because the glass
+# Sampling vials broke
+
+
+
+# Add NA data to those broken vials records
+
+Comment.06_04.B1CloverB <- GC.Data.NoSTD.2021[0,]
+
+Comment.06_04.B1CloverB[c(1:4),] <- NA ;
+
+Comment.06_04.B1CloverB$Sample.Name <- paste0("B1CloverB",c("T0" , "T15", "T30" , "T45"));
+
+Comment.06_04.B1CloverB$Sampling.Date <- "2021-06-04" ;
+
+Comment.06_04.B1CloverB$Sampling.Day <- "20210604" ;
+
+Comment.06_04.B1CloverB$Field.Notes <- "YES" ;
+
+Comment.06_04.B1CloverB$Note <- "Broken glass vials no samples"
+
+Comment.06_04.B1CloverB
 
 
 
 
 
+### Sampling.Date == 2021-06-04  ; Sample.Name == B1CloverD ;
+
+# Selecting set with the conditions 
+
+#unique(GC.Data.NoSTD.2021$Sample.Name)
+
+#  Select samples with Sampling date "2021","-06-04"
+
+
+which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
+
+str(which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")))
+
+GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")),]
+
+Comment.06_04 <- which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
+
+
+#  Select Samples with B1CloverD
+
+grep(pattern =  "B1CloverD",  x = GC.Data.NoSTD.2021$Sample.Name )
+
+str(grep(pattern =  "B1CloverD",  x = GC.Data.NoSTD.2021$Sample.Name ))
+
+GC.Data.NoSTD.2021[grep(pattern =  "B1CloverD",  x = GC.Data.NoSTD.2021$Sample.Name ),]
+
+Comment.B1CloverD <- grep(pattern =  "B1CloverD",  x = GC.Data.NoSTD.2021$Sample.Name )
+
+
+Comment.B1CloverD
+
+
+# Select samples with  Sampling date "2021-06-04" and B1CloverD 
+
+Comment.06_04[which(Comment.06_04 %in% Comment.B1CloverD)]
+
+# There are no samples with both  Sampling date "2021-06-04" and B1CloverD  because the glass
+# Sampling vials broke
+
+# Add NA data to those broken vials records
+
+Comment.06_04.B1CloverD <- GC.Data.NoSTD.2021[0,] ;
+
+Comment.06_04.B1CloverD[c(1:4),] <- NA ;
+
+Comment.06_04.B1CloverD$Sample.Name <- paste0("B1CloverD",c("T0" , "T15", "T30" , "T45"));
+
+Comment.06_04.B1CloverD$Sampling.Date <- "2021-06-04" ;
+
+Comment.06_04.B1CloverD$Sampling.Day <- "20210604" ;
+
+Comment.06_04.B1CloverD$Field.Notes <- "YES" ;
+
+Comment.06_04.B1CloverD$Note <- "Broken glass vials no samples"
+
+Comment.06_04.B1CloverD
+
+
+#  combining the two data frames Comment.06_04.B1CloverB.B1CloverD  and Comment.06_04.B1CloverB  #
+
+
+Comment.06_04.B1CloverB.B1CloverD <- rbind(Comment.06_04.B1CloverB , Comment.06_04.B1CloverD )
+
+Comment.06_04.B1CloverB.B1CloverD
+
+
+# Adding to the data  
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sample.Name == "B1CloverD" &  GC.Data.NoSTD.2021$Sampling.Date == "2021-06-04",]
+
+
+GC.Data.NoSTD.2021.add <- rbind(GC.Data.NoSTD.2021 , Comment.06_04.B1CloverB.B1CloverD) ;
+
+GC.Data.NoSTD.2021 <- GC.Data.NoSTD.2021.add ;
+
+GC.Data.NoSTD.2021.add[GC.Data.NoSTD.2021.add$Sample.Name == "B1CloverDT0" &  GC.Data.NoSTD.2021.add$Sampling.Date == "2021-06-04",]
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sample.Name == "B1CloverDT0" &  GC.Data.NoSTD.2021$Sampling.Date == "2021-06-04",]
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sample.Name == "B1CloverBT0" &  GC.Data.NoSTD.2021$Sampling.Date == "2021-06-04",]
 
 
 
 
+### Sampling.Date == 2021-06-21  ; Sample.Name == B3TriCT30 ;
+
+# Selecting set with the conditions 
+
+# unique(GC.Data.NoSTD.2021$Sample.Name)
+
+#  Select samples with Sampling date "2021","-06-04"
 
 
 
