@@ -599,6 +599,610 @@ str(GC.Data.NoSTD.2021)
 
 ##############################################################################################################
 #                           
+#                              Converting to factors the columns that have discrete values
+#                              
+#                              
+#
+##############################################################################################################
+
+GC.Data.NoSTD.2021
+
+
+### Add treatment information ###
+
+
+unique(GC.Data.NoSTD.2021$Sample.Name)
+
+GC.Data.NoSTD.2021$Treatment<-c("NONE");
+
+
+GC.Data.NoSTD.2021[grep("AT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T), c("Treatment")]<-c("A");
+
+GC.Data.NoSTD.2021[grep("BT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T), c("Treatment")]<-c("B");
+
+GC.Data.NoSTD.2021[grep("CT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T) , c("Treatment")]<-c("C");
+
+GC.Data.NoSTD.2021[grep("DT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T) , c("Treatment")]<-c("D");
+
+### Check if there was any treatment left with "NONE" label
+
+GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Treatment == "NONE"), ];
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sample.Name == "B4TritC30",] <- "B4TritCT30" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sample.Name == "B4TritCT30", c("Treatment")] <- c("C") ;
+
+
+GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Treatment == "NONE"), ];
+
+GC.Data.NoSTD.2021$Treatment <- factor(GC.Data.NoSTD.2021$Treatment) ;
+
+
+levels(GC.Data.NoSTD.2021$Treatment)
+
+str(GC.Data.NoSTD.2021)
+
+
+###  Add Block information ####
+
+grep("B1",GC.Data.NoSTD.2021$Sample.Name)
+
+GC.Data.NoSTD.2021$BLOCK<-c(9999);
+
+GC.Data.NoSTD.2021[grep("B1",GC.Data.NoSTD.2021$Sample.Name), c("BLOCK")] <- c(1);
+
+GC.Data.NoSTD.2021[grep("B2",GC.Data.NoSTD.2021$Sample.Name), c("BLOCK")] <- c(2);
+
+GC.Data.NoSTD.2021[grep("B3",GC.Data.NoSTD.2021$Sample.Name), c("BLOCK")] <- c(3);
+
+GC.Data.NoSTD.2021[grep("B4",GC.Data.NoSTD.2021$Sample.Name), c("BLOCK")] <- c(4);
+
+### Check if there was any BLOCK labeled 9999
+
+GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$BLOCK == 9999 ), ];
+
+GC.Data.NoSTD.2021$BLOCK <- factor(GC.Data.NoSTD.2021$BLOCK) ;
+
+levels(GC.Data.NoSTD.2021$BLOCK)
+
+str(GC.Data.NoSTD.2021)
+
+
+### Adding CoverCrop Data ####
+
+grep("3Spp",GC.Data.NoSTD.2021$Sample.Name)
+
+GC.Data.NoSTD.2021$CoverCrop <- c("NONE");
+
+GC.Data.NoSTD.2021[grep("3Spp",GC.Data.NoSTD.2021$Sample.Name), c("CoverCrop")] <- c("3Spp");
+
+GC.Data.NoSTD.2021[grep("Clover",GC.Data.NoSTD.2021$Sample.Name), c("CoverCrop")] <- c("Clover");
+
+GC.Data.NoSTD.2021[grep("Trit",GC.Data.NoSTD.2021$Sample.Name), c("CoverCrop")] <- c("Trit");
+
+
+### Check if there was any  CoverCrop labeled "NONE"
+
+GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$CoverCrop == "NONE" ), ];
+
+
+GC.Data.NoSTD.2021$CoverCrop <- factor(GC.Data.NoSTD.2021$CoverCrop) ;
+
+levels(GC.Data.NoSTD.2021$CoverCrop)
+
+str(GC.Data.NoSTD.2021)
+
+
+
+
+### Adding Sampling Time information  ###
+
+grep("T0",GC.Data.NoSTD.2021$Sample.Name)
+
+GC.Data.NoSTD.2021$Sampling.Time <- c(9999);
+
+GC.Data.NoSTD.2021[grep("T0",GC.Data.NoSTD.2021$Sample.Name), c("Sampling.Time")] <- c(0);
+
+GC.Data.NoSTD.2021[grep("T15",GC.Data.NoSTD.2021$Sample.Name), c("Sampling.Time")] <- c(15);
+
+GC.Data.NoSTD.2021[grep("T30",GC.Data.NoSTD.2021$Sample.Name), c("Sampling.Time")] <- c(30);
+
+GC.Data.NoSTD.2021[grep("T45",GC.Data.NoSTD.2021$Sample.Name), c("Sampling.Time")] <- c(45);
+
+
+### Check if there was any Sampling.Time left with "NONE" label
+
+GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Sampling.Time==9999),];
+
+str(GC.Data.NoSTD.2021)
+
+
+
+#### Adding plot  and location information  ###
+
+
+### Plot 202 ###
+
+GC.Data.NoSTD.2021$Plot <- NA ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Trit" , ] 
+                   
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Trit" 
+                   
+                   , "Plot"] <- "202"  ;
+
+
+GC.Data.NoSTD.2021$Location <- NA ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "202" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "202" , 
+                   
+                   "Location"] <- "Middle" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "202" , 
+                   
+                   "Location"] <- "Border" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Trit" , ] 
+
+
+
+### Plot 210 ###
+
+#  levels(GC.Data.NoSTD.2021$CoverCrop)
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ] 
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "3Spp", "Plot"] <- "210"  ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "210" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "210" , 
+                   
+                   "Location"] <- "Middle" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "210" , 
+                   
+                   "Location"] <- "Border" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ] 
+
+
+### Plot 212 ###
+
+#  levels(GC.Data.NoSTD.2021$CoverCrop)
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ] 
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover", "Plot"] <- "212"  ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "212" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "212" , 
+                   
+                   "Location"] <- "Border" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "212" , 
+                   
+                   "Location"] <- "Middle" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "D" &  GC.Data.NoSTD.2021$Plot == "212" , 
+                   
+                   "Location"] <- "Inside" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ] 
+
+
+
+
+
+### Plot 406 ###
+
+#  levels(GC.Data.NoSTD.2021$CoverCrop)
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Trit" , ] 
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Trit", "Plot"] <- "406"  ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "406" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "406" , 
+                   
+                   "Location"] <- "Border" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "406" , 
+                   
+                   "Location"] <- "Middle" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Trit" , ] 
+
+
+
+
+### Plot 401 ###
+
+#  levels(GC.Data.NoSTD.2021$CoverCrop)
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ] 
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp", "Plot"] <- "401"  ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "401" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "401" , 
+                   
+                   "Location"] <- "Border" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "401" , 
+                   
+                   "Location"] <- "Middle" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ] 
+
+
+
+
+### Plot 412 ###
+
+#  levels(GC.Data.NoSTD.2021$CoverCrop)
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ] 
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover", "Plot"] <- "412"  ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "412" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "412" , 
+                   
+                   "Location"] <- "Middle" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "412" , 
+                   
+                   "Location"] <- "Border" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "D" &  GC.Data.NoSTD.2021$Plot == "412" , 
+                   
+                   "Location"] <- "Inside" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ] 
+
+
+
+
+
+
+
+### Plot 910 ###
+
+#  levels(GC.Data.NoSTD.2021$CoverCrop)
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Trit" , ] 
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Trit", "Plot"] <- "910"  ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "910" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "910" , 
+                   
+                   "Location"] <- "Middle" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "910" , 
+                   
+                   "Location"] <- "Border" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Trit" , ] 
+
+
+
+
+
+### Plot 907 ###
+
+#  levels(GC.Data.NoSTD.2021$CoverCrop)
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ] 
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "3Spp", "Plot"] <- "907"  ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "907" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "907" , 
+                   
+                   "Location"] <- "Border" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "907" , 
+                   
+                   "Location"] <- "Middle" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ] 
+
+
+
+
+### Plot 903 ###
+
+#  levels(GC.Data.NoSTD.2021$CoverCrop)
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ] 
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Clover", "Plot"] <- "903"  ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "903" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "903" , 
+                   
+                   "Location"] <- "Border" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "903" , 
+                   
+                   "Location"] <- "Middle" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "D" &  GC.Data.NoSTD.2021$Plot == "903" , 
+                   
+                   "Location"] <- "Inside" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ] 
+
+
+
+### Plot 1205 ###
+
+#  levels(GC.Data.NoSTD.2021$CoverCrop)
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Trit" , ] 
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Trit", "Plot"] <- "1205"  ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "1205" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "1205" , 
+                   
+                   "Location"] <- "Border" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "1205" , 
+                   
+                   "Location"] <- "Middle" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Trit" , ]
+
+
+
+
+
+### Plot 1201 ###
+
+#  levels(GC.Data.NoSTD.2021$CoverCrop)
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ] 
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "3Spp", "Plot"] <- "1201"  ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "1201" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "1201" , 
+                   
+                   "Location"] <- "Border" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "1201" , 
+                   
+                   "Location"] <- "Middle" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ] 
+
+
+
+
+
+
+### Plot 1203 ###
+
+#  levels(GC.Data.NoSTD.2021$CoverCrop)
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ] 
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Clover", "Plot"] <- "1203"  ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "1203" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "1203" , 
+                   
+                   "Location"] <- "Border" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "1203" , 
+                   
+                   "Location"] <- "Middle" ;
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "D" &  GC.Data.NoSTD.2021$Plot == "1203" , 
+                   
+                   "Location"] <- "Inside" ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ]
+
+
+####   Do a Check #####
+
+GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Plot == NA ), ]   ;
+
+GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Location == NA ), ]   ;
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ]
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Trit" , ]
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ]
+
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "D" &  GC.Data.NoSTD.2021$Plot == "1203" , 
+                   
+                   "Location"]
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "D" &  GC.Data.NoSTD.2021$Plot == "202" , 
+                   
+                   "Location"]
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Trit" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "202" , 
+                   
+                   "Location"]
+
+
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+                     
+                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "907" , 
+                   
+                   "Location"]
+
+
+
+##############################################################################################################
+#                           
 #                              Adding field sampling notes to the data
 #                              
 #                              Making adjustments when appropriate according to the notes
