@@ -1199,7 +1199,11 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCro
                    
                    "Location"]
 
+#####  Converting Plot and Location to factors  ####
 
+GC.Data.NoSTD.2021$Plot <- factor(GC.Data.NoSTD.2021$Plot) ;
+
+GC.Data.NoSTD.2021$Location <- factor(GC.Data.NoSTD.2021$Location) ;
 
 ##############################################################################################################
 #                           
@@ -1213,7 +1217,9 @@ GC.Data.NoSTD.2021$Field.Notes <- "NO" ;
 
 GC.Data.NoSTD.2021$Note <- NA ;
   
-  
+
+
+str(GC.Data.NoSTD.2021)
   
 #### Adding Notes #####
 
@@ -1223,25 +1229,25 @@ GC.Data.NoSTD.2021$Note <- NA ;
 # Selecting set with the conditions 
 
 
-grep(pattern =  "B1CloverD",  x = GC.Data.NoSTD.2021$Sample.Name )
-
-GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01"),]
-
-GC.Data.NoSTD.2021[grep(pattern =  "B1CloverD",  x = unique(GC.Data.NoSTD.2021$Sample.Name)),]
-
-
-
-Comment.Date <- which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")) ;
-  
-Comment.Rows <-  which(grep(pattern =  "B1CloverD",  x = GC.Data.NoSTD.2021$Sample.Name) %in%  Comment.Date )  ;                 
-                    
-GC.Data.NoSTD.2021[Comment.Rows, "Field.Notes" ] <- "YES";
-
-GC.Data.NoSTD.2021[Comment.Rows, "Note" ] <- "Pump hose loose, data questionable" 
-  
-GC.Data.NoSTD.2021[Comment.Rows,]  
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "D" , ]
 
 
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "D" , "Field.Notes" ] <- "YES"  ;
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "D" , "Note" ] <- "Pump hose loose, data questionable"  ;
 
 
 #### Adding Notes #####
@@ -1251,24 +1257,32 @@ GC.Data.NoSTD.2021[Comment.Rows,]
 
 # Selecting set with the conditions 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B2TritCT45" , ]
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "C"  &   GC.Data.NoSTD.2021$Sampling.Time == 45, ]
 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B2TritCT45" , "Field.Notes"] <- "YES" ;
-  
-  
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B2TritCT45" , "Note"]  <- "Needle clogged no sample pusshed in the vial" ;
-  
-  
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B2TritCT45" , ]  
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "C"  &   GC.Data.NoSTD.2021$Sampling.Time == 45, 
+                    
+                    "Field.Notes" ] <- "YES"   ;
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "C"  &   GC.Data.NoSTD.2021$Sampling.Time == 45, 
+                    
+                    "Note" ] <- "Needle clogged no sample pusshed in the vial" ;   
+
+
 
 
 ### Sampling.Date == 2021-06-01  ; Sample.Name == B23sppAT45 ;
@@ -1277,24 +1291,32 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" &
 
 #unique(GC.Data.NoSTD.2021$Sample.Name)
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B23SppAT45" , ]  
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "A"  &   GC.Data.NoSTD.2021$Sampling.Time == 45, ]
 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B23SppAT45" , "Field.Notes"] <- "YES" ;
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "A"  &   GC.Data.NoSTD.2021$Sampling.Time == 45, 
+                    
+                    "Field.Notes" ] <- "YES"   ;
 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B23SppAT45" , "Note"]  <- "Pump off at T3" ;
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "A"  &   GC.Data.NoSTD.2021$Sampling.Time == 45,
+                    
+                    "Note" ] <- "Pump off at T3";   
 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B23SppAT45" , ]  
 
 
 ### Sampling.Date == 2021-06-01  ; Sample.Name == B3TritAT15 ;
@@ -1303,24 +1325,31 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" &
 
 #unique(GC.Data.NoSTD.2021$Sample.Name)
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B3TritAT15" , ]  
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "A"  &   GC.Data.NoSTD.2021$Sampling.Time == 15, ]
 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B3TritAT15" , "Field.Notes"] <- "YES" ;
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "A"  &   GC.Data.NoSTD.2021$Sampling.Time == 15,
+                    
+                    "Field.Notes" ] <- "YES"   ;
 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B3TritAT15" , "Note"]  <- "T15 Syringe Failed" ;
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "A"  &   GC.Data.NoSTD.2021$Sampling.Time == 15,
+                    
+                    "Note" ] <- "T15 Syringe plunger Failed"; 
 
-
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B3TritAT15" , ]  
 
 
 ### Sampling.Date == 2021-06-01  ; Sample.Name == B4CloverCT30 ;
@@ -1328,23 +1357,34 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" &
 # Selecting set with the conditions 
 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B4CloverCT30" , ]  
-
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B4CloverCT30" , "Field.Notes"] <- "YES" ;
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "C"  &   GC.Data.NoSTD.2021$Sampling.Time == 30, ]
 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B4CloverCT30" , "Note"]  <- "T15 Syringe Failed" ;
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "C"  &   GC.Data.NoSTD.2021$Sampling.Time == 30, 
+                    
+                    "Field.Notes" ] <- "YES"   ;
 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" & 
-                     
-                     GC.Data.NoSTD.2021$Sample.Name == "B4CloverCT30" , ]  
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-01")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "C"  &   GC.Data.NoSTD.2021$Sampling.Time == 30, 
+                    
+                    "Note" ] <- "T30 Needle clogged" ;
+
+
+
+
+
 
 
 
@@ -1356,41 +1396,23 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sampling.Date == "2021-06-01" &
 
 #unique(GC.Data.NoSTD.2021$Sample.Name)
 
-#  Select Block 1 (B1) samples
 
-grep(pattern =  "B1",  x = GC.Data.NoSTD.2021$Sample.Name )
-
-str(grep(pattern =  "B1",  x = GC.Data.NoSTD.2021$Sample.Name ))
-
-Comment.B1 <- grep(pattern =  "B1",  x = GC.Data.NoSTD.2021$Sample.Name )
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "1" , ]
 
 
-str(Comment.B1)
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "1" ,  "Field.Notes" ] <- "YES"   ; 
+                    
+                   
 
-#  Select samples with Sampling date "2021-06-04"
-
-which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
-
-str(which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")))
-
-Comment.06_04 <- which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
-
-str(Comment.06_04)
-
-# Select samples with  Sampling date "2021-06-04" and Block 1 (B1) 
-
-Comment.06_04[which(Comment.06_04 %in% Comment.B1)]
-
-GC.Data.NoSTD.2021[Comment.06_04[which(Comment.06_04 %in% Comment.B1)], "Field.Notes"] <- "YES" ;
-
-GC.Data.NoSTD.2021[Comment.06_04[which(Comment.06_04 %in% Comment.B1)], "Note"] <- 
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "1" ,  "Note" ] <- 
   
   "Block 1 fell of the car and was left in the field from Fryday to Monday" ;
-
-
-GC.Data.NoSTD.2021[Comment.06_04[which(Comment.06_04 %in% Comment.B1)],]
-
-rm(Comment.B1,Comment.06_04 )
 
 
 
@@ -1401,34 +1423,13 @@ rm(Comment.B1,Comment.06_04 )
 
 #unique(GC.Data.NoSTD.2021$Sample.Name)
 
-#  Select samples with Sampling date "2021","-06-04"
 
-which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "B", ]
 
-str(which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")))
-
-GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")),]
-
-Comment.06_04 <- which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
-
-
-#  Select Samples with B1CloverB..
-
-grep(pattern =  "B1CloverB",  x = GC.Data.NoSTD.2021$Sample.Name )
-
-str(grep(pattern =  "B1CloverB",  x = GC.Data.NoSTD.2021$Sample.Name ))
-
-GC.Data.NoSTD.2021[grep(pattern =  "B1CloverB",  x = GC.Data.NoSTD.2021$Sample.Name ),]
-
-Comment.B1CloverB <- grep(pattern =  "B1CloverB",  x = GC.Data.NoSTD.2021$Sample.Name )
-
-
-Comment.B1CloverB
-
-
-# Select samples with  Sampling date "2021-06-04" and B1CloverB 
-
-Comment.B1CloverB[which(Comment.B1CloverB %in% Comment.06_04)]
 
 # There are no samples with both  Sampling date "2021-06-04" and B1CloverB  because the glass
 # Sampling vials broke
@@ -1455,48 +1456,25 @@ Comment.06_04.B1CloverB
 
 
 
-
-
 ### Sampling.Date == 2021-06-04  ; Sample.Name == B1CloverD ;
 
 # Selecting set with the conditions 
 
 #unique(GC.Data.NoSTD.2021$Sample.Name)
 
-#  Select samples with Sampling date "2021","-06-04"
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "D", ]
 
 
-which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
-
-str(which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")))
-
-GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")),]
-
-Comment.06_04 <- which(GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04"))
-
-
-#  Select Samples with B1CloverD
-
-grep(pattern =  "B1CloverD",  x = GC.Data.NoSTD.2021$Sample.Name )
-
-str(grep(pattern =  "B1CloverD",  x = GC.Data.NoSTD.2021$Sample.Name ))
-
-GC.Data.NoSTD.2021[grep(pattern =  "B1CloverD",  x = GC.Data.NoSTD.2021$Sample.Name ),]
-
-Comment.B1CloverD <- grep(pattern =  "B1CloverD",  x = GC.Data.NoSTD.2021$Sample.Name )
-
-
-Comment.B1CloverD
-
-
-# Select samples with  Sampling date "2021-06-04" and B1CloverD 
-
-Comment.06_04[which(Comment.06_04 %in% Comment.B1CloverD)]
-
-# There are no samples with both  Sampling date "2021-06-04" and B1CloverD  because the glass
+# There are no samples with both  Sampling date "2021-06-04" and B1CloverB  because the glass
 # Sampling vials broke
 
 # Add NA data to those broken vials records
+
 
 Comment.06_04.B1CloverD <- GC.Data.NoSTD.2021[0,] ;
 
@@ -1547,7 +1525,7 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sample.Name == "B1CloverBT0" &  GC.Data.No
 
 # unique(GC.Data.NoSTD.2021$Sample.Name)
 
-#  Select samples with Sampling date "2021","-06-04"
+
 
 
 
