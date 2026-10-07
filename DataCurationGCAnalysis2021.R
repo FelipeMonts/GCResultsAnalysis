@@ -2288,6 +2288,60 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-20") 
 
 
 
+### Sampling.Date == 2021-07-30  ; Sample.Name == B13SppAT45 ;
+
+# Selecting set with the conditions
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "A"  &   GC.Data.NoSTD.2021$Sampling.Time == 45, ]
+
+
+
+##### Samples  B13SppA were measured two different times in the GC  and Blocks 3 and 4 are missing #####
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Trit", ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-20")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "B"  &   GC.Data.NoSTD.2021$Sampling.Time == 15,
+                    
+                    "Field.Notes" ] <- "YES"   ;
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-20")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "B"  &   GC.Data.NoSTD.2021$Sampling.Time == 15,
+                    
+                    "Note" ] <- "T15 is T45" ;
+
+
 
 
 
