@@ -2301,12 +2301,232 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30") 
 
 
 
-##### Samples  B13SppA were measured two different times in the GC  and Blocks 3 and 4 are missing #####
+
+
+##???????????????????????????????????????????????????????????????????????????????????????????????????????????????
+
+##### Samples  B13SppA were measured two different times in the GC  and Blocks 3 and 4 are missing ????????#####
+
+##???????????????????????????????????????????????????????????????????????????????????????????????????????????????
+
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30"),] 
+
+tail(GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30"),] )
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30") & 
+                      
+                      GC.Data.NoSTD.2021$File == "20210730B1B2peakareas.pdf", ]
+
+Data.20210730.B1B2 <- GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30") & 
+                      
+                      GC.Data.NoSTD.2021$File == "20210730B1B2peakareas.pdf", ] ;
+
+
+tail(Data.20210730.B1B2[ order(Data.20210730.B1B2$BLOCK, Data.20210730.B1B2$CoverCrop , 
+                               
+                               Data.20210730.B1B2$Treatment , Data.20210730.B1B2$Sampling.Time ),],25)
+
+
+
+#### Data in the file 20210730B1B2peakareas.pdf is OK #######
+
+#### Data from the files 20210730B3B4peakareasP1.pdf , 20210730B3B4peakareasP2.pdf and 20210730B3B4peakareasP3.pdf
+
+### has the GC Sample Name mislabeled. Instead of being B1.... B2... ist should be B3.... and B4.... respectively.
+
+### to solve that problem, the Block numbers in the files 20210730...P1, P2, P3 will be relabeled with B3... and B4....
+
+
+Data.20210730.B3B4.P1 <- GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30") & 
+                                            
+                                            GC.Data.NoSTD.2021$File == "20210730B3B4peakareasP1.pdf", ] ;
+
+
+#### Data in 20210730B3B4peakareasP1.pdf is correctly labeled; it does not need to be corrected ###
+
+
+### Collecting the data from  "20210730B3B4peakareasP2.pdf"  ###
+
+
+Data.20210730.B3B4.P2 <- GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30") & 
+                                            
+                                            GC.Data.NoSTD.2021$File == "20210730B3B4peakareasP2.pdf", ] ;
+
+
+
+Data.20210730.B3B4.P2[Data.20210730.B3B4.P2$BLOCK == "1" , "BLOCK"] <- "3" ;
+
+#### Check ###
+
+Data.20210730.B3B4.P2[Data.20210730.B3B4.P2$BLOCK == "1" , "BLOCK"]
+
+Data.20210730.B3B4.P2[Data.20210730.B3B4.P2$BLOCK == "3" , "BLOCK"]
+
+### Correcting the Sample.Name  ###
+
+Data.20210730.B3B4.P2[, "Sample.Name"] 
+
+paste0( "B" ,Data.20210730.B3B4.P2$BLOCK , Data.20210730.B3B4.P2$CoverCrop , 
+        
+        Data.20210730.B3B4.P2$Treatment , "T" ,Data.20210730.B3B4.P2$Sampling.Time )
+
+Data.20210730.B3B4.P2[, "Sample.Name"] <- paste0( "B" ,Data.20210730.B3B4.P2$BLOCK , Data.20210730.B3B4.P2$CoverCrop , 
+                                                  
+                                                  Data.20210730.B3B4.P2$Treatment , "T" ,Data.20210730.B3B4.P2$Sampling.Time );
+
+Data.20210730.B3B4.P2
+
+
+
+### Collecting the data from  "20210730B3B4peakareasP3.pdf"  ###
+
+Data.20210730.B3B4.P3 <- GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30") & 
+                                               
+                                               GC.Data.NoSTD.2021$File == "20210730B3B4peakareasP3.pdf", ] ;
+
+
+Data.20210730.B3B4.P3[Data.20210730.B3B4.P3$BLOCK == "1" , "BLOCK"] 
+
+Data.20210730.B3B4.P3[Data.20210730.B3B4.P3$BLOCK == "1" , "BLOCK"] <- "3" ;
+
+#### Check ###
+
+Data.20210730.B3B4.P3[Data.20210730.B3B4.P3$BLOCK == "3" , "BLOCK"] 
+
+Data.20210730.B3B4.P3[Data.20210730.B3B4.P3$BLOCK == "2" , "BLOCK"] 
+
+Data.20210730.B3B4.P3[Data.20210730.B3B4.P3$BLOCK == "2" , "BLOCK"] <- "4" ;
+
+#### Check ###
+
+Data.20210730.B3B4.P3[Data.20210730.B3B4.P3$BLOCK == "2" , "BLOCK"]
+
+Data.20210730.B3B4.P3[Data.20210730.B3B4.P3$BLOCK == "4" , "BLOCK"]
+
+
+### Correcting the Sample.Name  ###
+
+Data.20210730.B3B4.P3[, "Sample.Name"] 
+
+paste0( "B" ,Data.20210730.B3B4.P3$BLOCK , Data.20210730.B3B4.P3$CoverCrop , 
+        
+        Data.20210730.B3B4.P3$Treatment , "T" ,Data.20210730.B3B4.P3$Sampling.Time )
+
+Data.20210730.B3B4.P3[, "Sample.Name"] <- paste0( "B" ,Data.20210730.B3B4.P3$BLOCK , Data.20210730.B3B4.P3$CoverCrop , 
+                                                  
+                                                  Data.20210730.B3B4.P3$Treatment , "T" ,Data.20210730.B3B4.P3$Sampling.Time ) ;
+
+Data.20210730.B3B4.P3
+
+
+
+### Adding the Corrected data from Data.20210730.B3B4.P2 to the data frame GC.Data.NoSTD.2021 ###
+
+GC.Data.NoSTD.2021.4 <- GC.Data.NoSTD.2021 ;
+
+
+GC.Data.NoSTD.2021.4[ GC.Data.NoSTD.2021.4$Sampling.Date == paste0("2021","-07-30") & 
+                      
+                      GC.Data.NoSTD.2021.4$File == "20210730B3B4peakareasP2.pdf", ]
+
+
+
+str(GC.Data.NoSTD.2021.4[ GC.Data.NoSTD.2021.4$Sampling.Date == paste0("2021","-07-30") & 
+                            
+                            GC.Data.NoSTD.2021.4$File == "20210730B3B4peakareasP2.pdf", ])
+
+
+
+GC.Data.NoSTD.2021.4[ GC.Data.NoSTD.2021.4$Sampling.Date == paste0("2021","-07-30") & 
+                        
+                        GC.Data.NoSTD.2021.4$File == "20210730B3B4peakareasP2.pdf",  c("Sample.Name" , "BLOCK")]
+
+str(Data.20210730.B3B4.P2)
+
+
+GC.Data.NoSTD.2021.4[ GC.Data.NoSTD.2021.4$Sampling.Date == paste0("2021","-07-30") & 
+                        
+                        GC.Data.NoSTD.2021.4$File == "20210730B3B4peakareasP2.pdf",  
+                      
+                      c("Sample.Name" , "BLOCK")] <- Data.20210730.B3B4.P2[,c("Sample.Name" , "BLOCK")] ;
+  
+
+
+### Adding the Corrected data from Data.20210730.B3B4.P3 to the data frame GC.Data.NoSTD.2021 ###
+
+GC.Data.NoSTD.2021.4[ GC.Data.NoSTD.2021.4$Sampling.Date == paste0("2021","-07-30") & 
+                        
+                        GC.Data.NoSTD.2021.4$File == "20210730B3B4peakareasP3.pdf", ]
+
+str(GC.Data.NoSTD.2021.4[ GC.Data.NoSTD.2021.4$Sampling.Date == paste0("2021","-07-30") & 
+                            
+                            GC.Data.NoSTD.2021.4$File == "20210730B3B4peakareasP3.pdf", ])
+
+str(Data.20210730.B3B4.P3)
+
+
+GC.Data.NoSTD.2021.4[ GC.Data.NoSTD.2021.4$Sampling.Date == paste0("2021","-07-30") & 
+                        
+                        GC.Data.NoSTD.2021.4$File == "20210730B3B4peakareasP3.pdf",  
+                      
+                      c("Sample.Name" , "BLOCK")] <- Data.20210730.B3B4.P3[,c("Sample.Name" , "BLOCK")] ;
+
+
+GC.Data.NoSTD.2021 <-GC.Data.NoSTD.2021.4 ;
+
+rm(GC.Data.NoSTD.2021.4)
+
+### Check ###
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30") & 
+                       
+                       GC.Data.NoSTD.2021$File == "20210730B3B4peakareasP2.pdf",  c("Sample.Name" , "BLOCK")]
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30") & 
+                      
+                      GC.Data.NoSTD.2021$File == "20210730B3B4peakareasP3.pdf",  c("Sample.Name" , "BLOCK")]
+
+
+
+
+
+### Re doing Sampling.Date == 2021-07-30  ; Sample.Name == B13SppAT45 ;
+
+# Selecting set with the conditions
 
 
 GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30")  & 
                       
-                      GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Trit", ]
+                      GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "A"  &   GC.Data.NoSTD.2021$Sampling.Time == 45, ] 
+
+
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "A"  &   GC.Data.NoSTD.2021$Sampling.Time == 45,
+                    
+                    "Field.Notes" ] <- "YES"   ;
+
+
+GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30")  & 
+                      
+                      GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2021$Treatment == "A"  &   GC.Data.NoSTD.2021$Sampling.Time == 45,
+                    
+                    "Note" ] <- "T45 Syringe did not open" ;
+
+
 
 
 
