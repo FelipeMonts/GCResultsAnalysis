@@ -3045,15 +3045,6 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-09-17") 
    
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
 
 ###############################################################################################################
 #                          
@@ -3088,6 +3079,8 @@ GC.Data.NoSTD.2021.N2O.Slope <- 0.00155 ;
 GC.Data.NoSTD.2021$N2O.ppm <- (GC.Data.NoSTD.2021$N2O * GC.Data.NoSTD.2021.N2O.Slope) + GC.Data.NoSTD.2021.N2O.Intercept ;
 
 plot(GC.Data.NoSTD.2021$N2O.ppm )
+
+
 
 
 
