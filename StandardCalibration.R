@@ -319,9 +319,20 @@ OLS.regression.Log <- lm(CO2 ~ log.CO2.ppm ,
 # 
 # ################################################################################################################
 
+
+anyNA(C.GC.Standards.All$CO2)
+
+anyNA(C.GC.Standards.All$CO2.ppm)
+
+
+
+
+
 #### ratio of the largest to smalles response data  ####
 
 max(C.GC.Standards.All$CO2)/min(C.GC.Standards.All$CO2)
+
+
 
 ### Transformation is granted and recommended!!!! #####
 
@@ -445,9 +456,31 @@ legend("topleft", legend = c("CO2.ppm", "CO2.ppm.Calibrated"), col = c("red" , "
   
 ##############################################  N2O  ########################################################
 
+
+anyNA(C.GC.Standards.All$N2O)
+
+anyNA(C.GC.Standards.All$N2O.ppm)
+
+
+##### There are NA records in N2O data   ####
+
+which(is.na(C.GC.Standards.All$N2O))
+
+C.GC.Standards.All[which(is.na(C.GC.Standards.All$N2O)),]
+
+##### All records with NA are from 2022   #####
+
+##### Do the calibration without NA  records ###
+
+
+C.GC.Standards.no.NA <- C.GC.Standards.All[which(!is.na(C.GC.Standards.All$N2O)),]  ;
+
+which(is.na(C.GC.Standards.no.NA$N2O))
+
+
 OLS.regression.N2O <- lm(N2O ~ N2O.ppm, 
                          
-                         data = C.GC.Standards.All) ;
+                         data = C.GC.Standards.no.NA) ;
 
 summary(OLS.regression.N2O)
 
@@ -459,7 +492,7 @@ str(OLS.regression.N2O)
 
 plot(OLS.regression.N2O$fitted.values, OLS.regression.N2O$residuals)
 
-plot(C.GC.Standards.All$N2O.ppm , OLS.regression.N2O$residuals ) 
+plot(C.GC.Standards.no.NA$N2O.ppm , OLS.regression.N2O$residuals ) 
 
 
 ##### Residuals grow as the level of CO2 increases. Heteroscedasticity . Do Box-Cox method like CO2 
@@ -486,7 +519,7 @@ plot(C.GC.Standards.All$N2O.ppm , OLS.regression.N2O$residuals )
 
 
  
-#### ratio of the largest to smalles response data  ####
+#### ratio of the largest to smallest response data  ####
 
 max(C.GC.Standards.All$N2O , na.rm = T)/min(C.GC.Standards.All$N2O , na.rm = T)
   
@@ -580,6 +613,8 @@ plot(N2O.ppm ~ N2O,
      col = "red")
 
 points(N2O.ppm.Calibrated ~ C.GC.Standards.All$N2O, pch = 1, cex = 1.5 , col = "blue")
+
+points(N2O.ppm.Calibrated.Sqrt ~ C.GC.Standards.All$N2O, pch = 1, cex = 1.5 , col = "green")
 
 
 
