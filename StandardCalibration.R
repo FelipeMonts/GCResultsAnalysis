@@ -232,10 +232,13 @@ xyplot(CH4 ~ CH4.ppm,
 
 ###############################################################################################################
 #                           
-#        Do a regression with Ordinary least squares OLS
+#        Do a regression with Ordinary least squares OLS 
 #
 ###############################################################################################################
 
+
+
+##############################################  CO2  ########################################################
 
 OLS.regression.CO2 <- lm(CO2 ~ CO2.ppm, 
                      
@@ -440,20 +443,180 @@ points(CO2.ppm.Calibrated ~ C.GC.Standards.All$CO2, pch = 1, cex = 1.5 , col = "
 legend("topleft", legend = c("CO2.ppm", "CO2.ppm.Calibrated"), col = c("red" , "blue"), pch = c(16, 1))
        
   
+##############################################  N2O  ########################################################
 
+OLS.regression.N2O <- lm(N2O ~ N2O.ppm, 
+                         
+                         data = C.GC.Standards.All) ;
+
+summary(OLS.regression.N2O)
+
+plot(OLS.regression.N2O)
+
+
+str(OLS.regression.N2O)
+
+
+plot(OLS.regression.N2O$fitted.values, OLS.regression.N2O$residuals)
+
+plot(C.GC.Standards.All$N2O.ppm , OLS.regression.N2O$residuals ) 
+
+
+##### Residuals grow as the level of CO2 increases. Heteroscedasticity . Do Box-Cox method like CO2 
+
+
+# ###############################################################################################################
+# 
+# 
+#    Using the Box-Cox transformation analysis to find the data transformation that best reduces Heteroscedasticity 
+#  
+#     Draper and Smith, 1998. Applied regression Analysis, Page 280. Using the R package MASS from the Book
+#
+#     Venables and Ripley, "Modern Applied Statistics with S" (4th edition, 2002), page 170
+#
+#    https://cran.r-project.org/web/packages/MASS/index.html  
+#
+#    https://cran.r-project.org/web/packages/MASS/refman/MASS.html
+#
+#    https://cran.r-project.org/web/packages/MASS/MASS.pdf
+# 
+# 
+# ################################################################################################################
 
 
 
  
+#### ratio of the largest to smalles response data  ####
 
+max(C.GC.Standards.All$N2O , na.rm = T)/min(C.GC.Standards.All$N2O , na.rm = T)
   
   
+boxcox(OLS.regression.N2O)
 
-
-
+boxcox(N2O ~ N2O.ppm , data = C.GC.Standards.All , lambda = seq(from = 0, to = 1 , by = 0.01),
+       
+       plotit = T )
  
 
+OLS.regression.N2O.BoxCox <-boxcox(N2O ~ N2O.ppm , data = C.GC.Standards.All , lambda = seq(from = 0.2, to = 0.4 , by = 0.01),
+       
+       plotit = T )
+
+str(OLS.regression.N2O.BoxCox)
+
+max(OLS.regression.N2O.BoxCox$y)
+
+which(OLS.regression.N2O.BoxCox$y == max(OLS.regression.N2O.BoxCox$y))
+
+OLS.regression.N2O.BoxCox$x[53]
+
+##### The best lambda is OLS.regression.CO2.BoxCox$x[53] = 0.3050505 , which is very close to 0.3  ######
+
+#### The optimal transformation according to the Box-Cox transformation analysis is y^0.3 = a + X1...
+
+C.GC.Standards.All$N2O.pwr.1_3 <- (C.GC.Standards.All$N2O)^0.3 ;
+
+str(C.GC.Standards.All)
+
+
+OLS.regression.N2O.pwr.1_3 <- lm(C.GC.Standards.All$N2O.pwr.1_3 ~ N2O.ppm, 
+                              
+                              data = C.GC.Standards.All) ;
+
+summary(OLS.regression.N2O.pwr.1_3)  
+
+plot(OLS.regression.N2O.pwr.1_3) 
+
+str(OLS.regression.N2O.pwr.1_3)
+
+#### The best model for calibration of the CO2 GC data is 
+
+summary(OLS.regression.N2O.pwr.1_3)
+
+# Call:
+#   lm(formula = C.GC.Standards.All$N2O.pwr.1_3 ~ N2O.ppm, data = C.GC.Standards.All)
+# 
+# Residuals:
+#   Min      1Q  Median      3Q     Max 
+# -5.0528 -1.3603 -0.1184  0.9312  6.4156 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)    
+# (Intercept) 6.203021   0.095474   64.97   <2e-16 ***
+#   N2O.ppm     0.351243   0.004174   84.15   <2e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 1.991 on 641 degrees of freedom
+# (4 observations deleted due to missingness)
+# Multiple R-squared:  0.917,	Adjusted R-squared:  0.9169 
+# F-statistic:  7082 on 1 and 641 DF,  p-value: < 2.2e-16
+
+
+# N2O.pwr.1_3 = 6.203021 + 0.351243 * N2O.ppm
+# 
+# N2O.pwr.1_3 = 6.2 + 0.35 * CO2.ppm 
+# 
+# The calibration curve is then 
+# 
+# (N2O.pwr.1_3 - 6.2) / 0.35 = N2O.ppm 
+#
+#  N2O.ppm = (N2O.pwr.1_3 - 6.2) / 0.35
 
 
 
+N2O.ppm.Calibrated <- (C.GC.Standards.All$N2O.pwr.1_3 - 6.2) / 0.35  ; 
+
+plot(N2O.ppm ~ N2O,
+     
+     data = C.GC.Standards.All, 
+     
+     main = "N2O",
+     
+     pch = 16,
+     
+     cex = 1,
+     
+     col = "red")
+
+points(N2O.ppm.Calibrated ~ C.GC.Standards.All$N2O, pch = 1, cex = 1.5 , col = "blue")
+
+
+
+legend("topleft", legend = c("N2O.ppm", "N2O.ppm.Calibrated"), col = c("red" , "blue"), pch = c(16, 1))
+
+
+OLS.regression.sqrt_N2O <- lm(sqrt(C.GC.Standards.All$N2O) ~ N2O.ppm, 
+                                 
+                                 data = C.GC.Standards.All) ;
+
+summary(OLS.regression.sqrt_N2O)
+
+plot(OLS.regression.sqrt_N2O)
+
+
+################## TESTS #####################
+
+
+
+
+N2O.ppm.Calibrated.Sqrt <- (sqrt(C.GC.Standards.All$N2O) - 21.4) / 3.3  ; 
+
+plot(N2O.ppm ~ N2O,
+     
+     data = C.GC.Standards.All, 
+     
+     main = "N2O",
+     
+     pch = 16,
+     
+     cex = 1,
+     
+     col = "red")
+
+points(N2O.ppm.Calibrated.Sqrt ~ C.GC.Standards.All$N2O, pch = 1, cex = 1.5 , col = "blue")
+
+
+
+legend("topleft", legend = c("N2O.ppm", "N2O.ppm.Calibrated"), col = c("red" , "blue"), pch = c(16, 1))
 
