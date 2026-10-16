@@ -452,6 +452,127 @@ points(CO2.ppm.Calibrated ~ C.GC.Standards.All$CO2, pch = 1, cex = 1.5 , col = "
        
 
 legend("topleft", legend = c("CO2.ppm", "CO2.ppm.Calibrated"), col = c("red" , "blue"), pch = c(16, 1))
+
+
+###############################################################################################################
+#                           
+#        Use quantile regression for the standards
+#
+###############################################################################################################
+
+
+############## quantile regression  CO2 ###########
+
+Quantile.Reg.2 <- rq( CO2.ppm ~ CO2, data = C.GC.Standards.All, tau = seq(from = 0.1, to = 0.9 , by = 0.1) )
+
+str(Quantile.Reg.2 )
+
+plot(Quantile.Reg.2)
+
+summary(Quantile.Reg.2)
+
+coefficients(Quantile.Reg.2)[,1]
+
+
+xyplot(CO2.ppm ~ CO2 ,
+       
+       data = C.GC.Standards.All, 
+       
+       main = "CO2",
+       
+       groups = YEAR,
+       
+       pch = c(16, 1),
+       
+       cex = c(1, 1.5),
+       
+       col = c("red" , "blue"),
+       
+       key = list(
+         
+         space = "top",
+         
+         columns = 2,
+         
+         text = list(c("2021" , "2022")),
+         
+         points = list(pch = c(16, 1),
+                       
+                       col = c("red" , "blue"))),
+       
+       panel = function(x,y,...) {
+         
+         panel.xyplot(x,y, ...)
+         
+         panel.lmline(C.GC.Standards.All$CO2 , C.GC.Standards.All$CO2.ppm, col = "blue", lwd =2)
+         
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,1] , b = coefficients(Quantile.Reg.2)[2,1],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,2] , b = coefficients(Quantile.Reg.2)[2,2],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,3] , b = coefficients(Quantile.Reg.2)[2,3],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,4] , b = coefficients(Quantile.Reg.2)[2,4],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,5] , b = coefficients(Quantile.Reg.2)[2,5],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,6] , b = coefficients(Quantile.Reg.2)[2,6],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,7] , b = coefficients(Quantile.Reg.2)[2,7],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,8] , b = coefficients(Quantile.Reg.2)[2,8],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.abline(a = coefficients(Quantile.Reg.2)[1,9] , b = coefficients(Quantile.Reg.2)[2,9],
+                      
+                      col = "gray" , lwd = 1.5)
+         
+         panel.text(x = 4000,  y = 4000, 
+                    
+                    labels = paste(round(OLS.regression$coefficients[1],3),
+                                   
+                                   round(OLS.regression$coefficients[2],3),
+                                   sep = " + "),
+                    
+                    col = "black" ,
+                    
+                    cex = 2)
+         
+         
+         
+       }
+       
+)
+
+
+Quantile.Reg.05 <- rq( CO2.ppm ~ CO2, data = C.GC.Standards.All, tau = 0.5 )
+
+coefficients(Quantile.Reg.05)[1]
+
+
+plot(CO2.ppm ~ CO2 ,
+     
+     data = C.GC.Standards.All, col = "red")
+
+points(CO2.ppm.Calibrated ~ C.GC.Standards.All$CO2, pch = 1, cex = 1.5 , col = "blue")
+
+abline( a = coefficients(Quantile.Reg.05)[1] , b = coefficients(Quantile.Reg.05)[2], col = "green"  )
+
        
   
 ##############################################  N2O  ########################################################
@@ -521,17 +642,17 @@ plot(C.GC.Standards.no.NA$N2O.ppm , OLS.regression.N2O$residuals )
  
 #### ratio of the largest to smallest response data  ####
 
-max(C.GC.Standards.All$N2O , na.rm = T)/min(C.GC.Standards.All$N2O , na.rm = T)
+max(C.GC.Standards.no.NA$N2O)/min(C.GC.Standards.no.NA$N2O)
   
   
 boxcox(OLS.regression.N2O)
 
-boxcox(N2O ~ N2O.ppm , data = C.GC.Standards.All , lambda = seq(from = 0, to = 1 , by = 0.01),
+boxcox(N2O ~ N2O.ppm , data = C.GC.Standards.no.NA , lambda = seq(from = 0, to = 1 , by = 0.01),
        
        plotit = T )
  
 
-OLS.regression.N2O.BoxCox <-boxcox(N2O ~ N2O.ppm , data = C.GC.Standards.All , lambda = seq(from = 0.2, to = 0.4 , by = 0.01),
+OLS.regression.N2O.BoxCox <-boxcox(N2O ~ N2O.ppm , data = C.GC.Standards.no.NA , lambda = seq(from = 0.2, to = 0.4 , by = 0.01),
        
        plotit = T )
 
@@ -543,18 +664,18 @@ which(OLS.regression.N2O.BoxCox$y == max(OLS.regression.N2O.BoxCox$y))
 
 OLS.regression.N2O.BoxCox$x[53]
 
-##### The best lambda is OLS.regression.CO2.BoxCox$x[53] = 0.3050505 , which is very close to 0.3  ######
+##### The best lambda is OLS.regression.N2O.BoxCox$x[53] = 0.3050505 , which is very close to 0.3  ######
 
 #### The optimal transformation according to the Box-Cox transformation analysis is y^0.3 = a + X1...
 
-C.GC.Standards.All$N2O.pwr.1_3 <- (C.GC.Standards.All$N2O)^0.3 ;
+C.GC.Standards.no.NA$N2O.pwr.1_3 <- (C.GC.Standards.no.NA$N2O)^0.3 ;
 
-str(C.GC.Standards.All)
+str(C.GC.Standards.no.NA)
 
 
-OLS.regression.N2O.pwr.1_3 <- lm(C.GC.Standards.All$N2O.pwr.1_3 ~ N2O.ppm, 
+OLS.regression.N2O.pwr.1_3 <- lm(C.GC.Standards.no.NA$N2O.pwr.1_3 ~ N2O.ppm, 
                               
-                              data = C.GC.Standards.All) ;
+                              data = C.GC.Standards.no.NA) ;
 
 summary(OLS.regression.N2O.pwr.1_3)  
 
@@ -562,12 +683,12 @@ plot(OLS.regression.N2O.pwr.1_3)
 
 str(OLS.regression.N2O.pwr.1_3)
 
-#### The best model for calibration of the CO2 GC data is 
+#### The best model for calibration of the N2O GC data is 
 
 summary(OLS.regression.N2O.pwr.1_3)
 
 # Call:
-#   lm(formula = C.GC.Standards.All$N2O.pwr.1_3 ~ N2O.ppm, data = C.GC.Standards.All)
+#   lm(formula = C.GC.Standards.no.NA$N2O.pwr.1_3 ~ N2O.ppm, data = C.GC.Standards.no.NA)
 # 
 # Residuals:
 #   Min      1Q  Median      3Q     Max 
@@ -581,7 +702,6 @@ summary(OLS.regression.N2O.pwr.1_3)
 #   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 # 
 # Residual standard error: 1.991 on 641 degrees of freedom
-# (4 observations deleted due to missingness)
 # Multiple R-squared:  0.917,	Adjusted R-squared:  0.9169 
 # F-statistic:  7082 on 1 and 641 DF,  p-value: < 2.2e-16
 
@@ -598,11 +718,11 @@ summary(OLS.regression.N2O.pwr.1_3)
 
 
 
-N2O.ppm.Calibrated <- (C.GC.Standards.All$N2O.pwr.1_3 - 6.2) / 0.35  ; 
+N2O.ppm.Calibrated <- (C.GC.Standards.no.NA$N2O.pwr.1_3 - 6.2) / 0.35  ; 
 
 plot(N2O.ppm ~ N2O,
      
-     data = C.GC.Standards.All, 
+     data = C.GC.Standards.no.NA, 
      
      main = "N2O",
      
@@ -612,34 +732,35 @@ plot(N2O.ppm ~ N2O,
      
      col = "red")
 
-points(N2O.ppm.Calibrated ~ C.GC.Standards.All$N2O, pch = 1, cex = 1.5 , col = "blue")
+points(N2O.ppm.Calibrated ~ C.GC.Standards.no.NA$N2O, pch = 1, cex = 1.5 , col = "blue")
 
-points(N2O.ppm.Calibrated.Sqrt ~ C.GC.Standards.All$N2O, pch = 1, cex = 1.5 , col = "green")
+points(N2O.ppm.Calibrated.Sqrt ~ C.GC.Standards.no.NA$N2O, pch = 1, cex = 1.5 , col = "green")
 
 
 
 legend("topleft", legend = c("N2O.ppm", "N2O.ppm.Calibrated"), col = c("red" , "blue"), pch = c(16, 1))
 
 
-OLS.regression.sqrt_N2O <- lm(sqrt(C.GC.Standards.All$N2O) ~ N2O.ppm, 
+
+################## TESTING SQUARE ROOT FOR N2O #####################
+
+
+OLS.regression.sqrt_N2O <- lm(sqrt(C.GC.Standards.no.NA$N2O) ~ N2O.ppm, 
                                  
-                                 data = C.GC.Standards.All) ;
+                                 data = C.GC.Standards.no.NA) ;
 
 summary(OLS.regression.sqrt_N2O)
 
 plot(OLS.regression.sqrt_N2O)
 
 
-################## TESTS #####################
 
 
-
-
-N2O.ppm.Calibrated.Sqrt <- (sqrt(C.GC.Standards.All$N2O) - 21.4) / 3.3  ; 
+N2O.ppm.Calibrated.Sqrt <- (sqrt(C.GC.Standards.no.NA$N2O) - 21.4) / 3.3  ; 
 
 plot(N2O.ppm ~ N2O,
      
-     data = C.GC.Standards.All, 
+     data = C.GC.Standards.no.NA, 
      
      main = "N2O",
      
@@ -649,7 +770,35 @@ plot(N2O.ppm ~ N2O,
      
      col = "red")
 
-points(N2O.ppm.Calibrated.Sqrt ~ C.GC.Standards.All$N2O, pch = 1, cex = 1.5 , col = "blue")
+points(N2O.ppm.Calibrated.Sqrt ~ C.GC.Standards.no.NA$N2O, pch = 1, cex = 1.5 , col = "blue")
+
+points(N2O.ppm.Calibrated ~ C.GC.Standards.no.NA$N2O, pch = 1, cex = 1.5 , col = "blue")
+
+
+
+N2O.ppm.Calibrated.Sqrt <- (sqrt(C.GC.Standards.no.NA$N2O) - 21.4) / 3.3  ; 
+
+plot(N2O.ppm ~ N2O,
+     
+     data = C.GC.Standards.no.NA, 
+     
+     main = "N2O",
+     
+     pch = 16,
+     
+     cex = 1,
+     
+     col = "red",
+     
+     xlim = c(0,1000) , ylim = c(-10,10))
+
+points(N2O.ppm.Calibrated.Sqrt ~ C.GC.Standards.no.NA$N2O, pch = 1, cex = 1.5 , col = "blue")
+
+points(N2O.ppm.Calibrated ~ C.GC.Standards.no.NA$N2O, pch = 1, cex = 1.5 , col = "blue")
+
+
+
+
 
 
 
