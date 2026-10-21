@@ -248,9 +248,7 @@ summary(OLS.regression.CO2)
 
 plot(OLS.regression.CO2)
 
-
 str(OLS.regression.CO2)
-
 
 plot(OLS.regression.CO2$fitted.values, OLS.regression.CO2$residuals)
 
@@ -266,7 +264,7 @@ C.GC.Standards.All$log.CO2.ppm <- log(C.GC.Standards.All$CO2.ppm) ;
 #### CO2 ~ log.CO2.ppm  ####
 
 
-xyplot(CO2 ~ log.CO2.ppm,
+xyplot(log.CO2 ~ CO2.ppm,
        
        data = C.GC.Standards.All, 
        
@@ -301,6 +299,70 @@ OLS.regression.Log <- lm(CO2 ~ log.CO2.ppm ,
 
 #### There are standards with 0 CO2 ppm and log 0 is  NA/NaN/Inf, the regression failed ###
 
+### Two options; add a constant c or use the Inverse hyperbolic sine asinh;
+
+
+#### Try the first, c = 1  ####
+
+C.GC.Standards.All$CO2.ppm.plus.c <- C.GC.Standards.All$CO2.ppm +1 ;
+
+OLS.regression.Log.plus.c <- lm(CO2 ~ CO2.ppm.plus.c , 
+                         
+                         data = C.GC.Standards.All) ;
+
+
+summary(OLS.regression.Log.plus.c)
+
+plot(OLS.regression.Log.plus.c)
+
+##### the residuals still grow as the level of CO2 increases. Heteroscedasticity.  Try log log transformation
+
+
+#### log.CO2 ~ log.CO2.ppm  ####
+
+C.GC.Standards.All$log.CO2.ppm.plus.c <- log(C.GC.Standards.All$CO2.ppm.plus.c)  ;
+
+xyplot(log.CO2 ~ log.CO2.ppm.plus.c,
+       
+       data = C.GC.Standards.All, 
+       
+       main = "CO2",
+       
+       groups = YEAR,
+       
+       pch = c(16, 1),
+       
+       cex = c(1, 1.5),
+       
+       col = c("red" , "blue"),
+       
+       key = list(
+         
+         space = "top",
+         
+         columns = 2,
+         
+         text = list(c("2021" , "2022")),
+         
+         points = list(pch = c(16, 1),
+                       
+                       col = c("red" , "blue")
+                       
+         )
+       ))
+
+
+OLS.regression.Log.Log.plus.c <- lm(log.CO2 ~ log.CO2.ppm.plus.c , 
+                         
+                         data = C.GC.Standards.All) ;
+
+
+summary(OLS.regression.Log.Log.plus.c)
+
+plot(OLS.regression.Log.Log.plus.c)
+
+
+
 # ###############################################################################################################
 # 
 # 
@@ -328,7 +390,7 @@ anyNA(C.GC.Standards.All$CO2.ppm)
 
 
 
-#### ratio of the largest to smalles response data  ####
+#### ratio of the largest to smallest response data  ####
 
 max(C.GC.Standards.All$CO2)/min(C.GC.Standards.All$CO2)
 
@@ -433,9 +495,9 @@ summary(OLS.regression.sqrt_CO2)
 #
 #  CO2.ppm = (sqrt_CO2 - 35.56) / 0.0201 
 
-CO2.ppm.Calibrated <- (C.GC.Standards.All$sqrt_CO2 - 35.56) / 0.0201  ; 
 
-plot(CO2.ppm ~ CO2,
+
+plot(CO2 ~ CO2.ppm,
          
          data = C.GC.Standards.All, 
          
@@ -447,11 +509,14 @@ plot(CO2.ppm ~ CO2,
          
          col = "red")
 
-points(CO2.ppm.Calibrated ~ C.GC.Standards.All$CO2, pch = 1, cex = 1.5 , col = "blue")
-       
-       
+points(predict(OLS.regression.CO2)  ~  C.GC.Standards.All$CO2.ppm  , pch = 17 , cex = 1.5 , col = "green")
 
-legend("topleft", legend = c("CO2.ppm", "CO2.ppm.Calibrated"), col = c("red" , "blue"), pch = c(16, 1))
+points((predict(OLS.regression.sqrt_CO2))^2  ~  C.GC.Standards.All$CO2.ppm  , pch = 16 , cex = 1.5 , col = "blue")
+
+points((exp(predict(OLS.regression.Log.plus.c))-1) ~ C.GC.Standards.All$CO2.ppm  , pch = 17 , cex = 1.5 , col = "cyan"))
+
+       
+legend("topleft", legend = c("CO2.ppm", "OLS-CO2", "OLS-Sqrt(CO2)"), col = c("red" , "blue", "green"), pch = c(16, 17,16))
 
 
 ###############################################################################################################
@@ -463,18 +528,20 @@ legend("topleft", legend = c("CO2.ppm", "CO2.ppm.Calibrated"), col = c("red" , "
 
 ############## quantile regression  CO2 ###########
 
-Quantile.Reg.2 <- rq( CO2.ppm ~ CO2, data = C.GC.Standards.All, tau = seq(from = 0.1, to = 0.9 , by = 0.1) )
+Quantile.Reg <- rq( CO2 ~ CO2.ppm, data = C.GC.Standards.All, tau = seq(from = 0.1, to = 0.9 , by = 0.1) ) ;
 
-str(Quantile.Reg.2 )
+str(Quantile.Reg )
 
-plot(Quantile.Reg.2)
+plot(Quantile.Reg)
 
-summary(Quantile.Reg.2)
+summary(Quantile.Reg)
 
-coefficients(Quantile.Reg.2)[,1]
+str(dimnames(coefficients(Quantile.Reg)))
+
+coefficients(Quantile.Reg)
 
 
-xyplot(CO2.ppm ~ CO2 ,
+xyplot(CO2 ~ CO2.ppm ,
        
        data = C.GC.Standards.All, 
        
@@ -504,60 +571,69 @@ xyplot(CO2.ppm ~ CO2 ,
          
          panel.xyplot(x,y, ...)
          
-         panel.lmline(C.GC.Standards.All$CO2 , C.GC.Standards.All$CO2.ppm, col = "blue", lwd =2)
+         panel.xyplot(C.GC.Standards.All$CO2.ppm , C.GC.Standards.All$CO2, col = "black", lwd =2)
          
-         panel.abline(a = coefficients(Quantile.Reg.2)[1,1] , b = coefficients(Quantile.Reg.2)[2,1],
+         panel.abline(a = coefficients(Quantile.Reg)[1,1] , b = coefficients(Quantile.Reg)[2,1],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg.2)[1,2] , b = coefficients(Quantile.Reg.2)[2,2],
+         panel.abline(a = coefficients(Quantile.Reg)[1,2] , b = coefficients(Quantile.Reg)[2,2],
+                      
+                      col = "gray" , lwd = 1.5)
+        
+         panel.abline(a = coefficients(Quantile.Reg)[1,3] , b = coefficients(Quantile.Reg)[2,3],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg.2)[1,3] , b = coefficients(Quantile.Reg.2)[2,3],
+         panel.abline(a = coefficients(Quantile.Reg)[1,4] , b = coefficients(Quantile.Reg)[2,4],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg.2)[1,4] , b = coefficients(Quantile.Reg.2)[2,4],
+         panel.abline(a = coefficients(Quantile.Reg)[1,5] , b = coefficients(Quantile.Reg)[2,5],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg.2)[1,5] , b = coefficients(Quantile.Reg.2)[2,5],
+         panel.abline(a = coefficients(Quantile.Reg)[1,6] , b = coefficients(Quantile.Reg)[2,6],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg.2)[1,6] , b = coefficients(Quantile.Reg.2)[2,6],
+         panel.abline(a = coefficients(Quantile.Reg)[1,7] , b = coefficients(Quantile.Reg)[2,7],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg.2)[1,7] , b = coefficients(Quantile.Reg.2)[2,7],
+         panel.abline(a = coefficients(Quantile.Reg)[1,8] , b = coefficients(Quantile.Reg)[2,8],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg.2)[1,8] , b = coefficients(Quantile.Reg.2)[2,8],
+         panel.abline(a = coefficients(Quantile.Reg)[1,9] , b = coefficients(Quantile.Reg)[2,9],
                       
                       col = "gray" , lwd = 1.5)
          
-         panel.abline(a = coefficients(Quantile.Reg.2)[1,9] , b = coefficients(Quantile.Reg.2)[2,9],
-                      
-                      col = "gray" , lwd = 1.5)
-         
-         panel.text(x = 4000,  y = 4000, 
+         panel.text(x = 3000,  y = 4000, 
                     
-                    labels = paste(round(OLS.regression$coefficients[1],3),
+                    labels = paste0("OLS: ",round(OLS.regression.CO2$coefficients[1],3), "+" ,
                                    
-                                   round(OLS.regression$coefficients[2],3),
-                                   sep = " + "),
+                                   round(OLS.regression.CO2$coefficients[2],3), "CO2"),
                     
                     col = "black" ,
                     
                     cex = 2)
          
-         
+         panel.text(x = 3000,  y = 3000, 
+                    
+                    labels = paste0("QUANT: " ,round(Quantile.Reg$coefficients[1,5],3), "+" ,
+                                   
+                                   round(Quantile.Reg$coefficients[2,5],3), "CO2"),
+                    
+                    col = "black" ,
+                    
+                    cex = 2)
          
        }
        
 )
+
+
 
 
 Quantile.Reg.05 <- rq( CO2.ppm ~ CO2, data = C.GC.Standards.All, tau = 0.5 )
@@ -573,7 +649,11 @@ points(CO2.ppm.Calibrated ~ C.GC.Standards.All$CO2, pch = 1, cex = 1.5 , col = "
 
 abline( a = coefficients(Quantile.Reg.05)[1] , b = coefficients(Quantile.Reg.05)[2], col = "green"  )
 
-       
+points(predict(Quantile.Reg.05) ~ C.GC.Standards.All$CO2)  
+
+points(predict(OLS.regression.CO2) ~ C.GC.Standards.All$CO2 , pch = 1 , col = "darkblue")
+
+
   
 ##############################################  N2O  ########################################################
 
