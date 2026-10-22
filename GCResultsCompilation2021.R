@@ -316,14 +316,9 @@ str(Data.20210601)
 PeakArea.Results.All <-rbind(PeakArea.results.0 ,PeakArea.results.20210929B1B2peakareas1,  Data.20210601 )  ;
 
 
-
-
-
 str(PeakArea.Results.All)
 
-
 names(PeakArea.Results.All)
-
 
 
 Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ; 

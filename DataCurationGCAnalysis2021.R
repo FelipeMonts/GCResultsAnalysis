@@ -1161,9 +1161,9 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCro
 
 ####   Do a Check #####
 
-GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Plot == NA ), ]   ;
+GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$Plot)), ]   ;
 
-GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Location == NA ), ]   ;
+GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$Location)), ]   ;
 
 
 GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ]
@@ -3056,33 +3056,109 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-09-17") 
 ###############################################################################################################
 
 
+# ###############################################################################################################
+# 
+#                      Best calibration equation for CO2
+# 
+# ###############################################################################################################
+# 
+# 
+# Call: rq(formula = CO2 ~ CO2.ppm, tau = 0.5, data = C.GC.Standards.All)
+# 
+# tau: [1] 0.5
+# 
+# Coefficients:
+#   coefficients lower bd  upper bd 
+# (Intercept) 797.91013    740.63252 845.75477
+# CO2.ppm       3.30048      3.22693   3.47683
+# 
+# 
+#  Calibration equation
+# 
+# CO2 = 798 + (3.3 * CO2.ppm)
+# 
+# CO2.ppm =(CO2-798)/3.3
+# 
+# 
+# ###############################################################################################################
+
+
+
 str(GC.Data.NoSTD.2021)
+
+anyNA(GC.Data.NoSTD.2021$CO2)
+
+GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$CO2)), ]
 
 
 ##### CO2 ######
 
-GC.Data.NoSTD.2021.CO2.Intercept <- -182.031;
+GC.Data.NoSTD.2021$CO2.ppm <- (as.numeric(GC.Data.NoSTD.2021$CO2) - 798) / 3.3  ;
 
-GC.Data.NoSTD.2021.CO2.Slope <- 0.279;
+GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$CO2.ppm)), ]
 
-GC.Data.NoSTD.2021$CO2.ppm <- (GC.Data.NoSTD.2021$CO2 * GC.Data.NoSTD.2021.CO2.Slope) + GC.Data.NoSTD.2021.CO2.Intercept ;
 
 plot(GC.Data.NoSTD.2021$CO2.ppm )
 
 
+# ###############################################################################################################
+# 
+#                      Best calibration equation for N2O
+# 
+# ###############################################################################################################
+# 
+# 
+# Call: rq(formula = N2O ~ N2O.ppm, tau = 0.5, data = C.GC.Standards.no.NA)
+# 
+# tau: [1] 0.5
+# 
+# Coefficients:
+#   coefficients lower bd upper bd
+# (Intercept) 134.9825     127.2636 149.5451
+# N2O.ppm     624.6675     608.9579 634.0715 
+# 
+# Calibration equation
+# 
+# N2O = 135 + ( 625 * N2O.ppm )
+# 
+# N2O.ppm = (N20 - 135) / 625
+# 
+# 
+# 
+# ###############################################################################################################
+
+str(GC.Data.NoSTD.2021)
+
+anyNA(GC.Data.NoSTD.2021$N2O)
+
+GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$N2O)), ]
+
+
+
 ##### N2O ######
 
-GC.Data.NoSTD.2021.N2O.Intercept <- -0.18282 ;
 
-GC.Data.NoSTD.2021.N2O.Slope <- 0.00155 ;
+GC.Data.NoSTD.2021$N2O.ppm <- (as.numeric(GC.Data.NoSTD.2021$N2O) - 135) / 625  ;
 
-GC.Data.NoSTD.2021$N2O.ppm <- (GC.Data.NoSTD.2021$N2O * GC.Data.NoSTD.2021.N2O.Slope) + GC.Data.NoSTD.2021.N2O.Intercept ;
+GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$CO2.ppm)), ]
+
+
 
 plot(GC.Data.NoSTD.2021$N2O.ppm )
 
 
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ; 
+# 
+# write.csv(x = GC.Data.NoSTD.2021, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# 
+# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+# 
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GC_data_Curated_2021",
+# 
+# Working.Date , ".csv"), append = F , row.names = F )
 
 
+#read.csv(file = paste0("FluxDataAnalysisResults\\GC_data_Curated_20212026_10_22_11_34_59.csv" ))
 
 
 ###############################################################################################################
@@ -3091,7 +3167,7 @@ plot(GC.Data.NoSTD.2021$N2O.ppm )
 #
 ###############################################################################################################
 
-Block 1, Clover, D,
+#Block 1, Clover, D,
 
 
 
