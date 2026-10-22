@@ -93,11 +93,11 @@ library(HMR)
 # #### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!######## 
 
 
-#File.List.directory.path <- paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects",
-                                   # 
-                                   # "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data",
-                                   # 
-                                   # "\\GasChromatograph\\Felipe2022\\Results") ;
+# File.List.directory.path <- paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects",
+# 
+# "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data",
+# 
+# "\\GasChromatograph\\Felipe2022\\Results") ;
 
 
 File.List.directory.path <- "C:\\Users\\frm10\\Results\\Results_2022"  ;
@@ -126,7 +126,10 @@ File.List.directory <- list.files(File.List.directory.path)[which(list.files(Fil
                                                               list.files(File.List.directory.path) != "FelipeGCN2O-20220609_B1B2" &
                                                               
                                                               list.files(File.List.directory.path) != "FelipeGNN2O20220808_Aborted") ]
-File.List.directory
+
+
+
+# File.List.directory <- list.files(File.List.directory.path)
 
 
 File.List.Sub.directory <- list.files(paste0(File.List.directory.path , "\\" , File.List.directory [1] )); length(File.List.Sub.directory) ;
@@ -219,20 +222,22 @@ for (i in seq(1,length(File.List.directory))){
     
     PeakArea.results.1$AnalysisName<-PDF.Results.Files[[j]] ;
     
-    PeakArea.results<-rbind(PeakArea.results.0,PeakArea.results.1 );
+    PeakArea.results <- rbind(PeakArea.results.0,PeakArea.results.1 );
     
     
-    PeakArea.results.0<-PeakArea.results ;
+    PeakArea.results.0 <- PeakArea.results ;
     
     # Delete objects and files that are not longer needed
     
-    rm(PeakArea.results.1)
+    rm(PeakArea.results.1, PeakArea.results)
     
     
     
   }
   
 }
+
+PeakArea.Results.All <- PeakArea.results.0 ;
 
 
 # #### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!########
@@ -245,13 +250,16 @@ for (i in seq(1,length(File.List.directory))){
 # #### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!######## 
 
 
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ; 
+# 
+# write.csv(x = PeakArea.Results.All, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# 
+# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+# 
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults_2022_",
+# 
+# Working.Date , ".csv"), row.names = F )
 
-
-write.csv(x = PeakArea.results, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University",
-
-"\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
-
-"DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults2022.csv") )  ;
 
 
 
