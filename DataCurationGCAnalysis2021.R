@@ -1,9 +1,9 @@
 ##############################################################################################################
 # 
 # 
-# Program to Analyze and plot GC data collected from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
+# Program to Collect GC data from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
 # 
-#     This program is focused on measurements on year 2021
+#     This program is focused on curating measurements on year 2021
 # 
 # 
 #  Felipe Montes 2026/06/02

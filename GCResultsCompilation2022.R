@@ -93,6 +93,8 @@ library(HMR)
 # #### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!######## 
 
 
+
+
 # File.List.directory.path <- paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects",
 # 
 # "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\Data",
@@ -100,36 +102,37 @@ library(HMR)
 # "\\GasChromatograph\\Felipe2022\\Results") ;
 
 
-File.List.directory.path <- "C:\\Users\\frm10\\Results\\Results_2022"  ;
+###############################################################################################################
+#
+#                              Notes about GC Data 2026/10/22
+# 
+# Felipe_GCN2O_20220609_B1B2 had the summary results labeled as Results20220630. The date of the GC analysis is 06/30/2022. The labels was marked with the date of the GC analysis and not of the Sampling Date.
+# That has been corrected in the directory "Results_2022_Curated_FM_20261022"
+# 
+# Felipe_GCN2O_20220802_B3B4 has results for Summary GCN20_20220910. The file with the data for 20220802 was lost. That data is no longer available
+# 
+# Felipe_GCN2O_202200615_B3B4 and Felipe_GCN2O_202200615_B2B4. Block 1 was not sampled and block 4 was run two times trough the GC. Select the first run.
+# 
+# Felipe_GCN2O_202200707_B2 , Block B1 was not sampled that day
+# 
+# Directories  "Trouble" and "FelipeGCN2O20220808" do not have data.
+# 
+# "FelipeGCN2O-20220609_B1B2" is a duplicate of FelipeGCN2O_20220629_B1B2 
+# 
+# The directory with the corrected files is Results_2022_Curated_FM_20261022
+#
+#
+##############################################################################################################
+
+
+
+File.List.directory.path <- "C:\\Users\\frm10\\Results\\Results_2022_Curated_FM_20261022"  ;
 
 
 list.files(File.List.directory.path)
+ 
 
-#### "Trouble" and "FelipeGCN2O20220808" do not have data. Need to be removed from the list.files   ####
-
-#### "FelipeGCN2O-20220609_B1B2" is a duplicate of FelipeGCN2O_20220629_B1B2 
-
-list.files(File.List.directory.path)[which(list.files(File.List.directory.path) != "Trouble" &
-                                             
-                                             list.files(File.List.directory.path) != "FelipeGCN2O20220808" &
-                                             
-                                             list.files(File.List.directory.path) != "FelipeGCN2O-20220609_B1B2" &
-                                             
-                                             list.files(File.List.directory.path) != "FelipeGNN2O20220808_Aborted") ]
-
-
-
-File.List.directory <- list.files(File.List.directory.path)[which(list.files(File.List.directory.path) != "Trouble" &
-                                                              
-                                                              list.files(File.List.directory.path) != "FelipeGCN2O20220808" &
-                                                              
-                                                              list.files(File.List.directory.path) != "FelipeGCN2O-20220609_B1B2" &
-                                                              
-                                                              list.files(File.List.directory.path) != "FelipeGNN2O20220808_Aborted") ]
-
-
-
-# File.List.directory <- list.files(File.List.directory.path)
+File.List.directory <- list.files(File.List.directory.path)
 
 
 File.List.Sub.directory <- list.files(paste0(File.List.directory.path , "\\" , File.List.directory [1] )); length(File.List.Sub.directory) ;
@@ -181,7 +184,11 @@ PeakArea.results.0<-data.frame(Sample.Name = character(), Position = integer() ,
 
 ##### load the ReadGCReportPDF function ###
 
-source("ReadGCReportPDF2022.R")
+source(paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\",
+
+                "CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\" ,
+                
+                "RCode\\GCResultsAnalysis\\ReadGCReportPDF2022.R"))
 
 # i = 2
 
@@ -240,17 +247,9 @@ for (i in seq(1,length(File.List.directory))){
 PeakArea.Results.All <- PeakArea.results.0 ;
 
 
-# #### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!########
-
-# 
-# The directory "FelipeGCN20_20220802_B3B4" does not have the GC data corresponding to 20220802_B3B4
-# 
-# It has the data duplicated from 2O20220910_B1B2. It appears that the data for 20220802_B3B4 has been lost
-
-# #### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!######## 
 
 
-# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ; 
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
 # 
 # write.csv(x = PeakArea.Results.All, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
 # 
@@ -259,7 +258,7 @@ PeakArea.Results.All <- PeakArea.results.0 ;
 # "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults_2022_",
 # 
 # Working.Date , ".csv"), row.names = F )
-
+# 
 
 
 
