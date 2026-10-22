@@ -113,7 +113,12 @@ library(HMR)
 # 
 # Felipe_GCN2O_202200615_B3B4 and Felipe_GCN2O_202200615_B2B4. Block 1 was not sampled and block 4 was run two times trough the GC. Select the first run.
 # 
-# Felipe_GCN2O_202200707_B2 , Block B1 was not sampled that day
+# Felipe_GCN2O_202200707_B2 , Block B1 was not sampled that day. The results of the Felipe_GCN2O_202200707_B2 are identical to the results of FelipeGCN2O_20220719_B3B4 
+#  
+# A mistake in reading the file could cause the problem. The data from was recovered by hand from the GC sequence and it is now in the 
+# 
+# file SummaryGCN2O_20220707_B2_20261022
+
 # 
 # Directories  "Trouble" and "FelipeGCN2O20220808" do not have data.
 # 
@@ -248,6 +253,53 @@ PeakArea.Results.All <- PeakArea.results.0 ;
 
 
 
+###############################################################################################################
+
+# Add The data from Felipe_GCN2O_202200707_B2 was recovered by hand from the GC sequence and it is now 
+# 
+# in the file SummaryGCN2O_20220707_B2_20261022
+  
+###############################################################################################################
+
+read.xlsx( xlsxFile = paste0("C:\\Users\\frm10\\Results\\Results_2022_Curated_FM_20261022\\",
+
+                            "FelipeGCN2O_20220707_B2\\Summary\\SummaryGCN2O_20220707_B2_20261022.xlsx"))
+
+PeakArea.results.GCN2O_20220707_B2 <- read.xlsx( xlsxFile = paste0("C:\\Users\\frm10\\Results\\Results_2022_Curated_FM_20261022\\",
+                                                                   
+                                               "FelipeGCN2O_20220707_B2\\Summary\\SummaryGCN2O_20220707_B2_20261022.xlsx")) ; 
+
+str(PeakArea.results.GCN2O_20220707_B2)
+
+str(PeakArea.Results.All)
+
+PeakArea.results.GCN2O_20220707_B2$File <- "SummaryGCN2O_20220707_B2_20261022.xlsx" ;
+
+PeakArea.results.GCN2O_20220707_B2$Sampling.Day <- "20220707" ;
+
+PeakArea.results.GCN2O_20220707_B2$Sampling.Date <- as.Date("2022-07-07") ;
+
+PeakArea.results.GCN2O_20220707_B2$GC.Date <- as.Date("2022-10-14") ;
+
+PeakArea.results.GCN2O_20220707_B2$AnalysisName <- "SummaryGCN2O_20220707_B2_20261022.xlsx" ;
+
+names(PeakArea.results.GCN2O_20220707_B2)[4:6]
+
+names(PeakArea.Results.All)
+
+names(PeakArea.results.GCN2O_20220707_B2)[4:6] <- c( "CH4" , "CO2" , "N2O") ;
+
+
+#### Add the data to the Dataframe #####
+
+rbind(PeakArea.Results.All , PeakArea.results.GCN2O_20220707_B2) 
+
+PeakArea.Results.All.2 <- rbind(PeakArea.Results.All , PeakArea.results.GCN2O_20220707_B2) ;
+
+str(PeakArea.Results.All.2)
+
+PeakArea.Results.All <- PeakArea.Results.All.2 ;
+
 
 # Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
 # 
@@ -258,7 +310,7 @@ PeakArea.Results.All <- PeakArea.results.0 ;
 # "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults_2022_",
 # 
 # Working.Date , ".csv"), row.names = F )
-# 
+
 
 
 
