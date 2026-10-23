@@ -1560,6 +1560,393 @@ GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19") 
 
 
 
+### Sampling.Date == 2022-09-01  ; Sample.Name == B2TritA ;
+
+# Selecting set with the conditions 
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "A" , ]
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "A" , "Field.Notes" ] <- "YES";
+
+                    
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "A" , "Note" ] <- "Sampled next Day" ;                
+                    
+                    
+
+### Sampling.Date == 2022-09-01  ; Sample.Name == B2TritC ;
+
+# Selecting set with the conditions 
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C" , ]
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C" , "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C" , "Note" ] <- "Sampled next Day" ;  
+
+
+                    
+                    
+### Sampling.Date == 2022-09-01  ; Sample.Name == B2CloverD ;
+
+# Selecting set with the conditions 
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "D" , ]
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "D" , "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "D" , "Note" ] <- "Sampled next Day" ;                      
+
+
+
+
+### Sampling.Date == 2022-09-01  ; Sample.Name == B43SppA ;
+
+# Selecting set with the conditions 
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "A" , ]
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "A" , "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "A" , "Note" ] <- "Sampled next Day" ;  
+
+
+### Sampling.Date == 2022-09-01  ; Sample.Name == B43SppC ;
+
+# Selecting set with the conditions 
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C" , ]
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C" , "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C" , "Note" ] <- "Sampled next Day" ;  
+
+
+
+
+### Sampling.Date == 2022-09-01  ; Sample.Name == B43CloverD ;
+
+# Selecting set with the conditions 
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "D" , ]
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "D" , "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-01")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "D" , "Note" ] <- "Sampled next Day" ; 
+
+
+### Sampling.Date == 2022-09-10  ; Sample.Name == B2 ;
+
+# Selecting set with the conditions 
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4", ]
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4", "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4", "Note" ] <- "Sampled 2022 09 08, two days before" ;
+
+
+
+### Sampling.Date == 2022-09-10  ; Sample.Name == B2 ;
+
+# Selecting set with the conditions 
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2", ]
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2", "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2", "Note" ] <- "Sampled one day before 2022-09-09" ;
+
+
+
+### Sampling.Date == 2022-09-10  ; Sample.Name == B2ClovC ;
+
+# Selecting set with the conditions 
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C" , ]
+
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C" , "Field.Notes" ] <- "YES";
+
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C" , "Note" ] <- "Notice leak between the frame and the chamber";
+
+
+
+
+### Sampling.Date == 2022-09-10  ; Sample.Name == B4TritC ;
+
+# Selecting set with the conditions 
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C"  &   GC.Data.NoSTD.2022$Sampling.Time == 45, ]
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C"  &   GC.Data.NoSTD.2022$Sampling.Time == 45,
+                    
+                    "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-10")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4" & GC.Data.NoSTD.2022$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C"  &   GC.Data.NoSTD.2022$Sampling.Time == 45,
+                    
+                    "Note" ] <- "T45 Syringe stucked, took Sample from the manifold" ;
+
+
+
+### Sampling.Date == 2022-09-27  ; Sample.Name == B1, B2, B4 ;
+
+# Selecting set with the conditions 
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-27")  & 
+                      
+                     (GC.Data.NoSTD.2022$BLOCK == "1" | GC.Data.NoSTD.2022$BLOCK == "2" | GC.Data.NoSTD.2022$BLOCK == "4"), ]
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-27")  & 
+                      
+                      (GC.Data.NoSTD.2022$BLOCK == "1" | GC.Data.NoSTD.2022$BLOCK == "2" | GC.Data.NoSTD.2022$BLOCK == "4"), 
+                    
+                    "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-27")  & 
+                      
+                      (GC.Data.NoSTD.2022$BLOCK == "1" | GC.Data.NoSTD.2022$BLOCK == "2" | GC.Data.NoSTD.2022$BLOCK == "4"),
+                    
+                    "Note" ] <- "Sampled the next day 2022-09-28" ;
+
+
+### check ####
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-27")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "3", ]
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-27")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "1", ]
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-27")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2", ]
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-27")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "4", ] 
+
+
+
+### Sampling.Date == 2022-10-05  ; Sample.Name == B2, B4 ;
+
+# Selecting set with the conditions 
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-10-05")  & 
+                      
+                      ( GC.Data.NoSTD.2022$BLOCK == "2" | GC.Data.NoSTD.2022$BLOCK == "4"), ]
+
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-10-05")  & 
+                      
+                      ( GC.Data.NoSTD.2022$BLOCK == "2" | GC.Data.NoSTD.2022$BLOCK == "4"),
+                    
+                    "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-10-05")  & 
+                      
+                      ( GC.Data.NoSTD.2022$BLOCK == "2" | GC.Data.NoSTD.2022$BLOCK == "4"),
+                    
+                    "Note" ] <- "Sampled the next day 2022-10-06" ;
+                    
+
+
+### Sampling.Date == 2022-10-05  ; Sample.Name == B3TritCT30
+
+# Selecting set with the conditions 
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-10-05")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "3" & GC.Data.NoSTD.2022$CoverCrop == "Trit" & 
+                    
+                      GC.Data.NoSTD.2022$Treatment == "C" & GC.Data.NoSTD.2022$Sampling.Time == 30 , ]
+
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-10-05")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "3" & GC.Data.NoSTD.2022$CoverCrop == "Trit" & 
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C" & GC.Data.NoSTD.2022$Sampling.Time == 30 , 
+                    
+                    "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-10-05")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "3" & GC.Data.NoSTD.2022$CoverCrop == "Trit" & 
+                      
+                      GC.Data.NoSTD.2022$Treatment == "C" & GC.Data.NoSTD.2022$Sampling.Time == 30 , 
+                    
+                    "Note" ] <- " T2 Solenoid is Failing" ;
+
+
+
+
+### Sampling.Date == 2022-10-05  ; Sample.Name == B23SppAT30
+
+# Selecting set with the conditions 
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-10-05")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" & 
+                      
+                      GC.Data.NoSTD.2022$Treatment == "A" & GC.Data.NoSTD.2022$Sampling.Time == 30 , ]
+
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-10-05")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" & 
+                      
+                      GC.Data.NoSTD.2022$Treatment == "A" & GC.Data.NoSTD.2022$Sampling.Time == 30 , 
+                    
+                    "Field.Notes" ] <- "YES";
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-10-05")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" & 
+                      
+                      GC.Data.NoSTD.2022$Treatment == "A" & GC.Data.NoSTD.2022$Sampling.Time == 30 ,
+                    
+                    "Note" ] <- " Sampled the next day 2022-10-06 --  T2 Solenoid is Failing" ;
 
 
 
