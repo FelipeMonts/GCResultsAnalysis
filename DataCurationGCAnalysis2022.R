@@ -1463,6 +1463,109 @@ GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-02") 
                     "Note" ] <- "C is A and A is C" ;
 
 
+### Sampling.Date == 2022-08-19  ; Sample.Name == All ;
+
+# Selecting set with the conditions 
+
+# View.All.GC.Data.NoSTD.2022 <- GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19"),]
+# 
+# 
+# rm( View.All.GC.Data.NoSTD.2022)
+
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19"),] 
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19"), "Field.Notes" ] <- "YES"; 
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19"),  "Note" ] <- 
+  
+  "Soil wet only in the first 1 to 2 inches in all blocks" ;
+
+                      
+          
+
+### Sampling.Date == 2022-08-19  ; Sample.Name == B1 ;
+
+# Selecting set with the conditions 
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "1", ]
+
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "1",
+                    
+                    "Note" ] <- "Soil wet only in the first 1 to 2 inches in all blocks -  Sampled Next Day 08/19/22" ;
+
+
+
+### Sampling.Date == 2022-08-19  ; Sample.Name == B2 , B3 , B4  
+
+# Selecting set with the conditions 
+
+
+# View.All.GC.Data.NoSTD.2022 <- GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19")  &
+# 
+#                      ( GC.Data.NoSTD.2022$BLOCK == "2" | GC.Data.NoSTD.2022$BLOCK == "3" |
+# 
+#                          GC.Data.NoSTD.2022$BLOCK == "4"), ]
+# 
+# rm( View.All.GC.Data.NoSTD.2022)
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19")  &
+                      
+                      ( GC.Data.NoSTD.2022$BLOCK == "2" | GC.Data.NoSTD.2022$BLOCK == "3" |
+                          
+                          GC.Data.NoSTD.2022$BLOCK == "4"), ]
+
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19")  &
+                      
+                      ( GC.Data.NoSTD.2022$BLOCK == "2" | GC.Data.NoSTD.2022$BLOCK == "3" |
+                          
+                          GC.Data.NoSTD.2022$BLOCK == "4"),
+                    
+                    "Note" ] <- "Soil wet only in the first 1 to 2 inches in all blocks - Sampled Day Before 08/18/22" ;
+
+
+
+### Sampling.Date == 2022-08-19  ; Sample.Name == B2TritBT45 ;
+
+# Selecting set with the conditions 
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "B"  &   GC.Data.NoSTD.2022$Sampling.Time == 45, ]
+
+
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-08-19")  & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Trit" &
+                      
+                      GC.Data.NoSTD.2022$Treatment == "B"  &   GC.Data.NoSTD.2022$Sampling.Time == 45, 
+                    
+                    "Note" ] <- "Soil wet only in the first 1 to 2 inches in all blocks - Sampled Day Before 08/18/22 - T45 needle failed. Sample was Lost" ;
+
+
+
+
+
+
+
+
+
 # There are no samples with both  Sampling date "2022-06-04" and B1CloverB  because the glass
 # Sampling vials broke
 
