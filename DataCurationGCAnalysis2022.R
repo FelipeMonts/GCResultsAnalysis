@@ -69,7 +69,7 @@ setwd(paste0( "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\C
 #### Read data  #####
 
 
-PeakArea.results.2022 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults_2022_2026_10_22_12_39_58.csv" ) , header = T) ;
+PeakArea.results.2022 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults_2022_2026_10_22_17_40_46.csv" ) , header = T) ;
 
 ###############################################################################################################
 #                           
@@ -87,96 +87,63 @@ anyDuplicated(PeakArea.results.2022, MARGIN = c(1,2))
 
 anyDuplicated(PeakArea.results.2022, MARGIN = 0)
 
-PeakArea.results.2022[ 1689, ]
-
-PeakArea.results.2022[which(PeakArea.results.2022$CH4 == 6.34) ,]
-
-PeakArea.results.2022[order(PeakArea.results.2022$N2O), ]
-
-which(duplicated(PeakArea.results.2022, MARGIN = 0))
-
-PeakArea.results.2022[ 1690, ]
-
-PeakArea.results.2022[which(PeakArea.results.2022$N2O == 444.423) ,]
-
-PeakArea.results.2022[ 2109, ]  
-
-PeakArea.results.2022[which(PeakArea.results.2022$CO2 == 737.279 ) ,]
 
 
-# ###############################################################################################################
+
+# ###############################  Remove duplicates  ######################################################
 # 
-# It seems that reports "SummaryGCN2O20220927_B3B4.pdf"  and "SummaryGCN2O20220910_B1B2.pdf" were read two times
+# PeakArea.results.2022.1 <- PeakArea.results.2022[!duplicated(PeakArea.results.2022, MARGIN = c(1,2)),] ;
+# 
+# str(PeakArea.results.2022.1)
 # 
 # 
-# ###############################################################################################################
-
-PeakArea.results.2022.SummaryGCN2O20220927_B3B4 <- PeakArea.results.2022[which(PeakArea.results.2022$File == "SummaryGCN2O20220927_B3B4.pdf"), ]
-
-anyDuplicated(PeakArea.results.2022.SummaryGCN2O20220927_B3B4, MARGIN = 0)
-
-PeakArea.results.2022.SummaryGCN2O20220927_B3B4[106,]
-
-PeakArea.results.2022.SummaryGCN2O20220927_B3B4[PeakArea.results.2022.SummaryGCN2O20220927_B3B4$N2O ==103.861 ,]
-
-
-
-
-
-###############################  Remove duplicates  ######################################################
-
-PeakArea.results.2022.1 <- PeakArea.results.2022[!duplicated(PeakArea.results.2022, MARGIN = c(1,2)),] ;
-
-str(PeakArea.results.2022.1)
-
-
-anyDuplicated(PeakArea.results.2022.1, MARGIN = c(1,2))
-
-PeakArea.results.2021 <- PeakArea.results.2021.1  ;
-
-str(PeakArea.results.2021) 
-
-rm(PeakArea.results.2021.1)
-
-
-#################################################################################################################
+# anyDuplicated(PeakArea.results.2022.1, MARGIN = c(1,2))
+# 
+# PeakArea.results.2021 <- PeakArea.results.2021.1  ;
+# 
+# str(PeakArea.results.2021) 
+# 
+# rm(PeakArea.results.2021.1)
+# 
+# 
+# #################################################################################################################
 #                           
 #                              Check for repeated measurements 
 #
 ###############################################################################################################
 
-names(PeakArea.results.2021)
+names(PeakArea.results.2022)
 
-anyDuplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = c(1,2))
+anyDuplicated(PeakArea.results.2022[,c(4,5,6)], MARGIN = c(1,2))
 
-# There are 174 duplicate measurements. Not duplicate records, but GC measurements 
+# There are 105 duplicate measurements. Not duplicate records, but GC measurements 
 # 
 # that were repeated in two different analysis
 
-which(duplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = c(1,2)))
+which(duplicated(PeakArea.results.2022[,c(4,5,6)], MARGIN = c(1,2)))
 
-duplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = 0)
+duplicated(PeakArea.results.2022[,c(4,5,6)], MARGIN = 0)
 
-which(duplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = 0))
+which(duplicated(PeakArea.results.2022[,c(4,5,6)], MARGIN = 0))
 
 #  Find out which measurements are repeated and why
 
-str(PeakArea.results.2021)
+str(PeakArea.results.2022)
 
-PeakArea.results.2021.Repeated <- PeakArea.results.2021[duplicated(PeakArea.results.2021[,c(4,5,6)], MARGIN = c(1,2)),c(4,5,6,7,8) ] ;
+PeakArea.results.2022.Repeated <- PeakArea.results.2022[duplicated(PeakArea.results.2022[,c(4,5,6)], MARGIN = c(1,2)),c(4,5,6,7,8) ] ;
 
-str(PeakArea.results.2021.Repeated)
+str(PeakArea.results.2022.Repeated)
 
-PeakArea.results.2021[,6] %in% PeakArea.results.2021.Repeated[,3]
+PeakArea.results.2022[,6] %in% PeakArea.results.2022.Repeated[,3]
 
-PeakArea.results.2021[which(PeakArea.results.2021[,6] %in% PeakArea.results.2021.Repeated[,3]), ]
+PeakArea.results.2022[which(PeakArea.results.2022[,6] %in% PeakArea.results.2022.Repeated[,3]), ]
 
-PeakArea.results.2021.Repeated.measures <- PeakArea.results.2021[which(PeakArea.results.2021[,6] %in%
+PeakArea.results.2022.Repeated.measures <- PeakArea.results.2022[which(PeakArea.results.2022[,6] %in%
                                                                          
-                                                                         PeakArea.results.2021.Repeated[,3]), ] ;
+                                                                         PeakArea.results.2022.Repeated[,3]), ] ;
 
 
-PeakArea.results.2021.Repeated.measures[order(PeakArea.results.2021.Repeated.measures$N2O),]
+PeakArea.results.2022.Repeated.measures[order(PeakArea.results.2022.Repeated.measures$N2O),]
 
                         
 

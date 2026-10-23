@@ -117,8 +117,9 @@ library(HMR)
 #  
 # A mistake in reading the file could cause the problem. The data from was recovered by hand from the GC sequence and it is now in the 
 # 
-# file SummaryGCN2O_20220707_B2_20261022
-
+# file SummaryGCN2O_20220707_B2_20261022.xlsx.
+# 
+# File SummaryGCN2O_20220707_B2.pdf was removed to prevent duplication
 # 
 # Directories  "Trouble" and "FelipeGCN2O20220808" do not have data.
 # 
@@ -135,9 +136,17 @@ File.List.directory.path <- "C:\\Users\\frm10\\Results\\Results_2022_Curated_FM_
 
 
 list.files(File.List.directory.path)
+
+##### Remove "FelipeGCN2O_20220707_B2"  from the list. See paragraph above #########
+
+list.files(File.List.directory.path)[File.List.directory.path == "FelipeGCN2O_20220707_B2" ]
  
 
-File.List.directory <- list.files(File.List.directory.path)
+File.List.directory <- list.files(File.List.directory.path);
+
+File.List.directory <- File.List.directory[!File.List.directory == "FelipeGCN2O_20220707_B2" ] ;
+
+
 
 
 File.List.Sub.directory <- list.files(paste0(File.List.directory.path , "\\" , File.List.directory [1] )); length(File.List.Sub.directory) ;
@@ -195,7 +204,7 @@ source(paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\C
                 
                 "RCode\\GCResultsAnalysis\\ReadGCReportPDF2022.R"))
 
-# i = 2
+# i = 8
 
 #for (i in seq(1,length(File.List.directory)))
 
@@ -301,15 +310,15 @@ str(PeakArea.Results.All.2)
 PeakArea.Results.All <- PeakArea.Results.All.2 ;
 
 
-# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
-# 
-# write.csv(x = PeakArea.Results.All, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
-# 
-# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
-# 
-# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults_2022_",
-# 
-# Working.Date , ".csv"), row.names = F )
+Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+
+write.csv(x = PeakArea.Results.All, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+
+"Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+
+"DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults_2022_",
+
+Working.Date , ".csv"), row.names = F )
 
 
 
