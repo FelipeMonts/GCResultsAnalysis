@@ -419,74 +419,74 @@ GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCro
 
 ### Plot 506 ###
 
-#  levels(GC.Data.NoSTD.2021$CoverCrop)
+#  levels(GC.Data.NoSTD.2022$CoverCrop)
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ] 
-
-
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp", "Plot"] <- "401"  ;
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" , ] 
 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "3Spp", "Plot"] <- "506"  ;
+
+
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" & 
                      
-                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "401" , 
+                     GC.Data.NoSTD.2022$Treatment == "A" &  GC.Data.NoSTD.2022$Plot == "506" , 
                    
-                   "Location"] <- "Inside" ;
+                   "Location"] <- "Middle" ;
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" & 
                      
-                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "401" , 
+                     GC.Data.NoSTD.2022$Treatment == "B" &  GC.Data.NoSTD.2022$Plot == "506" , 
                    
                    "Location"] <- "Border" ;
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" & 
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" & 
                      
-                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "401" , 
+                     GC.Data.NoSTD.2022$Treatment == "C" &  GC.Data.NoSTD.2022$Plot == "506" , 
+                   
+                   "Location"] <- "Inside" ;
+
+
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "3Spp" , ] 
+
+
+
+
+### Plot 512 ###
+
+#  levels(GC.Data.NoSTD.2022$CoverCrop)
+
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" , ] 
+
+
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover", "Plot"] <- "512"  ;
+
+
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2022$Treatment == "A" &  GC.Data.NoSTD.2022$Plot == "512" , 
+                   
+                   "Location"] <- "Middle" ;
+
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2022$Treatment == "B" &  GC.Data.NoSTD.2022$Plot == "512" , 
+                   
+                   "Location"] <- "Inside" ;
+
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2022$Treatment == "C" &  GC.Data.NoSTD.2022$Plot == "512" , 
+                   
+                   "Location"] <- "Border" ;
+
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" & 
+                     
+                     GC.Data.NoSTD.2022$Treatment == "D" &  GC.Data.NoSTD.2022$Plot == "512" , 
                    
                    "Location"] <- "Middle" ;
 
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ] 
-
-
-
-
-### Plot 412 ###
-
-#  levels(GC.Data.NoSTD.2021$CoverCrop)
-
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ] 
-
-
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover", "Plot"] <- "412"  ;
-
-
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
-                     
-                     GC.Data.NoSTD.2021$Treatment == "A" &  GC.Data.NoSTD.2021$Plot == "412" , 
-                   
-                   "Location"] <- "Inside" ;
-
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
-                     
-                     GC.Data.NoSTD.2021$Treatment == "B" &  GC.Data.NoSTD.2021$Plot == "412" , 
-                   
-                   "Location"] <- "Middle" ;
-
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
-                     
-                     GC.Data.NoSTD.2021$Treatment == "C" &  GC.Data.NoSTD.2021$Plot == "412" , 
-                   
-                   "Location"] <- "Border" ;
-
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" & 
-                     
-                     GC.Data.NoSTD.2021$Treatment == "D" &  GC.Data.NoSTD.2021$Plot == "412" , 
-                   
-                   "Location"] <- "Inside" ;
-
-
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "2" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ] 
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$BLOCK == "2" & GC.Data.NoSTD.2022$CoverCrop == "Clover" , ] 
 
 
 
