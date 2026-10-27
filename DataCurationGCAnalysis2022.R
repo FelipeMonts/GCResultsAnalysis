@@ -3650,49 +3650,6 @@ plot(GC.Data.NoSTD.2022$N2O.ppm )
 #
 ###############################################################################################################
 
-#Block 1, Clover, D,
-
-
-
-
-
-
-
-
-
-
-GC.Data.NoSTD.2022$Series <- paste( GC.Data.NoSTD.2022$Sampling.Day , GC.Data.NoSTD.2022$BLOCK.F , 
-                               
-                                    GC.Data.NoSTD.2022$CoverCrop.F , GC.Data.NoSTD.2022$Treatment.F, sep = "_") ;
-
-head(GC.Data.NoSTD.2022)
-
-
-
-str(GC.Data.NoSTD.2022)
-
-
-levels(GC.Data.NoSTD.2022$Treatment.F)
-
-levels(GC.Data.NoSTD.2022$BLOCK.F)
-
-levels(GC.Data.NoSTD.2022$CoverCrop.F)
-
-GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$CoverCrop.F == "Clover" ,]
-
-
-xyplot(CO2.ppm ~ Sampling.Time | Treatment.F * BLOCK.F * CoverCrop.F, 
-       
-       data = GC.Data.NoSTD.2022 , xlim=c(0,45), ylim = c(0, max(GC.Data.NoSTD.2022$CO2.ppm)) ,   
-       
-       type="o", auto.key = T, main = "CO2");
-
-
-xyplot(N2O.ppm ~ Sampling.Time | Treatment.F * BLOCK.F * CoverCrop.F, 
-       
-       data = GC.Data.NoSTD.2022 , xlim=c(0,45), ylim = c(0, max(GC.Data.NoSTD.2022$N2O.ppm)) ,   
-       
-       type="o", auto.key = T , main = "N2O");
 
 
 

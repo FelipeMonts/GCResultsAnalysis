@@ -36,6 +36,8 @@
 
 # install.packages("Viridis",  dependencies = T)
 
+# install.packages("MetBrewer",  dependencies = T)
+
 # install.packages("paletteer", dependencies = T)
 
 # install.packages("MASS", dependencies = T) 
@@ -53,6 +55,8 @@ library(quantreg)
 library(paletteer)
 
 library(MASS) 
+
+library(MetBrewer)
 
 ###############################################################################################################
 #                             Setting up working directory  Loading Packages and Setting up working directory                        
@@ -1057,6 +1061,342 @@ legend("topleft", legend = c("N2O.ppm", "OLS-N2O", "OLS-Sqrt(N2O)", "Quant 50"),
 # N2O.ppm     624.6675     608.9579 634.0715 
 # 
 # ###############################################################################################################
+
+
+################################################################################################################
+# 
+# 
+#        Armen's suggestion: C scores and Z distribution envelope'
+# 
+#        Z-scores observation - median / standard deviation or standardization or normalizing
+# 
+################################################################################################################
+
+#################################################################################################################
+# 
+# 
+# Z-scores for CO2
+# 
+################################################################################################################
+
+
+str(C.GC.Standards.no.NA)
+
+C.GC.Standards.no.NA$CO2.ppm.F <- as.factor(C.GC.Standards.no.NA$CO2.ppm) ;
+
+levels(C.GC.Standards.no.NA$CO2.ppm.F)
+
+
+######## Z-scores can also be computed using the scale(function)
+
+(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CO2.ppm.F == "500", "CO2" ] - 
+    
+    mean(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CO2.ppm.F == "500", "CO2" ])) /
+  
+  sd(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CO2.ppm.F == "500", "CO2" ])
+
+scale(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CO2.ppm.F == "500", "CO2" ], center = T, scale = T)
+
+
+
+########################################################################################
+
+
+CO2.ppm.mean <- by( data = C.GC.Standards.no.NA[, "CO2"] , INDICES = C.GC.Standards.no.NA[,"CO2.ppm.F"] , 
+                    
+                    FUN = function(x) mean(x) ) ;
+
+CO2.ppm.sd <- by( data = C.GC.Standards.no.NA[, "CO2"] , INDICES = C.GC.Standards.no.NA[,"CO2.ppm.F"] , 
+                  
+                  FUN = function(x) sd(x) ) ;
+
+CO2.ppm.Z <- by(data = C.GC.Standards.no.NA[, "CO2"] , INDICES = C.GC.Standards.no.NA[,"CO2.ppm.F"],
+                
+                FUN = function(x) {(x - mean(x) ) / sd(x) })  ;
+
+
+#### Calculate densities for plotting ####
+
+
+CO2.ppm.Z.density <- lapply(CO2.ppm.Z , function (x) density(x) ) ;
+
+str(CO2.ppm.Z.density, max.level = 1)
+
+
+
+
+
+####### initialize dataframe for the range values needed for plotting  ##########
+
+Range.CO2.Z.Density <- data.frame(Min.x = double() , Max.x = double(), Min.y = double() , Max.y = double() ) ;
+
+levels(C.GC.Standards.no.NA$CO2.ppm.F)
+
+
+for (i in seq(from = 1, to = length(CO2.ppm.Z.density), by = 1)) {
+  
+  #i=1
+  
+  Range.CO2.Z.Density[i,c("Min.x" , "Max.x")] <- range(CO2.ppm.Z.density[[i]]["x"])
+  
+  Range.CO2.Z.Density[i,c("Min.y" , "Max.y")] <- range(CO2.ppm.Z.density[[i]]["y"])
+  
+}
+
+
+xlim = c(min(Range.CO2.Z.Density[,"Min.x"]), max(Range.CO2.Z.Density[,"Max.x"]))
+
+ylim = c(min(Range.CO2.Z.Density[,"Min.y"]), max(Range.CO2.Z.Density[,"Max.y"]))
+
+##### plot z-scores densities  ###
+
+Z.Colo <- met.brewer(name = "Austria", n = 7 , type = "discrete") 
+
+Z.Colo
+
+
+
+plot(CO2.ppm.Z.density[[1]], xlim = c(min(Range.CO2.Z.Density[,"Min.x"]), max(Range.CO2.Z.Density[,"Max.x"])),
+     
+     
+     ylim = c(min(Range.CO2.Z.Density[,"Min.y"]), max(Range.CO2.Z.Density[,"Max.y"])), 
+     
+     main = "CO2 - Z-Scores Distribution Density " , xlab = "",
+     
+     col = Z.Colo[1] , lwd = 2)  ;
+
+
+lines(CO2.ppm.Z.density[[2]], col = Z.Colo[2], lwd = 2)
+
+lines(CO2.ppm.Z.density[[3]], col = Z.Colo[3], lwd = 2)  
+
+lines(CO2.ppm.Z.density[[4]], col = Z.Colo[4], lwd = 2) 
+
+lines(CO2.ppm.Z.density[[5]], col = Z.Colo[5], lwd = 2) 
+
+lines(CO2.ppm.Z.density[[6]], col = Z.Colo[6], lwd = 2) 
+
+lines(CO2.ppm.Z.density[[7]], col = Z.Colo[7], lwd = 2) 
+
+names(CO2.ppm.Z.density)
+
+legend("topleft", legend = paste0(names(N2O.ppm.Z.density), " ppm"),
+       
+       text.col = Z.Colo )
+
+#################################################################################################################
+# 
+# 
+# Z-scores for N2O
+# 
+################################################################################################################
+
+
+str(C.GC.Standards.no.NA)
+
+C.GC.Standards.no.NA$N2O.ppm.F <- as.factor(C.GC.Standards.no.NA$N2O.ppm) ;
+
+levels(C.GC.Standards.no.NA$N2O.ppm.F)
+
+########################################################################################
+
+
+N2O.ppm.mean <- by( data = C.GC.Standards.no.NA[, "N2O"] , INDICES = C.GC.Standards.no.NA[,"N2O.ppm.F"] , 
+                    
+                    FUN = function(x) mean(x) ) ;
+
+N2O.ppm.sd <- by( data = C.GC.Standards.no.NA[, "N2O"] , INDICES = C.GC.Standards.no.NA[,"N2O.ppm.F"] , 
+                  
+                  FUN = function(x) sd(x) ) ;
+
+N2O.ppm.Z <- by(data = C.GC.Standards.no.NA[, "N2O"] , INDICES = C.GC.Standards.no.NA[,"N2O.ppm.F"],
+                
+                FUN = function(x) {(x - mean(x) ) / sd(x) })  ;
+
+
+#### Calculate densities for plotting ####
+
+
+N2O.ppm.Z.density <- lapply(N2O.ppm.Z , function (x) density(x) ) ;
+
+str(N2O.ppm.Z.density, max.level = 1)
+
+
+
+
+
+####### initialize dataframe for the range values needed for plotting  ##########
+
+Range.N2O.Z.Density <- data.frame(Min.x = double() , Max.x = double(), Min.y = double() , Max.y = double() ) ;
+
+levels(C.GC.Standards.no.NA$N2O.ppm.F)
+
+
+for (i in seq(from = 1, to = length(N2O.ppm.Z.density), by = 1)) {
+  
+  #i=1
+  
+  Range.N2O.Z.Density[i,c("Min.x" , "Max.x")] <- range(N2O.ppm.Z.density[[i]]["x"])
+  
+  Range.N2O.Z.Density[i,c("Min.y" , "Max.y")] <- range(N2O.ppm.Z.density[[i]]["y"])
+  
+}
+
+
+xlim = c(min(Range.N2O.Z.Density[,"Min.x"]), max(Range.N2O.Z.Density[,"Max.x"]))
+
+ylim = c(min(Range.N2O.Z.Density[,"Min.y"]), max(Range.N2O.Z.Density[,"Max.y"]))
+
+##### plot z-scores densities  ###
+
+Z.Colo <- met.brewer(name = "Austria", n = 7 , type = "discrete") 
+
+Z.Colo
+
+
+
+plot(N2O.ppm.Z.density[[1]], xlim = c(min(Range.N2O.Z.Density[,"Min.x"]), max(Range.N2O.Z.Density[,"Max.x"])),
+     
+     
+     ylim = c(min(Range.N2O.Z.Density[,"Min.y"]), max(Range.N2O.Z.Density[,"Max.y"])), 
+     
+     main = "N2O - Z-Scores Distribution Density " , xlab = "",
+     
+     col = Z.Colo[1] , lwd = 2)  ;
+
+
+lines(N2O.ppm.Z.density[[2]], col = Z.Colo[2], lwd = 2)
+
+lines(N2O.ppm.Z.density[[3]], col = Z.Colo[3], lwd = 2)  
+
+lines(N2O.ppm.Z.density[[4]], col = Z.Colo[4], lwd = 2) 
+
+lines(N2O.ppm.Z.density[[5]], col = Z.Colo[5], lwd = 2) 
+
+lines(N2O.ppm.Z.density[[6]], col = Z.Colo[6], lwd = 2) 
+
+lines(N2O.ppm.Z.density[[7]], col = Z.Colo[7], lwd = 2) 
+
+names(N2O.ppm.Z.density)
+
+legend("topleft", legend = paste0(names(N2O.ppm.Z.density), " ppm"),
+       
+       text.col = Z.Colo )
+
+
+#################################################################################################################
+# 
+# 
+# Z-scores for CH4 
+# 
+################################################################################################################
+
+
+str(C.GC.Standards.no.NA)
+
+C.GC.Standards.no.NA$CH4.ppm.F <- as.factor(C.GC.Standards.no.NA$CH4.ppm) ;
+
+levels(C.GC.Standards.no.NA$CH4.ppm.F)
+
+
+######## Z-scores can also be computed using the scale(function)
+
+(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CH4.ppm.F == "5", "CH4" ] - 
+    
+    mean(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CH4.ppm.F == "5", "CH4" ])) /
+  
+  sd(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CH4.ppm.F == "5", "CH4" ])
+
+scale(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CH4.ppm.F == "5", "CH4" ], center = T, scale = T)
+
+
+
+########################################################################################
+
+
+CH4.ppm.mean <- by( data = C.GC.Standards.no.NA[, "CH4"] , INDICES = C.GC.Standards.no.NA[,"CH4.ppm.F"] , 
+    
+    FUN = function(x) mean(x) ) ;
+
+CH4.ppm.sd <- by( data = C.GC.Standards.no.NA[, "CH4"] , INDICES = C.GC.Standards.no.NA[,"CH4.ppm.F"] , 
+                  
+                  FUN = function(x) sd(x) ) ;
+
+CH4.ppm.Z <- by(data = C.GC.Standards.no.NA[, "CH4"] , INDICES = C.GC.Standards.no.NA[,"CH4.ppm.F"],
+                
+                FUN = function(x) {(x - mean(x) ) / sd(x) })  ;
+
+
+#### Calculate densities for plotting ####
+
+
+CH4.ppm.Z.density <- lapply(CH4.ppm.Z , function (x) density(x) ) ;
+
+str(CH4.ppm.Z.density, max.level = 1)
+
+
+
+
+
+####### initialize dataframe for the range values needed for plotting  ##########
+
+Range.CH4.Z.Density <- data.frame(Min.x = double() , Max.x = double(), Min.y = double() , Max.y = double() ) ;
+
+levels(C.GC.Standards.no.NA$CH4.ppm.F)
+
+
+for (i in seq(from = 1, to = length(CH4.ppm.Z.density), by = 1)) {
+  
+  #i=1
+  
+  Range.CH4.Z.Density[i,c("Min.x" , "Max.x")] <- range(CH4.ppm.Z.density[[i]]["x"])
+  
+  Range.CH4.Z.Density[i,c("Min.y" , "Max.y")] <- range(CH4.ppm.Z.density[[i]]["y"])
+  
+  }
+
+
+xlim = c(min(Range.CH4.Z.Density[,"Min.x"]), max(Range.CH4.Z.Density[,"Max.x"]))
+
+ylim = c(min(Range.CH4.Z.Density[,"Min.y"]), max(Range.CH4.Z.Density[,"Max.y"]))
+
+##### plot z-scores densities  ###
+
+#  colors for plotting
+
+Z.Colo <- met.brewer(name = "Austria", n = 7 , type = "discrete") 
+
+Z.Colo
+
+
+
+plot(CH4.ppm.Z.density[[1]], xlim = c(min(Range.CH4.Z.Density[,"Min.x"]), max(Range.CH4.Z.Density[,"Max.x"])),
+     
+     
+     ylim = c(min(Range.CH4.Z.Density[,"Min.y"]), max(Range.CH4.Z.Density[,"Max.y"])), 
+     
+     main = "CH4 Z-Scores Distribution Density" , xlab = "",
+     
+     col = Z.Colo[1] , lwd = 2)  ;
+
+
+lines(CH4.ppm.Z.density[[2]], col = Z.Colo[2], lwd = 2)
+
+lines(CH4.ppm.Z.density[[3]], col = Z.Colo[3], lwd = 2)  
+
+lines(CH4.ppm.Z.density[[4]], col = Z.Colo[4], lwd = 2) 
+         
+lines(CH4.ppm.Z.density[[5]], col = Z.Colo[5], lwd = 2) 
+
+lines(CH4.ppm.Z.density[[6]], col = Z.Colo[6], lwd = 2) 
+
+lines(CH4.ppm.Z.density[[7]], col = Z.Colo[7], lwd = 2) 
+
+names(CH4.ppm.Z.density)
+
+legend("topleft", legend = paste0(names(CH4.ppm.Z.density), " ppm"),
+       
+       text.col = Z.Colo )
 
 
 
