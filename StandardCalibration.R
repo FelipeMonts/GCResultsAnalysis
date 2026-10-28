@@ -313,9 +313,9 @@ summary(OLS.regression.Log)
 
 str(C.GC.Standards.All)
 
-OLS.regression.Log.log <- lm(log.CO2 ~ log.CO2.ppm , 
-                             
-                             data = C.GC.Standards.All) ;
+# OLS.regression.Log.log <- lm(log.CO2 ~ log.CO2.ppm , 
+#                              
+#                              data = C.GC.Standards.All) ;
 
 # Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
 #   NA/NaN/Inf in 'x'
@@ -670,7 +670,6 @@ legend("topleft", legend = c("CO2.ppm", "OLS-CO2", "OLS-Sqrt(CO2)", "Quant 50"),
 
 
 
-
 # ###############################################################################################################
 # 
 #                      Best calibration equation for CO2
@@ -689,6 +688,17 @@ legend("topleft", legend = c("CO2.ppm", "OLS-CO2", "OLS-Sqrt(CO2)", "Quant 50"),
 # 
 # 
 # ###############################################################################################################
+
+
+#####  Collect regression coefficients to write them out and record them separate from this code
+
+summary(Quantile.Reg.CO2.05)
+
+str(summary(Quantile.Reg.CO2.05))
+
+Calibration.coeff.CO2 <- data.frame(coef(summary(Quantile.Reg.CO2.05))) ;
+
+rownames(Calibration.coeff.CO2)[1:2] <- c("CO2.Intercept", "CO2.Slope")
 
 
 ##############################################  N2O  ########################################################
@@ -1043,7 +1053,6 @@ legend("topleft", legend = c("N2O.ppm", "OLS-N2O", "OLS-Sqrt(N2O)", "Quant 50"),
 
 
 
-
 # ###############################################################################################################
 # 
 #                      Best calibration equation for N2O
@@ -1061,6 +1070,34 @@ legend("topleft", legend = c("N2O.ppm", "OLS-N2O", "OLS-Sqrt(N2O)", "Quant 50"),
 # N2O.ppm     624.6675     608.9579 634.0715 
 # 
 # ###############################################################################################################
+
+#####  Collect regression coefficients to write them out and record them separate from this code
+
+summary(Quantile.Reg.N2O.05)
+
+data.frame(coef(summary(Quantile.Reg.N2O.05)))
+
+
+
+Calibration.coeff.N2O <- data.frame(coef(summary(Quantile.Reg.N2O.05))) ;
+
+rownames(Calibration.coeff.N2O)[1:2] <- c("N2O.Intercept", "N2O.Slope")
+
+
+Calibration.coeff <- rbind(Calibration.coeff.CO2,Calibration.coeff.N2O) ;
+
+
+##### export calibration coefficients as a CSV
+
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+# 
+# write.csv(x = Calibration.coeff, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# 
+# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+# 
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\Calibration.coeff",
+# 
+# Working.Date , ".csv"), append = F , row.names = T )
 
 
 ################################################################################################################
@@ -1180,7 +1217,7 @@ lines(CO2.ppm.Z.density[[7]], col = Z.Colo[7], lwd = 2)
 
 names(CO2.ppm.Z.density)
 
-legend("topleft", legend = paste0(names(N2O.ppm.Z.density), " ppm"),
+legend("topleft", legend = paste0(names(CO2.ppm.Z.density), " ppm"),
        
        text.col = Z.Colo )
 
