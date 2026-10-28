@@ -2044,7 +2044,7 @@ GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-06-15") 
 
 # ######  GC - Notes20220629_B3B4 #########
 # 
-# The sequence was interrupted because of a potential prower out.
+# The sequence was interrupted because of a potential power out.
 # It was interrupted at vial 12. It should be restarted at vial 13.
 # Sample B3TritBT45 was lost when the GC was aborted.
 # The complete sequence was restarted and therefore the second set of results samples through 12 B3TritBT45 should be discarded.
@@ -2102,6 +2102,18 @@ GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-09-27") 
                       (GC.Data.NoSTD.2022$BLOCK == "1" | GC.Data.NoSTD.2022$BLOCK == "2"), "Note.GC" ] <- 
   
   "Air cylinder was at 0 PSI!!! Changed the air cylinder. " ;
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-06-15") & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "3" , ]
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-06-15") & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "2" , ]
+
+GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-06-15") & 
+                      
+                      GC.Data.NoSTD.2022$BLOCK == "1" , ]
 
 
 ###############################################################################################################
