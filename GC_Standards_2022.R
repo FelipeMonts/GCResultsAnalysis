@@ -71,7 +71,47 @@ setwd("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_P
  Year = 2022
 
 
-PeakArea.results <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults" , Year ,".csv" ) , header = T) ;
+PeakArea.results <- read.csv(file = "FluxDataAnalysisResults\\GCcompiledResults_2022_2026_10_23_11_06_11.csv"  , header = T) ;
+
+
+
+# ###############################################################################################################
+#              Notes collected during the GC analysis that affect standards results
+# 
+# 20220629_B1B2
+# 
+# The vials on Block 2, 3-SppN treatment B were switched with the vials of Block 2, 3SppN treatment C
+# 
+# 2-3SppN-B <-> 2-3SppN-C
+# 
+# The first half of the standards were pressure equilibrated, the second half were not.
+# 
+# 
+# 20220719_B1B2
+# 
+# Low standards were not available and this run is without low standards.
+# 
+# Low standards vials ar evacuated empty.
+# 
+# 
+# 202200910_B3B4
+# 
+# There was no enough 50% low standard to fill all the vials. 
+# Tha last 2 sets of standards do not have any gas in the los 50% standard vials L-50%; Those are empty
+# 
+# 
+# 202200927_B1B2
+# 
+# There were no low standards (L-100%, L-50%) standards left. 
+# Those vials do not have any gas except what was left from the preious GC analysis.
+# Air cylinder was at 0 PSI!!! Changed the air cylinder. Falem stabilized at 23 Pa
+# 
+###############################################################################################################
+
+
+
+
+###############################################################################################################
 
 ###############################################################################################################
 #                           
@@ -282,9 +322,11 @@ GC.standards[GC.standards$GC.Date == "2022-07-13",]
 
 ####### Plot Calibration line  for  CO2 #######
 
+GC.standards[GC.standards$Sampling.Date == "2022-06-29",]
+
 plot(CO2.ppm ~ CO2, 
      
-     data = GC.standards[GC.standards$Sampling.Date == "2022-06-30",],
+     data = GC.standards[GC.standards$Sampling.Date == "2022-06-29",],
      
      main = "2022-06-30",
      
@@ -292,44 +334,44 @@ plot(CO2.ppm ~ CO2,
      
      type = "p")  ;
 
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "CO2"],
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "CO2"],
       
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "CO2.ppm"],
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "CO2.ppm"],
       
-      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-30" , "Sample.Name"],
+      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "Sample.Name"],
       
       pos = 3);
 
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "CO2"],
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "CO2"],
       
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "CO2.ppm"],
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "CO2.ppm"],
       
-      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-30" ,]),
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,]),
       
       pos = 1);
 
 
 ###### Calculate calibration line CO2 #######
 
-CAL.CO2.2022_06_30 <- lm(CO2.ppm ~ CO2,
+CAL.CO2.2022_06_29 <- lm(CO2.ppm ~ CO2,
                          
-                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-30",])
+                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-29",])
 
 
 
-summary(CAL.CO2.2022_06_30) 
+summary(CAL.CO2.2022_06_29) 
 
-abline(a = CAL.CO2.2022_06_30$coefficients[1] ,
+abline(a = CAL.CO2.2022_06_29$coefficients[1] ,
        
-       b = CAL.CO2.2022_06_30$coefficients[2] , 
+       b = CAL.CO2.2022_06_29$coefficients[2] , 
        
        col = "red") ;
 
-text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-30", c("CO2")]),
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-29", c("CO2")]),
       
-      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-30", c("CO2.ppm")]),
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-29", c("CO2.ppm")]),
       
-      labels = paste(round(CAL.CO2.2022_06_30$coefficients[1],3), round(CAL.CO2.2022_06_30$coefficients[2],3), sep = "+"))
+      labels = paste(round(CAL.CO2.2022_06_29$coefficients[1],3), round(CAL.CO2.2022_06_29$coefficients[2],3), sep = "+"))
 
 
 
@@ -337,51 +379,51 @@ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-30", c("CO2")
 
 plot(N2O.ppm ~ N2O, 
      
-     data = GC.standards[GC.standards$Sampling.Date == "2022-06-30",],
+     data = GC.standards[GC.standards$Sampling.Date == "2022-06-29",],
      
-     main = "2022-06-30",
+     main = "2022-06-29",
      
      col = "blue",
      
      type = "p")  ;
 
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "N2O"],
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "N2O"],
       
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "N2O.ppm"],
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "N2O.ppm"],
       
-      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-30" , "Sample.Name"],
+      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "Sample.Name"],
       
       pos = 3);
 
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "N2O"],
+text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "N2O"],
       
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-30", "N2O.ppm"],
+      y = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "N2O.ppm"],
       
-      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-30" ,]),
+      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,]),
       
       pos = 1);
 
 ###### Calculate calibration line N2O #######
 
-CAL.N2O.2022_06_30 <- lm(N2O.ppm ~ N2O,
+CAL.N2O.2022_06_29 <- lm(N2O.ppm ~ N2O,
                          
-                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-30",],
+                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-29",] )
                          
-)
 
 
 
-summary(CAL.N2O.2022_06_30) 
 
-abline(a = CAL.N2O.2022_06_30$coefficients[1] ,
+summary(CAL.N2O.2022_06_29) 
+
+abline(a = CAL.N2O.2022_06_29$coefficients[1] ,
        
-       b = CAL.N2O.2022_06_30$coefficients[2] , 
+       b = CAL.N2O.2022_06_29$coefficients[2] , 
        
        col = "red") ;
 
-text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-30", c("N2O")]),
+text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-29", c("N2O")]),
       
-      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-30", c("N2O.ppm")]),
+      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-29", c("N2O.ppm")]),
       
       labels = paste(round(CAL.N2O.2022_06_30$coefficients[1],3), round(CAL.N2O.2022_06_30$coefficients[2],3), sep = "+")
       
