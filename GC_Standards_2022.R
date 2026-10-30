@@ -96,17 +96,17 @@ PeakArea.results <- read.csv(file = "FluxDataAnalysisResults\\GCcompiledResults_
 # 
 # 202200910_B3B4
 # 
-# There was no enough 50% low standard to fill all the vials. 
-# Tha last 2 sets of standards do not have any gas in the los 50% standard vials L-50%; Those are empty
+# There was no enough 50% low standard to fill all the vials.
+# The last 2 sets of standards do not have any gas in the low 50% standard vials L-50%; Those are empty
 # 
 # 
 # 202200927_B1B2
 # 
-# There were no low standards (L-100%, L-50%) standards left. 
+# There were no low standards (L-100%, L-50%) standards left.
 # Those vials do not have any gas except what was left from the preious GC analysis.
 # Air cylinder was at 0 PSI!!! Changed the air cylinder. Falem stabilized at 23 Pa
-# 
-###############################################################################################################
+
+##############################################################################################################
 
 
 
@@ -312,12 +312,50 @@ unique(GC.standards$Sample.Name)
 
 ##############################################################################################################
 #                           
-#                           GC Date [2022-07-13]  Sampling.Date [2022-06-30]
+#                           GC Date [2022-07-13]  Sampling.Date [2022-06-29]
 #
 ###############################################################################################################
 
 
 GC.standards[GC.standards$GC.Date == "2022-07-13",]
+
+
+######## GC NOTE  20220629_B1B2
+# 
+# The vials on Block 2, 3-SppN treatment B were switched with the vials of Block 2, 3SppN treatment C
+# 
+# 2-3SppN-B <-> 2-3SppN-C
+# 
+# The first half of the standards were pressure equilibrated, the second half were not.
+##############################
+
+
+##### Select conditions  
+
+
+GC.standards[GC.standards$Sampling.Date == "2022-06-29" & GC.standards$AnalysisName == "Summary20220629_B1B2.pdf", ]
+
+GC.standards.20220629B1B2 <- GC.standards[GC.standards$Sampling.Date == "2022-06-29" & 
+                                        
+                                        GC.standards$AnalysisName == "Summary20220629_B1B2.pdf", ] ;
+
+GC.standards.20220629B1B2 <- GC.standards.20220629B1B2[order(GC.standards.20220629B1B2$Position),] ;
+
+dim.data.frame(GC.standards.20220629B1B2)
+
+plot(CO2 ~ CO2.ppm , data = GC.standards.20220629B1B2[1:15,], col= "red", xlim = c(0, 5000))
+points(CO2 ~ CO2.ppm, data = GC.standards.20220629B1B2[16:25,], col= "blue")
+
+plot(N2O ~ N2O.ppm , data = GC.standards.20220629B1B2[1:15,], col= "red", xlim = c(0, 50))
+points(N2O ~ N2O.ppm, data = GC.standards.20220629B1B2[16:25,], col= "blue")
+
+
+plot(CH4 ~ CH4.ppm , data = GC.standards.20220629B1B2[1:15,], col= "red", xlim = c(0, 50))
+points(CH4 ~ CH4.ppm, data = GC.standards.20220629B1B2[16:25,], col= "blue")
+
+###### no practical difference between the sets ,  keep both ###########
+
+rm(GC.standards.20220629B1B2)
 
 
 ####### Plot Calibration line  for  CO2 #######
@@ -425,7 +463,7 @@ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-29", c("N2O")
       
       y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-29", c("N2O.ppm")]),
       
-      labels = paste(round(CAL.N2O.2022_06_30$coefficients[1],3), round(CAL.N2O.2022_06_30$coefficients[2],3), sep = "+")
+      labels = paste(round(CAL.N2O.2022_06_29$coefficients[1],3), round(CAL.N2O.2022_06_29$coefficients[2],3), sep = "+")
       
 )
 
@@ -1845,9 +1883,54 @@ update(Cum.Plot.N2O, panel = function(...) {
  #
  ###############################################################################################################
  
+ ############################################
+ #  GC NOTE
+ # 20220719_B1B2
+ # 
+ # Low standards were not available and this run is without low standards.
+ # 
+ # Low standards vials ar evacuated empty.
+ ############################################
  
  
- GC.standards[GC.standards$GC.Date == "2022-09-04",]
+ # Select conditions
+ 
+ 
+ GC.standards.20220719B1B2 <- GC.standards[GC.standards$AnalysisName == "Summary20220719_B1B2.pdf",]
+ 
+ grep( pattern = "L" , x =  GC.standards.20220719B1B2$Sample.Name, invert = F)
+   
+ GC.standards.20220719B1B2L <- GC.standards.20220719B1B2[grep( pattern = "L" , x =  GC.standards.20220719B1B2$Sample.Name, invert = F),]
+ 
+
+ plot(CO2 ~ CO2.ppm , data = GC.standards.20220719B1B2 , col = "red" )
+ 
+ points(CO2 ~ CO2.ppm,  data = GC.standards.20220719B1B2L , col = "blue" )
+ 
+ 
+ ##### Low Standards are defective according to the note (blue in the plot)
+ 
+
+ 
+ row.names(GC.standards.20220719B1B2L)
+ 
+ GC.standards[row.names(GC.standards.20220719B1B2L), ]
+ 
+ GC.standards.Rev1 <- GC.standards[ which(!row.names(GC.standards) %in% row.names(GC.standards.20220719B1B2L)),]
+ 
+ GC.standards.Rev1[GC.standards.Rev1$AnalysisName == "Summary20220719_B1B2.pdf", ] 
+ 
+ GC.standards.Rev2 <- GC.standards[row.names(GC.standards) %in% row.names(GC.standards.Rev1),]
+ 
+ GC.standards <- GC.standards.Rev2 
+ 
+ rm(GC.standards.Rev1, GC.standards.Rev2  )
+ 
+ ### check
+ 
+ GC.standards[GC.standards$AnalysisName == "Summary20220719_B1B2.pdf", ]  
+ 
+ 
  
  
  i = "2022-07-19" 
@@ -3040,8 +3123,68 @@ GC.standards <- GC.standards[!rownames(GC.standards) == "1381", ] ;
  ###############################################################################################################
  
  
+ # #############################
+ # GC Note
+ # 202200910_B3B4
+ # 
+ # There was no enough 50% low standard to fill all the vials.
+ # The last 2 sets of standards do not have any gas in the low 50% standard vials L-50%; Those are empty
+ # 
+ # #############################
+ 
+ 
+ ### Get the conditions ######
+ 
+ GC.standards[GC.standards$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" , ]
+ 
+ row.names(GC.standards[GC.standards$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" & GC.standards$Factor.Name == "L50" , ])
+ 
+ L50.Rev <- GC.standards[GC.standards$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" & GC.standards$Factor.Name == "L50" , ]
+ 
+ row.names(L50.Rev)
+ 
+ L50.Rev.Pos <- L50.Rev[order(L50.Rev$Position),]
+ 
+ row.names(L50.Rev.Pos)
 
- str(GC.standards)
+ plot(L50.Rev.Pos$CO2, col = "blue")
+ 
+ plot(L50.Rev.Pos$N2O, col = "red")
+ 
+ plot(L50.Rev.Pos$CH4, col = "green")
+      
+ ####### Two last L50 Standards are defective as the note describe. Remove #####
+ 
+ dim(L50.Rev.Pos)
+ 
+ row.names(L50.Rev.Pos[4:5,])
+ 
+ GC.standards.L50.Rev <- GC.standards[which(!row.names(GC.standards) %in% row.names(L50.Rev.Pos[4:5,])), ] ;
+ 
+ row.names(GC.standards[GC.standards$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" & GC.standards$Factor.Name == "L50" , ])
+ 
+ 
+row.names(GC.standards.L50.Rev[GC.standards.L50.Rev$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" & GC.standards.L50.Rev$Factor.Name == "L50" , ])
+ 
+
+ GC.standards.L50.Rev[GC.standards.L50.Rev$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" &
+                        
+                        GC.standards.L50.Rev$Factor.Name == "L50",  ]
+ 
+ GC.standards[!row.names(GC.standards) %in% row.names(GC.standards.L50.Rev),] ;
+ 
+ 
+ GC.standards <- GC.standards.L50.Rev ;
+ 
+ 
+ rm(L50.Rev , GC.standards.L50.Rev, GC.standards.Rev.L50.202200910_B3B4)
+ 
+ 
+###### check ###
+ 
+ GC.standards[GC.standards$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" & GC.standards$Factor.Name == "L50" ,]
+ 
+ 
  
  levels(GC.standards$ANAL.DATE)
  
@@ -3372,6 +3515,78 @@ GC.standards <- GC.standards[!rownames(GC.standards) == "1381", ] ;
  
  GC.standards[GC.standards$Sampling.Date == "2022-09-27",]
  
+########### GC Note
+ # 202200927_B1B2
+ # 
+ # There were no low standards (L-100%, L-50%) standards left.
+ # Those vials do not have any gas except what was left from the previous GC analysis.
+###########
+ 
+ ## Select conditions 
+ 
+ GC.standards[GC.standards$Sampling.Date == "2022-09-27" & GC.standards$AnalysisName == "SummaryGCN2O20220927_B1B2.pdf" &
+                
+                (GC.standards$Factor.Name == "L100" | GC.standards$Factor.Name == "L50"),]
+ 
+ GC.standards.L <- GC.standards[GC.standards$Sampling.Date == "2022-09-27" & 
+                                  
+                                  GC.standards$AnalysisName == "SummaryGCN2O20220927_B1B2.pdf" &
+                                  
+                                  (GC.standards$Factor.Name == "L100" | GC.standards$Factor.Name == "L50"),]
+ 
+ GC.standards.L.1 <- GC.standards[GC.standards$Sampling.Date == "2022-09-10" & 
+                                    
+                                    GC.standards$AnalysisName == "SummaryGCN2O20220910_B1B2.pdf" &
+                                    
+                                    (GC.standards$Factor.Name == "L100" | GC.standards$Factor.Name == "L50"),]
+                                                              
+                                                              
+ 
+ plot(CO2 ~ CO2.ppm , data = GC.standards.L.1 , col = "blue", ylim = c(0,3000) )
+
+ points(CO2 ~ CO2.ppm , data = GC.standards.L , col = "red")
+ 
+ 
+ plot(N2O ~ N2O.ppm , data = GC.standards.L.1 , col = "blue", ylim = c(0,1000) )
+ 
+ points(N2O ~ N2O.ppm , data = GC.standards.L , col = "red")
+ 
+ 
+ plot(CH4 ~ CH4.ppm , data = GC.standards.L.1 , col = "blue", ylim = c(0,50) )
+ 
+ points(CH4 ~ CH4.ppm , data = GC.standards.L , col = "red")
+ 
+ 
+ #### low standards (L-100%, L-50%) standards are defective. Remove  ###
+ 
+ row.names(GC.standards[GC.standards$Sampling.Date == "2022-09-27" & 
+                          
+                          GC.standards$AnalysisName == "SummaryGCN2O20220927_B1B2.pdf" &
+                          
+                          (GC.standards$Factor.Name == "L100" | GC.standards$Factor.Name == "L50"),])
+ 
+ 
+ 
+ GC.standards.L <- GC.standards[GC.standards$Sampling.Date == "2022-09-27" & 
+                                  
+                                  GC.standards$AnalysisName == "SummaryGCN2O20220927_B1B2.pdf" &
+                                  
+                                  (GC.standards$Factor.Name == "L100" | GC.standards$Factor.Name == "L50"),]
+ 
+row.names(GC.standards.L)
+ 
+GC.standards.Rev.L <- GC.standards[which(!row.names(GC.standards) %in% row.names(GC.standards.L) ),] ;
+
+
+GC.standards <- GC.standards.Rev.L ;
+
+#### check 
+ 
+GC.standards[GC.standards$Sampling.Date == "2022-09-27" & GC.standards$AnalysisName == "SummaryGCN2O20220927_B1B2.pdf",]
+
+
+
+
  
  i = "2022-09-27" 
  
