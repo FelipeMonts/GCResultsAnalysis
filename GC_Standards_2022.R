@@ -3177,7 +3177,7 @@ row.names(GC.standards.L50.Rev[GC.standards.L50.Rev$AnalysisName == "SummaryGCN2
  GC.standards <- GC.standards.L50.Rev ;
  
  
- rm(L50.Rev , GC.standards.L50.Rev, GC.standards.Rev.L50.202200910_B3B4)
+ rm(L50.Rev , GC.standards.L50.Rev)
  
  
 ###### check ###
@@ -4228,13 +4228,14 @@ GC.standards[GC.standards$Sampling.Date == "2022-09-27" & GC.standards$AnalysisN
  #
  ###############################################################################################################  
  
- write.csv(x = GC.standards, file = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\StandardsDataset2022.csv")
- 
- 
-
-
-
- 
- 
+ # Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+ # 
+ # write.csv(x =GC.standards, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+ # 
+ # "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+ # 
+ # "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\StandardsDataset2022_",
+ # 
+ # Working.Date , ".csv"), append = F , row.names = F )
  
  

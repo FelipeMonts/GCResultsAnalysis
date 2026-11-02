@@ -78,54 +78,38 @@ Year = 2021
 
 # Year = 2022
 
+###############################################################################################################
+#                           
+#                              Reading standards from the 2021 curated data
+#
+###############################################################################################################
 
-PeakArea.results <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults" , Year ,".csv" ) , header = T) ;
-
-
-PeakArea.results <- read.csv(file = "FluxDataAnalysisResults\\GCcompiledResults20265702Sep091788375422.csv" , header = T) ;
-
+GC.standards <- read.csv(file = "FluxDataAnalysisResults\\StandardsDataset20212026_11_02_11_00_59.csv" )  ;
 
 
 ###############################################################################################################
-#                           
+#
 #                              Checking for duplicated records
 #
 ###############################################################################################################
 
-str(PeakArea.results)
+str(GC.standards)
 
-head(PeakArea.results)
+head(GC.standards)
 
-anyDuplicated(PeakArea.results, MARGIN = c(1,2))
+anyDuplicated(GC.standards, MARGIN = c(1,2))
 
 
-
-##################################  Remove duplicates  ######################################################
-
-PeakArea.results.1 <- PeakArea.results[!duplicated(PeakArea.results, MARGIN = c(1,2)),] ;
-
-str(PeakArea.results.1) 
-
-anyDuplicated(PeakArea.results.1, MARGIN = c(1,2))
-
-PeakArea.results <- PeakArea.results.1  ;
-
-str(PeakArea.results) 
 ###############################################################################################################
-#                           
-#                               Working with standards
+#
+#                              Checking for repeated measurements
 #
 ###############################################################################################################
 
 
-# getting the GC samples with standards together
+anyDuplicated(GC.standards[,c(4:6)], MARGIN = c(1,2))
 
-GC.standards <- PeakArea.results[grep( pattern = "B" , x = PeakArea.results$Sample.Name, invert = T) ,] ;
-   
 
-# GC.Data <-  PeakArea.results[grep( pattern = "B" , x = PeakArea.results$Sample.Name, invert = F) ,] ;
-
-which(is.na(GC.standards))
 
 ###############################################################################################################
 #                           
@@ -135,8 +119,9 @@ which(is.na(GC.standards))
 #
 ###############################################################################################################
 
+###### Converting Sampling.Date from a character type to a date type 
 
-str(GC.standards)
+GC.standards$Sampling.Date <- as.Date(GC.standards$Sampling.Date) ;
 
 
 ##############################################################################################################
@@ -167,7 +152,7 @@ GC.standards[GC.standards$Sampling.Date == "2021-05-28",]
 
 GC.standards[GC.standards$Sampling.Date == "2021-05-28" & GC.standards$Sample.Name ==  "25PerSTD", 
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(1.25 , 125 , 0.25 ) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(1.25 ,  125 ,  0.25  )  # c(1 , 2 , 3 ) ;
 
 GC.standards[GC.standards$Sampling.Date == "2021-05-28" & GC.standards$Sample.Name ==  "50PerSTD", 
              
@@ -176,18 +161,22 @@ GC.standards[GC.standards$Sampling.Date == "2021-05-28" & GC.standards$Sample.Na
   
 GC.standards[GC.standards$Sampling.Date == "2021-05-28" & GC.standards$Sample.Name ==  "75PerSTD", 
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(3.75 , 375 , 0.75 ) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(3.75 , 375 ,  0.75  ) ;
 
 
 GC.standards[GC.standards$Sampling.Date == "2021-05-28" & GC.standards$Sample.Name ==  "100PerSTD", 
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(5 , 500 , 1 ) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(5 , 500 , 1  ) ;
 
 GC.standards[GC.standards$Sampling.Date == "2021-05-28",]
 
 ####### Plot Calibration line  for  CO2 #######
 
-plot(CO2.ppm ~ CO2, 
+str(GC.standards)
+
+range(GC.standards[GC.standards$Sampling.Date == "2021-05-28", "CO2.ppm"])
+
+plot(CO2 ~ CO2.ppm, 
      
      data = GC.standards[GC.standards$Sampling.Date == "2021-05-28",],
      
@@ -195,21 +184,28 @@ plot(CO2.ppm ~ CO2,
      
      col = "blue",
      
-     type = "p")  ;
+     type = "p",
+     
+     pch = 16,
+     
+     xlim = range(GC.standards[GC.standards$Sampling.Date == "2021-05-28", "CO2.ppm"]) ,
+     
+     ylim = range(GC.standards[GC.standards$Sampling.Date == "2021-05-28", "CO2"]) ) ;
+      
 
-text( x = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "CO2"],
+
+text( x = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "CO2.ppm"],
       
-      y = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "CO2.ppm"],
+      y = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "CO2"],
       
-      labels = GC.standards[GC.standards$Sampling.Date == "2021-05-28" , "Sample.Name"],
+      labels = row.names(GC.standards[GC.standards$Sampling.Date == "2021-05-28",]),
       
       pos = 3);
 
 
-
 ###### Calculate calibration line CO2 #######
 
-CAL.CO2.2021_05_28 <- lm(CO2.ppm ~ CO2,
+CAL.CO2.2021_05_28 <- lm(CO2 ~ CO2.ppm,
                          
                          data = GC.standards[GC.standards$Sampling.Date == "2021-05-28",],
                          
@@ -225,9 +221,9 @@ CAL.CO2.2021_05_28 <- lm(CO2.ppm ~ CO2,
         
         col = "red") ;
  
- text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("CO2")]),
+ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("CO2.ppm")]),
        
-       y = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("CO2.ppm")]),
+       y = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("CO2")]),
        
        labels = paste(round(CAL.CO2.2021_05_28$coefficients[1],3), round(CAL.CO2.2021_05_28$coefficients[2],3), sep = "+"))
        
@@ -235,7 +231,7 @@ CAL.CO2.2021_05_28 <- lm(CO2.ppm ~ CO2,
 
  ####### Plot Calibration line  for N2O #######
  
- plot(N2O.ppm ~ N2O, 
+ plot(N2O ~ N2O.ppm, 
       
       data = GC.standards[GC.standards$Sampling.Date == "2021-05-28",],
       
@@ -243,13 +239,15 @@ CAL.CO2.2021_05_28 <- lm(CO2.ppm ~ CO2,
       
       col = "blue",
       
-      type = "p")  ;
+      type = "p",
+      
+      pch = 16)  ;
  
- text( x = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "N2O"],
+ text( x = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "N2O.ppm"],
        
-       y = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "N2O.ppm"],
+       y = GC.standards[GC.standards$Sampling.Date == "2021-05-28", "N2O"],
        
-       labels = GC.standards[GC.standards$Sampling.Date == "2021-05-28" , "Sample.Name"],
+       labels = row.names(GC.standards[GC.standards$Sampling.Date == "2021-05-28",]),
        
        pos = 3);
  
@@ -257,7 +255,7 @@ CAL.CO2.2021_05_28 <- lm(CO2.ppm ~ CO2,
  
  ###### Calculate calibration line N2O #######
  
- CAL.N2O.2021_05_28 <- lm(N2O.ppm ~ N2O,
+ CAL.N2O.2021_05_28 <- lm(N2O ~ N2O.ppm,
                           
                           data = GC.standards[GC.standards$Sampling.Date == "2021-05-28",],
                           
@@ -273,9 +271,9 @@ CAL.CO2.2021_05_28 <- lm(CO2.ppm ~ CO2,
         
         col = "red") ;
  
- text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("N2O")]),
+ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("N2O.ppm")]),
        
-       y = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("N2O.ppm")]),
+       y = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("N2O")]),
        
        labels = paste(round(CAL.N2O.2021_05_28$coefficients[1],3), round(CAL.N2O.2021_05_28$coefficients[2],3), sep = "+")
        
@@ -283,9 +281,129 @@ CAL.CO2.2021_05_28 <- lm(CO2.ppm ~ CO2,
  
 
 
-#################################    2021-06-01  Missing   ############################################
+#################################    2021-06-01   ############################################
+ 
+ str(GC.standards)
  
  GC.standards[GC.standards$Sampling.Date == "2021-06-01",]
+ 
+
+ GC.standards[GC.standards$Sampling.Date == "2021-06-01" & GC.standards$Sample.Name ==  "25perSTD", 
+              
+              c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(1.25 ,  125 ,  0.25  )  # c(1 , 2 , 3 ) ;
+ 
+ GC.standards[GC.standards$Sampling.Date == "2021-06-01" & GC.standards$Sample.Name ==  "50perSTD", 
+              
+              c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(2.5 , 250 , 0.5 ) ;
+ 
+ 
+ GC.standards[GC.standards$Sampling.Date == "2021-06-01" & GC.standards$Sample.Name ==  "75perSTD", 
+              
+              c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(3.75 , 375 ,  0.75  ) ;
+ 
+ 
+ GC.standards[GC.standards$Sampling.Date == "2021-06-01" & GC.standards$Sample.Name ==  "100perSTD", 
+              
+              c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(5 , 500 , 1  ) ;
+ 
+ GC.standards[GC.standards$Sampling.Date == "2021-06-01",]
+ 
+ 
+ 
+ ##### Background plot with previous standards  #####
+ 
+ Previous.Std.Plot.Range <- GC.standards[GC.standards$Sampling.Date >= "2021-05-28" &
+                                
+                                GC.standards$Sampling.Date <= "2021-06-01" ,]
+ 
+ range(Previous.Std.Plot.Range$CO2)
+ 
+ plot(CO2 ~ CO2.ppm, 
+      
+      data = GC.standards[GC.standards$Sampling.Date == "2021-05-28",],
+      
+      main = "2021-06-01",
+      
+      col = "lightgray",
+      
+      cex = 1.5,
+      
+      type = "p",
+      
+      pch = 16,
+      
+      xlim = range(Previous.Std.Plot.Range$CO2.ppm) ,
+      
+      
+      ylim = range(Previous.Std.Plot.Range$CO2));
+ 
+ 
+ 
+ 
+ ###### Calculate calibration line CO2 with all previous standards  #######
+ 
+ CAL.CO2.2021.prev <- lm(CO2 ~ CO2.ppm,
+                          
+                          data = GC.standards[GC.standards$Sampling.Date >= "2021-05-28" &
+                                                
+                                                GC.standards$Sampling.Date <= "2021-05-28" ,])
+ 
+ 
+ 
+ summary(CAL.CO2.2021.prev) 
+ 
+ abline(a = CAL.CO2.2021.prev$coefficients[1] ,
+        
+        b = CAL.CO2.2021.prev$coefficients[2] , 
+        
+        col = "darkgray") ;
+ 
+ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("CO2.ppm")]),
+       
+       y = mean(GC.standards[GC.standards$Sampling.Date == "2021-05-28", c("CO2")]),
+       
+       labels = paste(round(CAL.CO2.2021_05_28$coefficients[1],3), round(CAL.CO2.2021_05_28$coefficients[2],3), sep = "+"))
+ 
+ 
+
+ ###### Calculate calibration line CO2 with current standards  #######
+ 
+ points(CO2 ~ CO2.ppm, 
+        
+        data = GC.standards[GC.standards$Sampling.Date == "2021-06-01",],
+        
+        col = "blue",
+        
+        cex=1.5,
+        
+        type = "p",
+        
+        pch = 16)
+ 
+ CAL.CO2.2021_06_21 <- lm(CO2 ~ CO2.ppm,
+                         
+                         data = GC.standards[GC.standards$Sampling.Date == "2021-06-01",]) 
+                                          
+ 
+ 
+ summary(CAL.CO2.2021_06_21) 
+ 
+ abline(a = CAL.CO2.2021_06_21$coefficients[1] ,
+        
+        b = CAL.CO2.2021_06_21$coefficients[2] , 
+        
+        col = "red") ;
+ 
+ text( x = mean(GC.standards[GC.standards$Sampling.Date == "2021-06-01", c("CO2.ppm")]),
+       
+       y = mean(GC.standards[GC.standards$Sampling.Date == "2021-06-01", c("CO2")]),
+       
+       labels = paste(round(CAL.CO2.2021_06_21$coefficients[1],3), round(CAL.CO2.2021_06_21$coefficients[2],3), sep = "+"))
+ 
+ 
+ 
+ 
+ 
  
 
 #################################    2021-06-04     ############################################
@@ -327,6 +445,8 @@ plot(CO2.ppm ~ CO2,
      
      col = "blue",
      
+     
+     
      type = "p")  ;
 
 text( x = GC.standards[GC.standards$Sampling.Date == "2021-06-04", "CO2"],
@@ -346,8 +466,6 @@ text( x = GC.standards[GC.standards$Sampling.Date == "2021-06-04", "CO2"],
       
       pos = 1);
 
-
-GC.standards[rownames(GC.standards) == "118", c("CH4.ppm" , "CO2.ppm" , "N2O.ppm")] <- c(1.25,     125,    0.25) ;
 
 ###### Calculate calibration line CO2 #######
 
@@ -3383,7 +3501,7 @@ GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Na
 
 GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "25PerSTDA",
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(1.25 , 125 , 0.25 ), each = 2) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(1.25 , 125 , 0.25 ) ;
 
 
 GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "50PerSTDA",]
@@ -3391,7 +3509,7 @@ GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Na
 
 GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "50PerSTDA",
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(2.5,	250,	0.5), each = 2) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(2.5,	250,	0.5) ;
 
 
 
@@ -3400,7 +3518,7 @@ GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Na
 
 GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "75PerSTDA",
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(3.75,	375,	0.75), each = 2) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(3.75,	375,	0.75) ;
 
 
 GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "100PerSTDA",]
@@ -3408,7 +3526,7 @@ GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Na
 
 GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "100PerSTDA",
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(5,	500,	1), each = 2) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(5,	500,	1) ;
 
 
 
@@ -3417,7 +3535,7 @@ GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Na
 
 GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "50PerSTD",
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(25,	2500,	25), each = 2) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(25,	2500,	25) ;
 
 
 GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "100PerSTD",]
@@ -3425,7 +3543,7 @@ GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Na
 
 GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "100PerSTD",
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(50,	5000,	50 ), each = 2) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(50,	5000,	50 ) ;
 
 
 GC.standards[GC.standards$Sampling.Date == "2021-10-27",]
@@ -3443,9 +3561,9 @@ plot(CO2.ppm ~ CO2,
      
      col = "blue",
      
-     # ylim = c(0,600),
+      # ylim = c(0,10000),
      
-     # xlim = c(8000,11000),
+      # xlim = c(0,30000),
      
      type = "p")  ; 
 
@@ -3990,6 +4108,18 @@ text( x = mean(GC.standards$N2O),
       labels = paste(round(CAL.N2O.FinalSet$coefficients[1],3), round(CAL.N2O.FinalSet$coefficients[2],3), sep = "+"))
 
 
+###############################################################################################################
+# 
+#  Removing seriously deviated outliers in the figure above
+# 
+# 3350 , 3224 , 3213 , 3349 , 2021 , 1628 , 1935 , 2891 , 1946 
+# 
+###############################################################################################################
+
+
+
+
+
 
 
 ###############################################################################################################
@@ -3998,5 +4128,13 @@ text( x = mean(GC.standards$N2O),
 #
 ###############################################################################################################  
 
-write.csv(x = GC.standards, file = "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\StandardsDataset2021.csv")
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+# 
+# write.csv(x = GC.standards, file, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# 
+# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+# 
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\StandardsDataset2021",
+# 
+# Working.Date , ".csv"), append = F , row.names = T )
 

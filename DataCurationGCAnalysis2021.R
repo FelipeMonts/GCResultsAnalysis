@@ -575,14 +575,39 @@ which(is.na(PeakArea.results.2021$N2O))
 
 rm(PeakArea.results.2021.6, PeakArea.results.2021.Repeated, PeakArea.results.2021.Repeated.measures )
 
+
+
+###############################################################################################################
+#                           
+#                               Writing out curated Standards data
+#
+###############################################################################################################
+
+##### Selecting standards records  #####
+
+
+Standards.Dataset.2021 <- PeakArea.results.2021[grep( pattern = "B" , x = PeakArea.results.2021$Sample.Name, invert = T) ,]
+
+str(Standards.Dataset.2021)
+
+
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+# 
+# write.csv(x = Standards.Dataset.2021, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# 
+# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+# 
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\StandardsDataset2021",
+# 
+# Working.Date , ".csv"), append = F , row.names = F )
+
                                                                    
-                                                                   
 
 
 
 
 
-#################################################################################################################
+###############################################################################################################
 #                           
 #                              Removing standards data
 #
@@ -3042,6 +3067,8 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-09-17") 
                       GC.Data.NoSTD.2021$Treatment == "B"  &   GC.Data.NoSTD.2021$Sampling.Time == 45,
                     
                     "Note" ] <- "T 45 no Sample"  ;
+
+
    
   
   
@@ -3145,6 +3172,13 @@ GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$CO2.ppm)), ]
 
 
 plot(GC.Data.NoSTD.2021$N2O.ppm )
+
+
+###############################################################################################################
+#                           
+#                               Writing out curated data
+#
+###############################################################################################################
 
 
 # Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ; 

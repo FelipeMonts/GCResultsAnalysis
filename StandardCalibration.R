@@ -1,7 +1,7 @@
 ##############################################################################################################
 # 
 # 
-# Program to form a calibration curve from all the GC standards collected from tha analysis of the 2021 and 2022
+# Program to form a calibration curve from all the GC standards collected from the analysis of the 2021 and 2022
 # 
 # sampling seasons and analyzed using from Professor Lauren McPhillips Agilent 8890 Gas Chromatograph
 # 
@@ -89,7 +89,7 @@ head(C.GC.Standards.2021, 20)
 tail(C.GC.Standards.2021, 20)
 
 
-C.GC.Standards.2022 <- read.csv(file = "StandardsDataset2022.csv" , header = T);
+C.GC.Standards.2022 <- read.csv(file = "StandardsDataset2022.csv2026_10_30_09_26_07.csv" , header = T);
 
 str(C.GC.Standards.2022)
 
@@ -1095,7 +1095,7 @@ Calibration.coeff <- rbind(Calibration.coeff.CO2,Calibration.coeff.N2O) ;
 # 
 # "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
 # 
-# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\Calibration.coeff",
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\Calibration_coeff",
 # 
 # Working.Date , ".csv"), append = F , row.names = T )
 
