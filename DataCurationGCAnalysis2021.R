@@ -575,6 +575,28 @@ which(is.na(PeakArea.results.2021$N2O))
 
 rm(PeakArea.results.2021.6, PeakArea.results.2021.Repeated, PeakArea.results.2021.Repeated.measures )
 
+PeakArea.results.2021[PeakArea.results.2021$Sampling.Date == "2021-10-27",]
+
+# #################################################################################################################
+# 
+# ###### working on the standards, I noticed that there was a misspelling on the name of the file with the data,
+# 
+# ###### that result in errors in the retrieval of the sampling date "2021027B3B4peakareas.pdf"
+# 
+#################################################################################################################
+
+
+PeakArea.results.2021[PeakArea.results.2021$File== "2021027B3B4peakareas.pdf",]
+
+
+PeakArea.results.2021[PeakArea.results.2021$File== "2021027B3B4peakareas.pdf", "Sampling.Day"] <- "20211027" ;
+
+
+PeakArea.results.2021[PeakArea.results.2021$File== "2021027B3B4peakareas.pdf", "Sampling.Date"] <- "2021-10-27" ;
+
+### check ####
+
+PeakArea.results.2021[PeakArea.results.2021$File== "2021027B3B4peakareas.pdf",]
 
 
 ###############################################################################################################

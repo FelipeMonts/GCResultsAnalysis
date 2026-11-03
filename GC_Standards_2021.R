@@ -260,21 +260,21 @@ GC.standards[GC.standards$Sampling.Date == "2021-06-14", "Sample.Name"]
 
 GC.standards[GC.standards$Sampling.Date == "2021-06-14" & GC.standards$Sample.Name ==  "25PerSTD", 
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(1.25 , 125 , 0.25 ), each = 3)  ; 
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(1.25 , 125 , 0.25 ), each = 2)  ; 
 
 GC.standards[GC.standards$Sampling.Date == "2021-06-14" & GC.standards$Sample.Name ==  "50PerSTD", 
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(2.5 , 250 , 0.5), each = 3 ) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(2.5 , 250 , 0.5), each = 2 ) ;
 
 
 GC.standards[GC.standards$Sampling.Date == "2021-06-14" & GC.standards$Sample.Name ==  "75PerSTD", 
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(3.75 , 375 , 0.75 ), each = 3) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(3.75 , 375 , 0.75 ), each = 2) ;
 
 
 GC.standards[GC.standards$Sampling.Date == "2021-06-14" & GC.standards$Sample.Name ==  "100PerSTD", 
              
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(5 , 500 , 1 ) , each = 3) ;
+             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- rep(c(5 , 500 , 1 ) , each = 2) ;
 
 GC.standards[GC.standards$Sampling.Date == "2021-06-14",]
 
@@ -1047,14 +1047,6 @@ GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Na
              c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(0 , 0 , 0 ) ;
 
 
-GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "0PerSTD",]
-
-GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "0PerSTD",
-             
-             c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" ) ] <- c(0 , 0 , 0 ) ;
-
-
-
 GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "25PerSTDA",]
 
 GC.standards[GC.standards$Sampling.Date == "2021-10-27" & GC.standards$Sample.Name ==  "25PerSTDA",
@@ -1117,8 +1109,15 @@ GC.standards[GC.standards$Sampling.Date == "2021-10-27",]
 #
 ###############################################################################################################
 
-any(is.na(GC.standards$CH4.ppm))
+any(is.na(GC.standards$CO2.ppm))
 
+which(is.na(GC.standards$CO2.ppm))
+
+which(is.na(GC.standards$N2O.ppm))
+
+
+
+GC.standards[which(is.na(GC.standards$CO2.ppm)),]
 
 
 ###############################################################################################################
