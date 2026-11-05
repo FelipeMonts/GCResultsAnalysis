@@ -84,7 +84,7 @@ Year = 2021
 #
 ###############################################################################################################
 
-GC.standards <- read.csv(file = "FluxDataAnalysisResults\\StandardsDataset20212026_11_02_11_00_59.csv" )  ;
+GC.standards <- read.csv(file = "FluxDataAnalysisResults\\StandardsDataset2021_2026_11_04_09_13_48.csv" )  ;
 
 
 ###############################################################################################################
@@ -514,24 +514,6 @@ GC.standards[GC.standards$Sampling.Date == "2021-07-07",]
 
 
 GC.standards[,c("Sampling.Date" , "GC.Date")]
-
-###############    2021-07-07  Missing 20210702b3b407b2peakareas.pdf ????   ####################
-###############    2021-07-07  Missing 20210702b3b407b2peakareas.pdf ????   ####################
-###############    2021-07-07  Missing 20210702b3b407b2peakareas.pdf ????   ####################
-###############    2021-07-07  Missing 20210702b3b407b2peakareas.pdf ????   ####################
-###############    2021-07-07  Missing 20210702b3b407b2peakareas.pdf ????   ####################
-
-# there is a problem with  50PerSTD and 100PerSTD ?? #
-
-
-#         Sample.Name Position Vial     CH4      CO2      N2O                      File Sampling.Day Sampling.Date    GC.Date
-# 1424    50PerSTD        5    1 101.687 4309.923 6559.847 20210707B3B4peakareas.pdf     20210707    2021-07-07 2021-08-01
-# 1435   100PerSTD        6    1 126.926 6050.251 8951.515 20210707B3B4peakareas.pdf     20210707    2021-07-07 2021-08-01
-#                    AnalysisName CH4.ppm CO2.ppm N2O.ppm
-# 1424 20210707B3B4peakareas.pdf   25.00    2500   25.00
-# 1435 20210707B3B4peakareas.pdf   50.00    5000   50.00
-
-
 
 
 
@@ -972,10 +954,6 @@ GC.standards[GC.standards$Sampling.Date == "2021-09-17",]
 #################################    2021-09-29     ############################################
 
 
-##### 20210929B1B2peakareas1 is missing!!!!!!!!  
-##### 20210929B1B2peakareas2 is missing!!!!!!!!  
-
-
 GC.standards[GC.standards$Sampling.Date == "2021-09-29",]
 
 
@@ -1117,7 +1095,20 @@ which(is.na(GC.standards$N2O.ppm))
 
 
 
-GC.standards[which(is.na(GC.standards$CO2.ppm)),]
+GC.standards[which(is.na(GC.standards$CO2.ppm)), ]
+
+#### Add the missing standard values #####
+
+
+GC.standards[which(is.na(GC.standards$CO2.ppm)), c("CH4.ppm" , "CO2.ppm" ,"N2O.ppm" )] <- c(0 , 0 , 0 ) ;
+
+
+#### check ####
+
+
+any(is.na(GC.standards$CO2.ppm))
+
+any(is.na(GC.standards$N2O.ppm))
 
 
 ###############################################################################################################
@@ -1170,198 +1161,6 @@ xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards,
        })
        
  
-GC.standards[rownames(GC.standards) == "2605", ]  # 2021-09-02
-
-GC.standards[rownames(GC.standards) == "2530", ]  # 2021-09-02
-
-GC.standards[rownames(GC.standards) == "2616", ]  # 2021-09-20
-
-GC.standards[rownames(GC.standards) == "2541", ]  # 2021-09-20
-
-
-
-GC.standards[rownames(GC.standards) == "1435", ]  # 2021-07-02 GC.Date 2021-08-01
-
-GC.standards[rownames(GC.standards) == "1310", ]  # 2021-07-02 GC.Date 2021-08-01
-
-GC.standards[rownames(GC.standards) == "2810", ] # 2021-09-17  GC.Date 2021-09-22
-
-GC.standards[rownames(GC.standards) == "2799", ] # 2021-09-17 GC.Date 2021-09-22
-
-GC.standards[rownames(GC.standards) == "2724", ] # 2021-09-17 GC.Date 2021-09-22
-
-GC.standards[rownames(GC.standards) == "2713", ] # 2021-09-17 GC.Date 2021-09-22
- 
- 
-###### with out  2021-09-02   ########
-
-xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards[!GC.standards$GC.Date == "2021-09-02",], 
-       
-       pch = 16 , 
-       
-       main="CO2", 
-       
-       color.palette = paletteer_d("ggsci::default_ucscgb"),
-       
-       key = simpleKey(
-         
-         text = levels(GC.standards[GC.standards$GC.Date != "2021-09-02", "ANAL.DATE"]),
-         
-         points = TRUE,
-         
-         pch = 16,
-         
-         col = paletteer_d("ggsci::default_ucscgb") ,
-         
-         space = "right"
-         
-       ),
-       
-       panel  = function(x, y,...) {
-         
-         panel.xyplot(x, y,...)
-         
-         panel.text(x,y,
-                    
-                    labels = rownames(GC.standards[GC.standards$GC.Date != "2021-09-02",]))
-         
-         
-       })
-
-
-
-###### with out  2021-08-01   ########
-
-xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards[!GC.standards$GC.Date == "2021-08-01",], 
-       
-       pch = 16 , 
-       
-       main="CO2", 
-       
-       color.palette = paletteer_d("ggsci::default_ucscgb"),
-       
-       key = simpleKey(
-         
-         text = levels(GC.standards[GC.standards$GC.Date != "2021-08-01", "ANAL.DATE"]),
-         
-         points = TRUE,
-         
-         pch = 16,
-         
-         col = paletteer_d("ggsci::default_ucscgb") ,
-         
-         space = "right"
-         
-       ),
-       
-       panel  = function(x, y,...) {
-         
-         panel.xyplot(x, y,...)
-         
-         panel.text(x,y,
-                    
-                    labels = rownames(GC.standards[GC.standards$GC.Date != "2021-08-01",]))
-         
-         
-       })
-
-
-
-###### without  2021-09-22   ########
-
-xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards[!GC.standards$GC.Date == "2021-09-22",], 
-       
-       pch = 16 , 
-       
-       main="CO2", 
-       
-       color.palette = paletteer_d("ggsci::default_ucscgb"),
-       
-       key = simpleKey(
-         
-         text = levels(GC.standards[GC.standards$GC.Date != "2021-09-22", "ANAL.DATE"]),
-         
-         points = TRUE,
-         
-         pch = 16,
-         
-         col = paletteer_d("ggsci::default_ucscgb") ,
-         
-         space = "right"
-         
-       ),
-       
-       panel  = function(x, y,...) {
-         
-         panel.xyplot(x, y,...)
-         
-         panel.text(x,y,
-                    
-                    labels = rownames(GC.standards[GC.standards$GC.Date != "2021-09-22",]))
-         
-         
-       })
-
-########### Remove standards with outliers  ######
-
-# 2021-09-22 #
-# 2021-08-01 #
-# 2021-09-02 #
-
-GC.standards_No_2021_09_22 <- GC.standards[!GC.standards$GC.Date == "2021-09-22" , ] ;
-
-GC.standards_No_2021_09_22[GC.standards_No_2021_09_22$GC.Date == "2021-09-22" , ]
-
-GC.standards_No_2021_08_01 <- GC.standards_No_2021_09_22[!GC.standards_No_2021_09_22$GC.Date == "2021-08-01" , ]
-
-GC.standards_No_2021_08_01[GC.standards_No_2021_08_01$GC.Date == "2021-08-01" , ]
-
-GC.standards_No_2021_09_02 <- GC.standards_No_2021_08_01[! GC.standards_No_2021_08_01$GC.Date == "2021-09-02" , ]
-
-GC.standards_No_2021_09_02[GC.standards_No_2021_09_02$GC.Date == "2021-09-02" , ]
-
-
-GC.standards <- GC.standards_No_2021_09_02 ;
-
-
-rm(GC.standards_No_2021_09_22 , GC.standards_No_2021_08_01 ,  GC.standards_No_2021_09_02 )
-
-
-
-
-xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards, 
-       
-       pch = 16 , 
-       
-       main="CO2", 
-       
-       color.palette = paletteer_d("ggsci::default_ucscgb"),
-       
-       key = simpleKey(
-         
-         text = levels(GC.standards$ANAL.DATE),
-         
-         points = TRUE,
-         
-         pch = 16,
-         
-         col = paletteer_d("ggsci::default_ucscgb") ,
-         
-         space = "right"
-         
-       ),
-       
-       panel  = function(x, y,...) {
-         
-         panel.xyplot(x, y,...)
-         
-         panel.text(x,y,
-                    
-                    labels = rownames(GC.standards))
-         
-         
-       })
-
 
 
 ###############################################################################################################
@@ -1405,153 +1204,6 @@ xyplot(N2O ~ N2O.ppm, groups = GC.Date, data= GC.standards,
          
        })
 
-###############################################################################################################
-#                           
-#                                           Final set for CO2 Standards Calibration
-#
-###############################################################################################################  
-
-
-
-
-####### Plot Calibration line  CO2 #######
-
-plot(CO2.ppm ~ CO2, 
-     
-     data = GC.standards,
-     
-     main = "CO2 Calibration Set 2021",
-     
-     col = "blue",
-     
-     # ylim = c(0,600),
-     
-     # xlim = c(8000,11000),
-     
-     type = "p")  ; 
-
-# text( x = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2"],
-#       
-#       y = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2.ppm"],
-#       
-#       labels = GC.standards[GC.standards$Sampling.Date == "2021-10-27" , "Sample.Name"],
-#       
-#       pos = 3);
-# 
-# 
-# text( x = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2"],
-#       
-#       y = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2.ppm"],
-#       
-#       labels = rownames(GC.standards[GC.standards$Sampling.Date == "2021-10-27" ,]),
-#       
-#       pos = 1);
-# 
-
-
-
-###### Calculate calibration line CO2 #######
-
-CAL.CO2.FinalSet <- lm(CO2.ppm ~ CO2,
-                         
-                         data = GC.standards)
-
-
-
-summary(CAL.CO2.FinalSet) 
-
-abline(a = CAL.CO2.FinalSet$coefficients[1] ,
-       
-       b = CAL.CO2.FinalSet$coefficients[2] , 
-       
-       col = "red") ;
-
-text( x = mean(GC.standards$CO2),
-      
-      y = mean(GC.standards$CO2.ppm),
-      
-      labels = paste(round(CAL.CO2.FinalSet$coefficients[1],3), round(CAL.CO2.FinalSet$coefficients[2],3), sep = "+"))
-
-
-
-
-###############################################################################################################
-#                           
-#                                           Final set for N2O Standards Calibration
-#
-###############################################################################################################  
-
-  
-####### Plot Calibration line  N2O #######
-
-plot(N2O.ppm ~ N2O, 
-     
-     data = GC.standards,
-     
-     main = "N2O Calibration Set 2021",
-     
-     col = "blue",
-     
-     # ylim = c(0,600),
-     
-     # xlim = c(8000,11000),
-     
-     type = "p")  ; 
-
-# text( x = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2"],
-#       
-#       y = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2.ppm"],
-#       
-#       labels = GC.standards[GC.standards$Sampling.Date == "2021-10-27" , "Sample.Name"],
-#       
-#       pos = 3);
-# 
-# 
-# text( x = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2"],
-#       
-#       y = GC.standards[GC.standards$Sampling.Date == "2021-10-27", "CO2.ppm"],
-#       
-#       labels = rownames(GC.standards[GC.standards$Sampling.Date == "2021-10-27" ,]),
-#       
-#       pos = 1);
-# 
-
-
-
-###### Calculate calibration line CO2 #######
-
-CAL.N2O.FinalSet <- lm(N2O.ppm ~ N2O,
-                       
-                       data = GC.standards)
-
-
-
-summary(CAL.N2O.FinalSet) 
-
-abline(a = CAL.N2O.FinalSet$coefficients[1] ,
-       
-       b = CAL.N2O.FinalSet$coefficients[2] , 
-       
-       col = "red") ;
-
-text( x = mean(GC.standards$N2O),
-      
-      y = mean(GC.standards$N2O.ppm),
-      
-      labels = paste(round(CAL.N2O.FinalSet$coefficients[1],3), round(CAL.N2O.FinalSet$coefficients[2],3), sep = "+"))
-
-
-###############################################################################################################
-# 
-#  Removing seriously deviated outliers in the figure above
-# 
-# 3350 , 3224 , 3213 , 3349 , 2021 , 1628 , 1935 , 2891 , 1946 
-# 
-###############################################################################################################
-
-
-
-
 
 
 
@@ -1563,11 +1215,11 @@ text( x = mean(GC.standards$N2O),
 
 # Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
 # 
-# write.csv(x = GC.standards, file, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# write.csv(x = GC.standards, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
 # 
 # "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
 # 
-# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\StandardsDataset2021",
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\Standards2021_",
 # 
-# Working.Date , ".csv"), append = F , row.names = T )
+# Working.Date , ".csv"), row.names = T )
 

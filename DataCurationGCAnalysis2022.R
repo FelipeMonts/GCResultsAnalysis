@@ -69,7 +69,7 @@ setwd(paste0( "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\C
 #### Read data  #####
 
 
-PeakArea.results.2022 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults_2022_2026_10_23_11_06_11.csv" ) , header = T) ;
+PeakArea.results.2022 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults_2022_2026_11_04_09_15_58.csv" ) , header = T) ;
 
 ###############################################################################################################
 #                           
@@ -118,6 +118,29 @@ anyDuplicated(PeakArea.results.2022[,c(4,5,6)], MARGIN = c(1,2))
 
 anyDuplicated(PeakArea.results.2022[,c(4,5,6)], MARGIN = 0)
 
+###############################################################################################################
+#                           
+#                               Writing out curated Standards data
+#
+###############################################################################################################
+
+##### Selecting standards records  #####
+
+Standards.Dataset.2022 <- PeakArea.results.2022[grep( pattern = "B" , x = PeakArea.results.2022$Sample.Name, invert = T) ,]
+
+str(Standards.Dataset.2022)
+
+
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+# 
+# write.csv(x = Standards.Dataset.2022, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# 
+# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+# 
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\StandardsDataset2022_",
+# 
+# Working.Date , ".csv"), row.names = F ) ;
+# 
 
 
 

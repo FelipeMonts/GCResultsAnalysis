@@ -310,15 +310,15 @@ str(PeakArea.Results.All.2)
 PeakArea.Results.All <- PeakArea.Results.All.2 ;
 
 
-Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
-
-write.csv(x = PeakArea.Results.All, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
-
-"Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
-
-"DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults_2022_",
-
-Working.Date , ".csv"), row.names = F )
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+# 
+# write.csv(x = PeakArea.Results.All, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# 
+# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+# 
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GCcompiledResults_2022_",
+# 
+# Working.Date , ".csv"), row.names = F )
 
 
 

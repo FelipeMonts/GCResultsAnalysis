@@ -34,6 +34,8 @@
 
 # install.packages("HMR",  dependencies = T)
 
+# install.packages("paletteer", dependencies = T)
+
 ###############################################################################################################
 #                           load the libraries that are needed   
 ###############################################################################################################
@@ -50,7 +52,7 @@ library(quantreg)
 
 library(HMR)
 
-
+library(paletteer)
 
 ###############################################################################################################
 #                             Setting up working directory  Loading Packages and Setting up working directory                        
@@ -71,7 +73,7 @@ setwd("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_P
  Year = 2022
 
 
-PeakArea.results <- read.csv(file = "FluxDataAnalysisResults\\GCcompiledResults_2022_2026_10_23_11_06_11.csv"  , header = T) ;
+ GC.standards <- read.csv(file = "FluxDataAnalysisResults\\StandardsDataset2022_2026_11_04_09_17_13.csv"  , header = T) ;
 
 
 
@@ -119,47 +121,11 @@ PeakArea.results <- read.csv(file = "FluxDataAnalysisResults\\GCcompiledResults_
 #
 ###############################################################################################################
 
-str(PeakArea.results)
+str(GC.standards)
 
-head(PeakArea.results)
+head(GC.standards)
 
-anyDuplicated(PeakArea.results, MARGIN = c(1,2))
-
-PeakArea.results[c(316:320) ,]
-
-PeakArea.results[PeakArea.results$CH4 == 4.048,]
-
-PeakArea.results[PeakArea.results$CH4 == 9.056,]
-
-PeakArea.results[PeakArea.results$CH4 == 10.521,]
-
-duplicated(PeakArea.results, MARGIN = c(1,2))
-
-################################## It seems that 2022 has some duplicates   ##################################
-
-which(duplicated(PeakArea.results, MARGIN = c(1,2)))
-
-PeakArea.results[c(316:320) ,]
-
-PeakArea.results[PeakArea.results$CH4 == 4.048,]
-
-PeakArea.results[PeakArea.results$CH4 == 9.056,]
-
-PeakArea.results[PeakArea.results$CH4 == 10.521,]
-
-duplicated(PeakArea.results, MARGIN = c(1,2))
-
-##################################  Remove duplicates  ######################################################
-
-PeakArea.results.1 <- PeakArea.results[!duplicated(PeakArea.results, MARGIN = c(1,2)),] ;
-
-str(PeakArea.results.1) 
-
-anyDuplicated(PeakArea.results.1, MARGIN = c(1,2))
-
-PeakArea.results <- PeakArea.results.1  ;
-
-str(PeakArea.results) 
+anyDuplicated(GC.standards, MARGIN = c(1,2))
 
 ###############################################################################################################
 #                           
@@ -176,20 +142,13 @@ str(PeakArea.results)
 # PeakArea.results$N2O<-as.double(PeakArea.results$N2O) ;
 
 
-# getting the GC samples with standards together
-
-GC.standards <- PeakArea.results[grep( pattern = "B" , x = PeakArea.results$Sample.Name, invert = T) ,] ;
-   
-
-# GC.Data <-  PeakArea.results[grep( pattern = "B" , x = PeakArea.results$Sample.Name, invert = F) ,] ;
-
-which(is.na(GC.standards))
 
 ###############################################################################################################
 #                           
 #                            Standards Data dispersion and variability 
 #
 ###############################################################################################################
+
 
 
 str(GC.standards)
@@ -258,9 +217,17 @@ GC.standards[GC.standards$Sample.Name == 'L25',c('N2O.ppm')] <- 0.25;
 
     
 GC.standards[GC.standards$Sample.Name == '0',c('CH4.ppm', 'CO2.ppm', 'N2O.ppm')] <- 0 ;
-    
-    
 
+
+##### Check if all the standards were filled  ####
+
+anyNA(GC.standards$N2O.ppm)
+
+which(is.na(GC.standards$CO2.ppm))
+    
+which(is.na(GC.standards$N2O.ppm))
+
+GC.standards[which(is.na(GC.standards$N2O.ppm)), ]
 
 str(GC.standards)
 
@@ -295,7 +262,25 @@ simpleKey(text = GC.standards$Position )
 
 str(GC.standards)
 
-  
+
+# ###############################################################################################################
+# #                           
+# #                                 Write curated Standards Calibration Data Set
+# #
+# ###############################################################################################################  
+# 
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+# 
+# write.csv(x =GC.standards, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# 
+# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+# 
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\Standards2022_",
+# 
+# Working.Date , ".csv"), row.names = F )
+# 
+# 
+#   
 
 ##############################################################################################################
 #                           
@@ -307,6 +292,280 @@ str(GC.standards)
 str(GC.standards$Sample.Name)
 
 unique(GC.standards$Sample.Name)
+
+
+##############################################################################################################
+#                           
+#      Plot all the standard calibration points with the quantile regression median and and 95% quantiles as background 
+# 
+#     and 95% quantiles as background  to detect outliers
+#
+###############################################################################################################
+
+###############################################################################################################
+#                           
+#                                            CO2   Standards
+#
+###############################################################################################################  
+
+str(GC.standards)
+
+
+
+GC.standards$ANAL.DATE <- as.factor(GC.standards$GC.Date)  ;
+
+GC.standards$Sampling.Day <- as.factor(GC.standards$Sampling.Day)  ;
+
+
+xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards, 
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       color.palette = paletteer_d("ggsci::default_ucscgb"),
+       
+       auto.key =  list( space = "right" , points = T , lines = F ,title = "Sampling Day" ,  type = "l", pch = 16, fill = T) );
+
+# panel  = function(x, y,...) {
+#   
+#   panel.xyplot(x, y,...)
+#   
+#   panel.text(x,y,
+#              
+#              labels = rownames(GC.standards))
+#   
+#   
+# })
+
+simpleKey(text = levels(GC.standards$Sampling.Day),
+          
+          points = T,
+          
+          rectangles = T ,
+          
+          lines = F ,
+          
+          pch = 16)
+          
+          
+
+xyplot(CO2 ~ CO2.ppm, groups = GC.Date, data= GC.standards, 
+
+  pch = 16 , 
+
+  main="CO2", 
+
+  color.palette = paletteer_d("ggsci::default_ucscgb"),
+
+  key = simpleKey(
+  
+  text = levels(GC.standards$Sampling.Day),
+  
+  points = TRUE,
+  
+  col = paletteer_d("ggsci::default_ucscgb") ,
+  
+  space = "right" )) ;
+
+# panel  = function(x, y,...) {
+#   
+#   panel.xyplot(x, y,...)
+#   
+#   panel.text(x,y,
+#              
+#              labels = rownames(GC.standards))
+#   
+#   
+# })
+
+##### Do Quantile Regression  ####
+
+
+Quantile.Reg.CO2 <- rq( CO2 ~ CO2.ppm, data = GC.standards, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
+
+summary(Quantile.Reg.CO2)
+
+plot(NULL, xlim = c( min(GC.standards$CO2.ppm), max(GC.standards$CO2.ppm)),
+                                          
+                                          ylim = c(min(GC.standards$CO2), max(GC.standards$CO2)),
+                                                   
+                                                   main = "CO2", xlab = "CO2" , ylab = "CO2.ppm" ) ;
+
+####### calculations to plot quantile bands  #######
+
+range(GC.standards$CO2.ppm)[1]
+min(GC.standards$CO2.ppm)
+
+
+polygon.x <- c(min(GC.standards$CO2.ppm) , max(GC.standards$CO2.ppm) ,max(GC.standards$CO2.ppm) , min(GC.standards$CO2.ppm)) ;
+
+polygon.y <- c(y = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1],  Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] +
+               
+               (Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2] * max(GC.standards$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2] * max(GC.standards$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
+
+
+####### All points in gray  #######
+
+points(CO2 ~ CO2.ppm , data = GC.standards,
+  
+     pch = 16 , 
+     
+     main="CO2", 
+     
+     col = "gray")
+
+Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][2],
+       
+       col = "blue")
+text(x = GC.standards$CO2.ppm , y = GC.standards$CO2, labels = row.names(GC.standards) )
+
+
+###############################################################################################################
+#                           
+#                                 Remove points outside the 95 percentile
+#
+###############################################################################################################
+
+
+
+
+
+###############################################################################################################
+#                           
+#                                            N2O   Standards
+#
+###############################################################################################################  
+
+GC.standards$ANAL.DATE<-as.factor(GC.standards$GC.Date)  ;
+
+xyplot(N2O ~ N2O.ppm, groups = GC.Date, data= GC.standards, 
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       color.palette = paletteer_d("ggsci::default_ucscgb"),
+       
+       key = simpleKey(
+         
+         text = levels(GC.standards$ANAL.DATE),
+         
+         points = TRUE,
+         
+         pch = 16,
+         
+         col = paletteer_d("ggsci::default_ucscgb") ,
+         
+         space = "right"
+         
+       ),
+       
+       panel  = function(x, y,...) {
+         
+         panel.xyplot(x, y,...)
+         
+         panel.text(x,y,
+                    
+                    labels = rownames(GC.standards))
+         
+         
+       })
+
+
+
+
+
+str(GC.standards)
+
+xyplot(CO2 ~ CO2.ppm,
+       
+       data = GC.standards, 
+       
+       main = "CO2",
+       
+       groups = ANAL.DATE,
+       
+       pch = c(16, 1),
+       
+       cex = c(1, 1.5),
+       
+       col = c("red" , "blue"),
+       
+       key = list(
+         
+         space = "top",
+         
+         columns = 2,
+         
+         text = list(c("2021" , "2022")),
+         
+         points = list(pch = c(16, 1),
+                       
+                       col = c("red" , "blue")
+                       
+         )
+       ))
+
+
+xyplot(N2O ~ N2O.ppm,
+       
+       data = C.GC.Standards.All, 
+       
+       main = "N2O",
+       
+       groups = YEAR,
+       
+       pch = c(16, 1),
+       
+       cex = c(1, 1.5),
+       
+       col = c("red" , "blue"),
+       
+       key = list(
+         
+         space = "top",
+         
+         columns = 2,
+         
+         text = list(c("2021" , "2022")),
+         
+         points = list(pch = c(16, 1),
+                       
+                       col = c("red" , "blue")
+                       
+         )
+       ))
+
+
+
+
 
 
 
@@ -4234,7 +4493,7 @@ GC.standards[GC.standards$Sampling.Date == "2022-09-27" & GC.standards$AnalysisN
  # 
  # "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
  # 
- # "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\StandardsDataset2022_",
+ # "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\Standards2022_",
  # 
  # Working.Date , ".csv"), append = F , row.names = F )
  
