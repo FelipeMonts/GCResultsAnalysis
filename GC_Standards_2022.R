@@ -449,15 +449,27 @@ text(x = GC.standards$CO2.ppm , y = GC.standards$CO2, labels = row.names(GC.stan
 
 ###############################################################################################################
 #                           
-#                                 Indentify points outside the 95 percentile
+#                                 Identify points outside the 95 percentile
 #
 ###############################################################################################################
 
-plot(NULL, xlim = c( 4990 , 5010),
+range(GC.standards$CO2) 
+
+range(GC.standards$CO2.ppm)
+
+plot(NULL, xlim = range(GC.standards$CO2.ppm),
      
-     ylim = c(27000, 29000),
+     ylim = range(GC.standards$CO2) ,
      
      main = "CO2", xlab = "CO2" , ylab = "CO2.ppm" ) ;
+
+
+# plot(NULL, xlim = c( 4990 , 5010),
+#      
+#      ylim = c(27000, 29000),
+#      
+#      main = "CO2", xlab = "CO2" , ylab = "CO2.ppm" ) ;
+
 
 polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
 
@@ -493,11 +505,16 @@ abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.CO2
 text(x = GC.standards$CO2.ppm , y = GC.standards$CO2, labels = row.names(GC.standards) )
 
 
+####### give each point a unique id based on the row.name  ######
+
+GC.standards$P.ID <- row.names.data.frame(GC.standards) ;
+
+
 #### points that are outside of the 95 percentile ###
 
- OutRange.Points <- c(150 , 170 , 525 , 365 , 90 , 63 , 241 , 491 , 122 , 161 , 281 , 55 , 74 , 226 , 167 ,
-  
-  162 , 192 , 551 , 471 , 282 , 332 ,426 , 172) ;
+ OutRange.Points <- c('150' , '170' , '525' , '365', '90' , '63' , '241' , '491' , '122' , '161' , '281' , '55' , '74' , 
+                      
+                      '226' , '167' , '162' , '192' , '551' , '471' , '282' , '332' ,'426' , '172') ;
  
  anyDuplicated(OutRange.Points)
 
@@ -505,9 +522,9 @@ text(x = GC.standards$CO2.ppm , y = GC.standards$CO2, labels = row.names(GC.stan
  
  anyDuplicated(OutRange.Points)
  
- GC.standards[ OutRange.Points ,]
+ GC.standards[GC.standards$P.ID %in% OutRange.Points ,]
  
- OutRange.Points.1 <- GC.standards[ OutRange.Points ,] ;
+ OutRange.Points.1 <- GC.standards[GC.standards$P.ID %in% OutRange.Points ,];
  
  
  OutRange.Points.1 <- OutRange.Points.1[order(OutRange.Points.1$Sampling.Date) ,]
@@ -717,11 +734,18 @@ Quantile.Reg.N2O
 
 summary(Quantile.Reg.N2O)
 
-plot(NULL, xlim = c( min(GC.standards$N2O.ppm, na.rm = T), max(GC.standards$N2O.ppm , na.rm = T)),
+plot(NULL, xlim =range(GC.standards$N2O.ppm, na.rm = T), 
      
-     ylim = c(min(GC.standards$N2O , na.rm = T), max(GC.standards$N2O , na.rm = T)),
+     ylim = range(GC.standards$N2O , na.rm = T), 
      
      main = "N2O", xlab = "N2O" , ylab = "N2O.ppm" ) ;
+
+
+# plot(NULL, xlim =c(40,60), 
+#      
+#      ylim = c(40000,50000), 
+#      
+#      main = "N2O", xlab = "N2O" , ylab = "N2O.ppm" ) ;
 
 ####### calculations to plot quantile bands  #######
 
@@ -777,43 +801,157 @@ abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.N2O
 abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][2],
        
        col = "blue")
-text(x = GC.standards$N2O.ppm , y = GC.standards$N2O, labels = row.names(GC.standards) )
+text(x = GC.standards$N2O.ppm , y = GC.standards$N2O, labels = GC.standards$P.ID )
 
 ##### add outrange CO2 points ####
 
-points(N2O ~ N2O.ppm , data = GC.standards[OutRange.Points,],
+points(N2O ~ N2O.ppm , data = OutRange.Points.1,
        
        pch = 16 , 
        
        main="N2O", 
        
-       col = "red1")
+       col = "red")
 
-##### outrange CO2 points  are also outrange in N2O####
+##### out of range CO2 points  are also outrange in N2O####
+
+
+
+###############################################################################################################
+#                           
+#                                 Identify points outside the 95 percentile after
+#
+#                                 removal of CO2 points out of range
+#
+###############################################################################################################
 
 
 ##### remove out of range points  ######
 
+str(GC.standards)
 
+str(GC.standards[!GC.standards$P.ID %in% OutRange.Points ,])
 
-str(GC.standards[ - OutRange.Points ,])
-
-GC.standards.2 <- GC.standards[ - OutRange.Points ,];
+GC.standards.2 <- GC.standards[!GC.standards$P.ID %in% OutRange.Points ,];
 
 #####  check  ### 
 
-GC.standards.2[row.names(GC.standards) %in% OutRange.Points ,]
-
-OutRange.Points
+GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points ,]
 
 
-GC.standards.2[row.names(GC.standards.2) == 525,]
-GC.standards.2[row.names(GC.standards.2) == 526,]
-
-GC.standards.2[row.names(GC.standards.2) == 150,]
-GC.standards.2[row.names(GC.standards.2) == 151,]
+##### Do Quantile Regression  ####
 
 
+Quantile.Reg.N2O <- rq( N2O ~ N2O.ppm, data = GC.standards.2, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
+
+Quantile.Reg.N2O
+
+summary(Quantile.Reg.N2O)
+
+plot(NULL, xlim =range(GC.standards.2$N2O.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.2$N2O , na.rm = T), 
+     
+     main = "N2O", xlab = "N2O" , ylab = "N2O.ppm" ) ;
+
+
+# plot(NULL, xlim =c(45,55),
+# 
+#      ylim = c(40000,50000),
+# 
+#      main = "N2O", xlab = "N2O" , ylab = "N2O.ppm" ) ;
+
+####### calculations to plot quantile bands  #######
+
+range(GC.standards.2$N2O.ppm)[1]
+min(GC.standards.2$N2O.ppm)
+
+
+polygon.x <- c(min(GC.standards.2$N2O.ppm, na.rm = T) , max(GC.standards.2$N2O.ppm , na.rm = T) , 
+               
+               max(GC.standards.2$N2O.ppm , na.rm = T) , min(GC.standards.2$N2O.ppm, na.rm = T)) ;
+
+polygon.y <- c(y = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1],  Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2] * max(GC.standards.2$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2] * max(GC.standards.2$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
+
+
+####### All points in gray  #######
+
+points(N2O ~ N2O.ppm , data = GC.standards.2,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "gray")
+
+Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][2],
+       
+       col = "blue")
+text(x = GC.standards.2$N2O.ppm , y = GC.standards.2$N2O, labels = GC.standards.2$P.ID )
+
+
+########## Points that are outside the 95% interval ############################
+
+OutRange.Points.2 <- as.character(sort(c(221 , 44 , 80 , 166 , 89 , 531 , 245 , 231 , 250 , 95 , 100 , 45 , 197 , 20 , 246 , 257 , 507 ))) ;
+
+GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.2 ,]
+
+GC.standards.3 <- GC.standards.2[!GC.standards.2$P.ID %in% OutRange.Points.2 ,]
+
+
+points(N2O ~ N2O.ppm , data = GC.standards.3,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "blue")
+
+
+points(N2O ~ N2O.ppm , data = GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.2 ,],
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "red")
+
+
+###### check out of range points #####
+
+OutRange.Points.2
+
+OutRange.Points.3 <- GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.2 ,] ;
+
+OutRange.Points.3 <- OutRange.Points.3 [order(OutRange.Points.3$Sampling.Date) , ] ;
 
 ###############################################################################################################
 #                           
