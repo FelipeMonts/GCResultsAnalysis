@@ -14,6 +14,12 @@
 ############################################################################################################### 
 
 
+# source( file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects",
+# 
+# "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode" , 
+# 
+# "\\GCResultsAnalysis\\GC_Standards_2022.R"), echo = T )
+
 ###############################################################################################################
 #                            Install the packages that are needed                       
 ###############################################################################################################
@@ -398,6 +404,8 @@ range(GC.standards$CO2.ppm)[1]
 min(GC.standards$CO2.ppm)
 
 
+##### 95% confidence quartile polygon envelope   #########
+
 polygon.x <- c(min(GC.standards$CO2.ppm) , max(GC.standards$CO2.ppm) ,max(GC.standards$CO2.ppm) , min(GC.standards$CO2.ppm)) ;
 
 polygon.y <- c(y = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1],  Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] +
@@ -461,7 +469,7 @@ plot(NULL, xlim = range(GC.standards$CO2.ppm),
      
      ylim = range(GC.standards$CO2) ,
      
-     main = "CO2", xlab = "CO2" , ylab = "CO2.ppm" ) ;
+     main = "CO2", xlab = "CO2.ppm" , ylab = "CO2" ) ;
 
 
 # plot(NULL, xlim = c( 4990 , 5010),
@@ -470,6 +478,7 @@ plot(NULL, xlim = range(GC.standards$CO2.ppm),
 #      
 #      main = "CO2", xlab = "CO2" , ylab = "CO2.ppm" ) ;
 
+##### 95% confidence quartile polygon envelope   #########
 
 polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
 
@@ -530,6 +539,9 @@ GC.standards$P.ID <- row.names.data.frame(GC.standards) ;
  OutRange.Points.1 <- OutRange.Points.1[order(OutRange.Points.1$Sampling.Date) ,]
  
 
+ str(GC.standards)
+ 
+ str(OutRange.Points.1)
 
 ###############################################################################################################
 #                           
@@ -738,7 +750,7 @@ plot(NULL, xlim =range(GC.standards$N2O.ppm, na.rm = T),
      
      ylim = range(GC.standards$N2O , na.rm = T), 
      
-     main = "N2O", xlab = "N2O" , ylab = "N2O.ppm" ) ;
+     main = "N2O", xlab = "N2O.ppm" , ylab = "N2O" ) ;
 
 
 # plot(NULL, xlim =c(40,60), 
@@ -752,6 +764,8 @@ plot(NULL, xlim =range(GC.standards$N2O.ppm, na.rm = T),
 range(GC.standards$N2O.ppm)[1]
 min(GC.standards$N2O.ppm)
 
+
+##### 95% confidence quartile polygon envelope   #########
 
 polygon.x <- c(min(GC.standards$N2O.ppm, na.rm = T) , max(GC.standards$N2O.ppm , na.rm = T) , 
                
@@ -834,6 +848,8 @@ str(GC.standards[!GC.standards$P.ID %in% OutRange.Points ,])
 
 GC.standards.2 <- GC.standards[!GC.standards$P.ID %in% OutRange.Points ,];
 
+str(GC.standards.2)
+
 #####  check  ### 
 
 GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points ,]
@@ -852,7 +868,7 @@ plot(NULL, xlim =range(GC.standards.2$N2O.ppm, na.rm = T),
      
      ylim = range(GC.standards.2$N2O , na.rm = T), 
      
-     main = "N2O", xlab = "N2O" , ylab = "N2O.ppm" ) ;
+     main = "N2O", xlab = "N2O.ppm" , ylab = "N2O" ) ;
 
 
 # plot(NULL, xlim =c(45,55),
@@ -866,6 +882,7 @@ plot(NULL, xlim =range(GC.standards.2$N2O.ppm, na.rm = T),
 range(GC.standards.2$N2O.ppm)[1]
 min(GC.standards.2$N2O.ppm)
 
+##### 95% confidence quartile polygon envelope   #########
 
 polygon.x <- c(min(GC.standards.2$N2O.ppm, na.rm = T) , max(GC.standards.2$N2O.ppm , na.rm = T) , 
                
@@ -926,6 +943,8 @@ GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.2 ,]
 
 GC.standards.3 <- GC.standards.2[!GC.standards.2$P.ID %in% OutRange.Points.2 ,]
 
+str(GC.standards.3)
+
 
 points(N2O ~ N2O.ppm , data = GC.standards.3,
        
@@ -936,14 +955,6 @@ points(N2O ~ N2O.ppm , data = GC.standards.3,
        col = "blue")
 
 
-points(N2O ~ N2O.ppm , data = GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.2 ,],
-       
-       pch = 16 , 
-       
-       main="N2O", 
-       
-       col = "red")
-
 
 ###### check out of range points #####
 
@@ -953,49 +964,58 @@ OutRange.Points.3 <- GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.2 ,
 
 OutRange.Points.3 <- OutRange.Points.3 [order(OutRange.Points.3$Sampling.Date) , ] ;
 
+
+##############################################################################################################
+#                           
+#                           GC Date [2022-07-13]  Sampling.Date [2022-06-29]
+#
+###############################################################################################################
+
 ###############################################################################################################
 #                           
-#                                            N2O   Standards
+#                                       Check     N2O   Standards
 #
-###############################################################################################################  
+###############################################################################################################
 
 
+GC.standards[GC.standards$GC.Date == "2022-07-13",]
+
+
+######## GC NOTE  20220629_B1B2
+# 
+# The vials on Block 2, 3-SppN treatment B were switched with the vials of Block 2, 3SppN treatment C
+# 
+# 2-3SppN-B <-> 2-3SppN-C
+# 
+# The first half of the standards were pressure equilibrated, the second half were not.
+##############################
 
 ##### Do Quantile Regression  ####
 
 
-Quantile.Reg.N2O <- rq( N2O ~ N2O.ppm, data = GC.standards.2, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
+Quantile.Reg.N2O <- rq( N2O ~ N2O.ppm, data = GC.standards.3, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
 
 Quantile.Reg.N2O
 
 summary(Quantile.Reg.N2O)
 
-plot(NULL, xlim = c( min(GC.standards.2$N2O.ppm, na.rm = T), max(GC.standards.2$N2O.ppm , na.rm = T)),
+plot(NULL, xlim = range(GC.standards.3$N2O.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.3$N2O , na.rm = T), 
+     
+     main = "N2O", xlab = "N2O.ppm" , ylab = "N2O" ) ;
 
-     ylim = c(min(GC.standards.2$N2O , na.rm = T), max(GC.standards.2$N2O , na.rm = T)),
+##### 95% confidence quartile polygon envelope   #########
 
-     main = "N2O", xlab = "N2O" , ylab = "N2O.ppm" ) ;
-
-# plot(NULL, xlim = c(20,30 ),
-#      
-#      ylim = c(8200,8500),
-#      
-#      main = "N2O", xlab = "N2O" , ylab = "N2O.ppm" ) ;
-
-
-####### calculations to plot quantile bands  #######
-
-range(GC.standards.2$N2O.ppm)[1]
-min(GC.standards.2$N2O.ppm)
-
-
-polygon.x <- c(min(GC.standards.2$N2O.ppm) , max(GC.standards.2$N2O.ppm) ,max(GC.standards.2$N2O.ppm) , min(GC.standards.2$N2O.ppm)) ;
+polygon.x <- c(min(GC.standards.3$N2O.ppm, na.rm = T) , max(GC.standards.3$N2O.ppm , na.rm = T) , 
+               
+               max(GC.standards.3$N2O.ppm , na.rm = T) , min(GC.standards.3$N2O.ppm, na.rm = T)) ;
 
 polygon.y <- c(y = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1],  Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] +
                  
-                 (Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2] * max(GC.standards.2$N2O.ppm)),
+                 (Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$N2O.ppm)),
                
-               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2] * max(GC.standards.2$N2O.ppm)),
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$N2O.ppm)),
                
                Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] ) ;
 
@@ -1006,7 +1026,7 @@ polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f
 
 ####### All points in gray  #######
 
-points(N2O ~ N2O.ppm , data = GC.standards.2,
+points(N2O ~ N2O.ppm , data = GC.standards.3,
        
        pch = 16 , 
        
@@ -1035,78 +1055,65 @@ abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.N2O
 abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][2],
        
        col = "blue")
-text(x = GC.standards.2$N2O.ppm , y = GC.standards.2$N2O, labels = row.names(GC.standards.2) )
+#text(x = GC.standards.3$N2O.ppm , y = GC.standards.3$N2O, labels = GC.standards.3$P.ID )
 
 
+##### Select conditions  
 
 
-#### points that are outside of the 95 percentile ###
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf",]
 
-OutRange.Points.2 <- c(221, 245 , 231 , 250 , 44 , 166 , 80 , 89 , 531 ) ;   #### row.names  !!!!!!!!!
-
-anyDuplicated(OutRange.Points.2)
-
-GC.standards.2[ OutRange.Points.2 ,]
-
-OutRange.Points.1 <- GC.standards.2[ - OutRange.Points.2 ,] ;
-
-str(GC.standards.2)
-
-str(OutRange.Points.1)
-
-OutRange.Points.1 <- OutRange.Points.1[order(OutRange.Points.1$Sampling.Date) ,]
-
-#### add out of range points to the figure ######
-
-points(N2O ~ N2O.ppm , data = GC.standards.2[ OutRange.Points.2 ,],
+points(N2O ~ N2O.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & 
+                                                
+                                                GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf",] ,
        
        pch = 16 , 
        
-       col = "red1")
+       main="N2O", 
+       
+       col = "red")
+       
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "N2O.ppm"] ,
+     
+     y =GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "N2O"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "P.ID"])
+       
 
 
 
-
-##############################################################################################################
+###############################################################################################################
 #                           
-#      Plot all the standard calibration without points outside the quantiles as background 
-#  
+#                                       Check     CO2   Standards
 #
 ###############################################################################################################
-
-###############################################################################################################
-#                           
-#                                            CO2   Standards
-#
-############################################################################################################### 
-
 
 ##### Do Quantile Regression  ####
 
 
-Quantile.Reg.CO2 <- rq( CO2 ~ CO2.ppm, data = GC.standards.2, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
+Quantile.Reg.CO2 <- rq( CO2 ~ CO2.ppm, data = GC.standards.3, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
+
+Quantile.Reg.CO2
 
 summary(Quantile.Reg.CO2)
 
-plot(NULL, xlim = c( min(GC.standards.2$CO2.ppm), max(GC.standards.2$CO2.ppm)),
+plot(NULL, xlim = range(GC.standards.3$CO2.ppm, na.rm = T), 
      
-     ylim = c(min(GC.standards.2$CO2), max(GC.standards.2$CO2)),
+     ylim = range(GC.standards.3$CO2 , na.rm = T), 
      
-     main = "CO2", xlab = "CO2" , ylab = "CO2.ppm" ) ;
+     main = "CO2", xlab = "CO2.ppm" , ylab = "CO2" ) ;
 
-####### calculations to plot quantile bands  #######
+##### 95% confidence quartile polygon envelope   #########
 
-range(GC.standards.2$CO2.ppm)[1]
-min(GC.standards.2$CO2.ppm)
-
-
-polygon.x <- c(min(GC.standards.2$CO2.ppm) , max(GC.standards.2$CO2.ppm) ,max(GC.standards.2$CO2.ppm) , min(GC.standards.2$CO2.ppm)) ;
+polygon.x <- c(min(GC.standards.3$CO2.ppm, na.rm = T) , max(GC.standards.3$CO2.ppm , na.rm = T) , 
+               
+               max(GC.standards.3$CO2.ppm , na.rm = T) , min(GC.standards.3$CO2.ppm, na.rm = T)) ;
 
 polygon.y <- c(y = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1],  Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] +
                  
-                 (Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2] * max(GC.standards.2$CO2.ppm)),
+                 (Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$CO2.ppm)),
                
-               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2] * max(GC.standards.2$CO2.ppm)),
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$CO2.ppm)),
                
                Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] ) ;
 
@@ -1117,7 +1124,7 @@ polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f
 
 ####### All points in gray  #######
 
-points(CO2 ~ CO2.ppm , data = GC.standards.2,
+points(CO2 ~ CO2.ppm , data = GC.standards.3,
        
        pch = 16 , 
        
@@ -1146,168 +1153,33 @@ abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.CO2
 abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][2],
        
        col = "blue")
-text(x = GC.standards.2$CO2.ppm , y = GC.standards.2$CO2, labels = row.names(GC.standards.2) )
-
-
-
-
-
-##############################################################################################################
-#                           
-#                           GC Date [2022-07-13]  Sampling.Date [2022-06-29]
-#
-###############################################################################################################
-
-
-GC.standards[GC.standards$GC.Date == "2022-07-13",]
-
-
-######## GC NOTE  20220629_B1B2
-# 
-# The vials on Block 2, 3-SppN treatment B were switched with the vials of Block 2, 3SppN treatment C
-# 
-# 2-3SppN-B <-> 2-3SppN-C
-# 
-# The first half of the standards were pressure equilibrated, the second half were not.
-##############################
+#text(x = GC.standards.3$CO2.ppm , y = GC.standards.3$CO2, labels = GC.standards.3$P.ID )
 
 
 ##### Select conditions  
 
 
-GC.standards[GC.standards$Sampling.Date == "2022-06-29" & GC.standards$AnalysisName == "Summary20220629_B1B2.pdf", ]
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf",]
 
-GC.standards.20220629B1B2 <- GC.standards[GC.standards$Sampling.Date == "2022-06-29" & 
-                                        
-                                        GC.standards$AnalysisName == "Summary20220629_B1B2.pdf", ] ;
-
-GC.standards.20220629B1B2 <- GC.standards.20220629B1B2[order(GC.standards.20220629B1B2$Position),] ;
-
-dim.data.frame(GC.standards.20220629B1B2)
-
-plot(CO2 ~ CO2.ppm , data = GC.standards.20220629B1B2[1:15,], col= "red", xlim = c(0, 5000))
-points(CO2 ~ CO2.ppm, data = GC.standards.20220629B1B2[16:25,], col= "blue")
-
-plot(N2O ~ N2O.ppm , data = GC.standards.20220629B1B2[1:15,], col= "red", xlim = c(0, 50))
-points(N2O ~ N2O.ppm, data = GC.standards.20220629B1B2[16:25,], col= "blue")
-
-
-plot(CH4 ~ CH4.ppm , data = GC.standards.20220629B1B2[1:15,], col= "red", xlim = c(0, 50))
-points(CH4 ~ CH4.ppm, data = GC.standards.20220629B1B2[16:25,], col= "blue")
-
-###### no practical difference between the sets ,  keep both ###########
-
-rm(GC.standards.20220629B1B2)
-
-
-####### Plot Calibration line  for  CO2 #######
-
-GC.standards[GC.standards$Sampling.Date == "2022-06-29",]
-
-plot(CO2.ppm ~ CO2, 
-     
-     data = GC.standards[GC.standards$Sampling.Date == "2022-06-29",],
-     
-     main = "2022-06-30",
-     
-     col = "blue",
-     
-     type = "p")  ;
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "CO2"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "CO2.ppm"],
-      
-      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "Sample.Name"],
-      
-      pos = 3);
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "CO2"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "CO2.ppm"],
-      
-      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,]),
-      
-      pos = 1);
-
-
-###### Calculate calibration line CO2 #######
-
-CAL.CO2.2022_06_29 <- lm(CO2.ppm ~ CO2,
-                         
-                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-29",])
-
-
-
-summary(CAL.CO2.2022_06_29) 
-
-abline(a = CAL.CO2.2022_06_29$coefficients[1] ,
+points(CO2 ~ CO2.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & 
+                                                
+                                                GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf",] ,
        
-       b = CAL.CO2.2022_06_29$coefficients[2] , 
+       pch = 16 , 
        
-       col = "red") ;
-
-text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-29", c("CO2")]),
-      
-      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-29", c("CO2.ppm")]),
-      
-      labels = paste(round(CAL.CO2.2022_06_29$coefficients[1],3), round(CAL.CO2.2022_06_29$coefficients[2],3), sep = "+"))
-
-
-
-####### Plot Calibration line  for N2O #######
-
-plot(N2O.ppm ~ N2O, 
-     
-     data = GC.standards[GC.standards$Sampling.Date == "2022-06-29",],
-     
-     main = "2022-06-29",
-     
-     col = "blue",
-     
-     type = "p")  ;
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "N2O"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "N2O.ppm"],
-      
-      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "Sample.Name"],
-      
-      pos = 3);
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "N2O"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-29", "N2O.ppm"],
-      
-      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,]),
-      
-      pos = 1);
-
-###### Calculate calibration line N2O #######
-
-CAL.N2O.2022_06_29 <- lm(N2O.ppm ~ N2O,
-                         
-                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-29",] )
-                         
-
-
-
-
-summary(CAL.N2O.2022_06_29) 
-
-abline(a = CAL.N2O.2022_06_29$coefficients[1] ,
+       main="CO2", 
        
-       b = CAL.N2O.2022_06_29$coefficients[2] , 
-       
-       col = "red") ;
+       col = "red")
 
-text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-29", c("N2O")]),
-      
-      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-29", c("N2O.ppm")]),
-      
-      labels = paste(round(CAL.N2O.2022_06_29$coefficients[1],3), round(CAL.N2O.2022_06_29$coefficients[2],3), sep = "+")
-      
-)
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "CO2.ppm"] ,
+     
+     y = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "CO2"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "P.ID"])
+
+
+
+####### all the remaining points are within range for N2O or for CO2. Points are OK  ###################
 
 
 
