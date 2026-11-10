@@ -16,7 +16,7 @@
 
 # source( file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects",
 # 
-# "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode" , 
+# "\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode" ,
 # 
 # "\\GCResultsAnalysis\\GC_Standards_2022.R"), echo = T )
 
@@ -958,11 +958,38 @@ points(N2O ~ N2O.ppm , data = GC.standards.3,
 
 ###### check out of range points #####
 
-OutRange.Points.2
+OutRange.Points.1
 
 OutRange.Points.3 <- GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.2 ,] ;
 
 OutRange.Points.3 <- OutRange.Points.3 [order(OutRange.Points.3$Sampling.Date) , ] ;
+
+OutRange.Points.All <- rbind(OutRange.Points.1 , OutRange.Points.3)
+
+
+##############################################################################################################
+#                           
+#                           Do Quantile Regresion with out out of range points
+#
+###############################################################################################################
+
+##### Do Quantile Regression for N2O ####
+
+
+Quantile.Reg.N2O <- rq( N2O ~ N2O.ppm, data = GC.standards.3, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
+
+Quantile.Reg.N2O
+
+summary(Quantile.Reg.N2O)
+
+
+##### Do Quantile Regression for CO2 ####
+
+Quantile.Reg.CO2 <- rq( CO2 ~ CO2.ppm, data = GC.standards.3, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
+
+Quantile.Reg.CO2
+
+summary(Quantile.Reg.CO2)
 
 
 ##############################################################################################################
@@ -990,14 +1017,8 @@ GC.standards[GC.standards$GC.Date == "2022-07-13",]
 # The first half of the standards were pressure equilibrated, the second half were not.
 ##############################
 
-##### Do Quantile Regression  ####
 
 
-Quantile.Reg.N2O <- rq( N2O ~ N2O.ppm, data = GC.standards.3, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
-
-Quantile.Reg.N2O
-
-summary(Quantile.Reg.N2O)
 
 plot(NULL, xlim = range(GC.standards.3$N2O.ppm, na.rm = T), 
      
@@ -1058,26 +1079,45 @@ abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.N2O
 #text(x = GC.standards.3$N2O.ppm , y = GC.standards.3$N2O, labels = GC.standards.3$P.ID )
 
 
-##### Select conditions  
+
+##### Select conditions 
 
 
-GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf",]
+GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,]
 
-points(N2O ~ N2O.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & 
-                                                
-                                                GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf",] ,
+points(N2O ~ N2O.ppm ,  data = GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,] ,
        
        pch = 16 , 
        
        main="N2O", 
        
        col = "red")
+
+text(x = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "N2O.ppm"] ,
+     
+     y =GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "N2O"] ,
+     
+     labels = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "P.ID"])
+
+
+
+
+
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" ,]
+
+points(N2O ~ N2O.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" ,] ,
        
-text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "N2O.ppm"] ,
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "blue")
+       
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" , "N2O.ppm"] ,
      
-     y =GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "N2O"] ,
+     y =GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" , "N2O"] ,
      
-     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "P.ID"])
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" , "P.ID"])
        
 
 
@@ -1088,14 +1128,6 @@ text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standa
 #
 ###############################################################################################################
 
-##### Do Quantile Regression  ####
-
-
-Quantile.Reg.CO2 <- rq( CO2 ~ CO2.ppm, data = GC.standards.3, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
-
-Quantile.Reg.CO2
-
-summary(Quantile.Reg.CO2)
 
 plot(NULL, xlim = range(GC.standards.3$CO2.ppm, na.rm = T), 
      
@@ -1159,11 +1191,10 @@ abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.CO2
 ##### Select conditions  
 
 
-GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf",]
 
-points(CO2 ~ CO2.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & 
-                                                
-                                                GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf",] ,
+GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,]
+
+points(CO2 ~ CO2.ppm ,  data = GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,] ,
        
        pch = 16 , 
        
@@ -1171,292 +1202,33 @@ points(CO2 ~ CO2.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2
        
        col = "red")
 
-text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "CO2.ppm"] ,
+text(x = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "CO2.ppm"] ,
      
-     y = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "CO2"] ,
+     y = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "CO2"] ,
      
-     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" & GC.standards.3$AnalysisName == "Summary20220629_B1B2.pdf", "P.ID"])
+     labels = GC.standards[GC.standards$Sampling.Date == "2022-06-29"  , "P.ID"])
 
+
+
+
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" ,]
+
+points(CO2 ~ CO2.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" ,] ,
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       col = "blue")
+
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" , "CO2.ppm"] ,
+     
+     y = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" , "CO2"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29"  , "P.ID"])
 
 
 ####### all the remaining points are within range for N2O or for CO2. Points are OK  ###################
-
-
-
-##############################################################################################################
-#                           
-#                           GC Date [2022-08-09]  Sampling.Date [2022-06-09]
-#
-###############################################################################################################
-
-
-GC.standards[GC.standards$GC.Date == "2022-08-09",]
-
-
-####### Plot Calibration line  for  CO2 #######
-
-plot(CO2.ppm ~ CO2, 
-     
-     data = GC.standards[GC.standards$Sampling.Date == "2022-06-09",],
-     
-     main = "2022-06-09",
-     
-     col = "blue",
-     
-     type = "p")  ;
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "CO2"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "CO2.ppm"],
-      
-      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-09" , "Sample.Name"],
-      
-      pos = 3);
-
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "CO2"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "CO2.ppm"],
-      
-      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-09" ,]),
-      
-      pos = 1);
-
-
-###### Calculate calibration line CO2 #######
-
-CAL.CO2.2022_06_09 <- lm(CO2.ppm ~ CO2,
-                         
-                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-09",])
-
-
-
-summary(CAL.CO2.2022_06_09) 
-
-abline(a = CAL.CO2.2022_06_09$coefficients[1] ,
-       
-       b = CAL.CO2.2022_06_09$coefficients[2] , 
-       
-       col = "red") ;
-
-text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-09", c("CO2")]),
-      
-      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-09", c("CO2.ppm")]),
-      
-      labels = paste(round(CAL.CO2.2022_06_09$coefficients[1],3), round(CAL.CO2.2022_06_09$coefficients[2],3), sep = "+"))
-
-
-
-####### Plot Calibration line  for N2O #######
-
-plot(N2O.ppm ~ N2O, 
-     
-     data = GC.standards[GC.standards$Sampling.Date == "2022-06-09",],
-     
-     main = "2022-06-09",
-     
-     col = "blue",
-     
-     type = "p")  ;
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "N2O"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "N2O.ppm"],
-      
-      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-09" , "Sample.Name"],
-      
-      pos = 3);
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "N2O"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-09", "N2O.ppm"],
-      
-      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-09" ,]),
-      
-      pos = 1);
-
-###### Calculate calibration line N2O #######
-
-CAL.N2O.2022_06_09 <- lm(N2O.ppm ~ N2O,
-                         
-                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-09",],
-                         
-)
-
-
-
-summary(CAL.N2O.2022_06_09) 
-
-abline(a = CAL.N2O.2022_06_09$coefficients[1] ,
-       
-       b = CAL.N2O.2022_06_09$coefficients[2] , 
-       
-       col = "red") ;
-
-text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-09", c("N2O")]),
-      
-      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-09", c("N2O.ppm")]),
-      
-      labels = paste(round(CAL.N2O.2022_06_09$coefficients[1],3), round(CAL.N2O.2022_06_09$coefficients[2],3), sep = "+")
-      
-)
-
-
-points(N2O.ppm ~ N2O, 
-       
-       data = GC.standards[rownames(GC.standards) == "454", ],
-       
-       main = "2022-06-09",
-       
-       col = "red",
-       
-       cex = 2,
-       
-       pch = 19) ;
-
-##### Remove outliers row names 454 ####### 
-
-GC.standards[rownames(GC.standards) == "454", ]
-
-GC.standards <- GC.standards[!rownames(GC.standards) == "454", ] ;
-
-##############################################################################################################
-#                           
-#                           Cumulative plot for 2022
-#
-###############################################################################################################
-
-##### data to plot  CO2 #####
-
-str(GC.standards$Sampling.Date)
-
-Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09")
-
-
-Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
-
-str(Cum.Plot.Data)
-
-xyplot(CO2 ~ CO2.ppm, 
-       
-       groups = GC.Date, 
-       
-       data = Cum.Plot.Data, 
-       
-       pch =16, 
-       
-       main="CO2", 
-       
-       auto.key = T, 
-
-      panel=function(x, y, ...){
-        
-        panel.xyplot(x, y, ...)
-        
-        panel.text(x=x, y=y, 
-                   
-                   labels= rownames(Cum.Plot.Data), 
-                   
-                   pos=1)
-        
-      })
-
-
-text( x = Cum.Plot.Data$CO2.ppm,
-      
-      y = Cum.Plot.Data$CO2,
-      
-      labels = rownames(Cum.Plot.Data),
-      
-      pos = 1);
-
-
-
-##### data to plot  N20 #####
-
-str(GC.standards$Sampling.Date)
-
-Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09")
-
-
-Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
-
-str(Cum.Plot.Data)
-
-xyplot(N2O ~ N2O.ppm, 
-       
-       groups = GC.Date, 
-       
-       data = Cum.Plot.Data, 
-       
-       pch =16, 
-       
-       main = "N2O", 
-       
-       auto.key = T, 
-       
-       panel=function(x, y, ...){
-         
-         panel.xyplot(x, y, ...)
-         
-         panel.text(x=x, y=y, 
-                    
-                    labels= rownames(Cum.Plot.Data), 
-                    
-                    pos=1)
-         
-       }
-       
-)
-       
-
-
-GC.standards[rownames(GC.standards) == "421", ]
-
-
-##### Remove outliers row names 421 ####### 
-
-GC.standards[rownames(GC.standards) == "421", ]
-
-GC.standards <- GC.standards[!rownames(GC.standards) == "421", ] ;
-
-
-##### data to plot  CO2 #####
-
-str(GC.standards$Sampling.Date)
-
-Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09")
-
-
-Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
-
-str(Cum.Plot.Data)
-
-xyplot(CO2 ~ CO2.ppm, 
-       
-       groups = GC.Date, 
-       
-       data = Cum.Plot.Data, 
-       
-       pch =16, 
-       
-       main="CO2", 
-       
-       auto.key = T, 
-
-      panel=function(x, y, ...){
-        
-        panel.xyplot(x, y, ...)
-        
-        panel.text(x=x, y=y, 
-                   
-                   labels= rownames(Cum.Plot.Data), 
-                   
-                   pos=1)
-        
-      })
-
-
 
 
 ##############################################################################################################
@@ -1468,226 +1240,220 @@ xyplot(CO2 ~ CO2.ppm,
 
 GC.standards[GC.standards$GC.Date == "2022-08-10",]
 
-
-####### Plot Calibration line  for  CO2 #######
-
-plot(CO2.ppm ~ CO2, 
-     
-     data = GC.standards[GC.standards$Sampling.Date == "2022-06-23",],
-     
-     main = "2022-06-23",
-     
-     col = "blue",
-     
-     type = "p")  ;
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "CO2"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "CO2.ppm"],
-      
-      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-23" , "Sample.Name"],
-      
-      pos = 3);
-
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "CO2"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "CO2.ppm"],
-      
-      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-23" ,]),
-      
-      pos = 1);
-
-
-###### Calculate calibration line CO2 #######
-
-CAL.CO2.2022_06_23 <- lm(CO2.ppm ~ CO2,
-                         
-                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-23",])
-
-
-
-summary(CAL.CO2.2022_06_23) 
-
-abline(a = CAL.CO2.2022_06_23$coefficients[1] ,
-       
-       b = CAL.CO2.2022_06_23$coefficients[2] , 
-       
-       col = "red") ;
-
-text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-23", c("CO2")]),
-      
-      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-23", c("CO2.ppm")]),
-      
-      labels = paste(round(CAL.CO2.2022_06_23$coefficients[1],3), round(CAL.CO2.2022_06_23$coefficients[2],3), sep = "+"))
-
-
-
-####### Plot Calibration line  for N2O #######
-
-plot(N2O.ppm ~ N2O, 
-     
-     data = GC.standards[GC.standards$Sampling.Date == "2022-06-23",],
-     
-     main = "2022-06-23",
-     
-     col = "blue",
-     
-     type = "p")  ;
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "N2O"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "N2O.ppm"],
-      
-      labels = GC.standards[GC.standards$Sampling.Date == "2022-06-23" , "Sample.Name"],
-      
-      pos = 3);
-
-text( x = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "N2O"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == "2022-06-23", "N2O.ppm"],
-      
-      labels = rownames(GC.standards[GC.standards$Sampling.Date == "2022-06-23" ,]),
-      
-      pos = 1);
-
-###### Calculate calibration line N2O #######
-
-CAL.N2O.2022_06_23 <- lm(N2O.ppm ~ N2O,
-                         
-                         data = GC.standards[GC.standards$Sampling.Date == "2022-06-23",],
-                         
-)
-
-
-
-summary(CAL.N2O.2022_06_23) 
-
-abline(a = CAL.N2O.2022_06_23$coefficients[1] ,
-       
-       b = CAL.N2O.2022_06_23$coefficients[2] , 
-       
-       col = "red") ;
-
-text( x = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-23", c("N2O")]),
-      
-      y = mean(GC.standards[GC.standards$Sampling.Date == "2022-06-23", c("N2O.ppm")]),
-      
-      labels = paste(round(CAL.N2O.2022_06_23$coefficients[1],3), round(CAL.N2O.2022_06_23$coefficients[2],3), sep = "+")
-      
-)
-
-
-
-
-
-points(N2O.ppm ~ N2O, 
-       
-       data = GC.standards[rownames(GC.standards) == "716", ],
-       
-       col = "red",
-       
-       cex = 2,
-       
-       pch = 19) ;
-
-##### Remove outliers row names 454 ####### 
-
-GC.standards[rownames(GC.standards) == "454", ]
-
-GC.standards <- GC.standards[!rownames(GC.standards) == "454", ] ;
-
-##############################################################################################################
+###############################################################################################################
 #                           
-#                           Cumulative plot for 2022
+#                                       Check     CO2   Standards
 #
 ###############################################################################################################
 
-##### data to plot  CO2 #####
 
-str(GC.standards$Sampling.Date)
+plot(NULL, xlim = range(GC.standards.3$CO2.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.3$CO2 , na.rm = T), 
+     
+     main = "CO2", xlab = "CO2.ppm" , ylab = "CO2" ) ;
 
-Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09", "2022-06-23")
+##### 95% confidence quartile polygon envelope   #########
+
+polygon.x <- c(min(GC.standards.3$CO2.ppm, na.rm = T) , max(GC.standards.3$CO2.ppm , na.rm = T) , 
+               
+               max(GC.standards.3$CO2.ppm , na.rm = T) , min(GC.standards.3$CO2.ppm, na.rm = T)) ;
+
+polygon.y <- c(y = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1],  Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
 
 
-Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
+####### All points in gray  #######
 
-str(Cum.Plot.Data)
-
-xyplot(CO2 ~ CO2.ppm, 
+points(CO2 ~ CO2.ppm , data = GC.standards.3,
        
-       groups = GC.Date, 
-       
-       data = Cum.Plot.Data, 
-       
-       pch =16, 
+       pch = 16 , 
        
        main="CO2", 
        
-       auto.key = T, 
+       col = "gray")
+
+Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2],
        
-       panel=function(x, y, ...){
-         
-         panel.xyplot(x, y, ...)
-         
-         panel.text(x=x, y=y, 
-                    
-                    labels= rownames(Cum.Plot.Data), 
-                    
-                    pos=1)
-         
-       })
+       col = "red1")
 
-
-
-
-##### data to plot  N20 #####
-
-str(GC.standards$Sampling.Date)
-
-
-str(Cum.Plot.Data)
-
-xyplot(N2O ~ N2O.ppm, 
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2],
        
-       groups = GC.Date, 
+       col = "red1")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][2],
        
-       data = Cum.Plot.Data, 
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][2],
        
-       pch =16, 
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][2],
        
-       main = "N2O", 
+       col = "blue")
+#text(x = GC.standards.3$CO2.ppm , y = GC.standards.3$CO2, labels = GC.standards.3$P.ID )
+
+
+##### Select conditions  
+
+GC.standards[GC.standards$Sampling.Date == "2022-06-23" ,]
+
+points(CO2 ~ CO2.ppm ,  data = GC.standards[GC.standards$Sampling.Date == "2022-06-23" ,] ,
        
-       auto.key = T, 
+       pch = 16 , 
        
-       panel=function(x, y, ...){
-         
-         panel.xyplot(x, y, ...)
-         
-         panel.text(x=x, y=y, 
-                    
-                    labels= rownames(Cum.Plot.Data), 
-                    
-                    pos=1)
-         
-       }
+       main="CO2", 
        
-)
+       col = "red")
+
+text(x = GC.standards[GC.standards$Sampling.Date == "2022-06-23" , "CO2.ppm"] ,
+     
+     y = GC.standards[GC.standards$Sampling.Date == "2022-06-23" , "CO2"] ,
+     
+     labels = GC.standards[GC.standards$Sampling.Date == "2022-06-23" , "P.ID"])
+
+
+
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-23" ,]
+
+points(CO2 ~ CO2.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-23" ,] ,
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       col = "blue")
+
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-23" , "CO2.ppm"] ,
+     
+     y = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-23" , "CO2"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-23" , "P.ID"])
+
+
+
+###############################################################################################################
+#                           
+#                                       Check     N2O   Standards
+#
+###############################################################################################################
+
+OutRange.Points.All
+
+
+GC.standards[GC.standards$GC.Date == "2022-07-13",]
+
+
+plot(NULL, xlim = range(GC.standards.3$N2O.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.3$N2O , na.rm = T), 
+     
+     main = "N2O", xlab = "N2O.ppm" , ylab = "N2O" ) ;
+
+##### 95% confidence quartile polygon envelope   #########
+
+polygon.x <- c(min(GC.standards.3$N2O.ppm, na.rm = T) , max(GC.standards.3$N2O.ppm , na.rm = T) , 
+               
+               max(GC.standards.3$N2O.ppm , na.rm = T) , min(GC.standards.3$N2O.ppm, na.rm = T)) ;
+
+polygon.y <- c(y = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1],  Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
+
+
+####### All points in gray  #######
+
+points(N2O ~ N2O.ppm , data = GC.standards.3,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "gray")
+
+Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][2],
+       
+       col = "blue")
+#text(x = GC.standards.3$N2O.ppm , y = GC.standards.3$N2O, labels = GC.standards.3$P.ID )
+
+
+
+##### Select conditions
+
+GC.standards[GC.standards$Sampling.Date == "2022-06-23" ,]
+
+points(N2O ~ N2O.ppm ,  data = GC.standards[GC.standards$Sampling.Date == "2022-06-23" ,] ,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "red")
+
+text(x = GC.standards[GC.standards$Sampling.Date == "2022-06-23" , "N2O.ppm"] ,
+     
+     y =GC.standards[GC.standards$Sampling.Date == "2022-06-23" , "N2O"] ,
+     
+     labels = GC.standards[GC.standards$Sampling.Date == "2022-06-23" , "P.ID"])
 
 
 
 
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-23" ,]
 
+points(N2O ~ N2O.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-23" ,] ,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "blue")
 
-##### Remove outliers row names  ####### 
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-23" , "N2O.ppm"] ,
+     
+     y =GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-23" , "N2O"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-23" , "P.ID"])
 
-# GC.standards[rownames(GC.standards) == "421", ]
-
-# GC.standards <- GC.standards[!rownames(GC.standards) == "421", ] ;
-
-
-
-
+####### all the remaining points are within range for N2O or for CO2. Points are OK  ###################
 
 
 ##############################################################################################################
@@ -1696,899 +1462,229 @@ xyplot(N2O ~ N2O.ppm,
 #
 ###############################################################################################################
 
-
+OutRange.Points.All
 
 GC.standards[GC.standards$GC.Date == "2022-08-19",]
 
 
-i = "2022-06-29" 
-
-j = "2022_06_29"
-
-####### Plot Calibration line  for  CO2 #######
-
-plot(CO2.ppm ~ CO2, 
-     
-     data = GC.standards[GC.standards$Sampling.Date == i,],
-     
-     main = i ,
-     
-     col = "blue",
-     
-     type = "p")  ;
-
-text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-      
-      labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-      
-      pos = 3);
-
-
-text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-      
-      labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-      
-      pos = 1);
-
-
-
-###### Calculate calibration line CO2 #######
-
-assign(paste("CAL.CO2.", j, sep = ""), lm(CO2.ppm ~ CO2,
-                                   
-                                   data = GC.standards[GC.standards$Sampling.Date == i , ]))
-
-
-summary(get(paste("CAL.CO2.", j, sep = "")))
-
-get(paste("CAL.CO2.", j,sep = ""))[[1]][1]
-
-abline(a = get(paste("CAL.CO2.", j,sep = ""))[[1]][1] ,
-       
-       b = get(paste("CAL.CO2.", j,sep = ""))[[1]][2], 
-       
-       col = "red") ;
-
-text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2")]),
-      
-      y = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2.ppm")]),
-      
-      labels = paste(round(get(paste("CAL.CO2.", j,sep = ""))[[1]][1],3), 
-                     
-                     round(get(paste("CAL.CO2.", j,sep = ""))[[1]][2],3), 
-                     
-                     sep = "+")
-      )
-
-
-
-####### Plot Calibration line  for N2O #######
-
-plot(N2O.ppm ~ N2O, 
-     
-     data = GC.standards[GC.standards$Sampling.Date == i,],
-     
-     main = i,
-     
-     col = "blue",
-     
-     type = "p")  ;
-
-text( x = GC.standards[GC.standards$Sampling.Date == i , "N2O"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == i , "N2O.ppm"],
-      
-      labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-      
-      pos = 3);
-
-text( x = GC.standards[GC.standards$Sampling.Date == i, "N2O"],
-      
-      y = GC.standards[GC.standards$Sampling.Date == i, "N2O.ppm"],
-      
-      labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-      
-      pos = 1);
-
-###### Calculate calibration line N2O #######
-
-assign(paste("CAL.N2O.", j, sep = ""), lm(N2O.ppm ~ N2O,
-                                          
-                                          data = GC.standards[GC.standards$Sampling.Date == i,]))
-
-
-
-summary(get(paste("CAL.N2O.", j, sep = "")))
-
-abline(a = get(paste("CAL.N2O.", j, sep = ""))[[1]][1] ,
-       
-       b = get(paste("CAL.N2O.", j, sep = ""))[[1]][2], 
-       
-       col = "red") ;
-
-text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O")]),
-      
-      y = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O.ppm")]),
-      
-      labels = paste(round(get(paste("CAL.N2O.", j, sep = ""))[[1]][1],3), round(get(paste("CAL.N2O.", j, sep = ""))[[1]][2],3), sep = "+")
-      
-)
-
-
-
-
-
-
-
-points(N2O.ppm ~ N2O, 
-       
-       data = GC.standards[rownames(GC.standards) == "716", ],
-       
-       col = "red",
-       
-       cex = 2,
-       
-       pch = 19) ;
-
-##### Remove outliers row names 454 ####### 
-
-# GC.standards[rownames(GC.standards) == "454", ]
-
-# GC.standards <- GC.standards[!rownames(GC.standards) == "454", ] ;
-
-##############################################################################################################
+###############################################################################################################
 #                           
-#                           Cumulative plot for 2022
+#                                       Check     CO2   Standards
 #
 ###############################################################################################################
 
-##### data to plot  CO2 #####
 
-i
+plot(NULL, xlim = range(GC.standards.3$CO2.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.3$CO2 , na.rm = T), 
+     
+     main = "CO2", xlab = "CO2.ppm" , ylab = "CO2" ) ;
 
-str(GC.standards$Sampling.Date)
+##### 95% confidence quartile polygon envelope   #########
 
-Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09", "2022-06-23" , "2022-06-29")
+polygon.x <- c(min(GC.standards.3$CO2.ppm, na.rm = T) , max(GC.standards.3$CO2.ppm , na.rm = T) , 
+               
+               max(GC.standards.3$CO2.ppm , na.rm = T) , min(GC.standards.3$CO2.ppm, na.rm = T)) ;
+
+polygon.y <- c(y = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1],  Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
 
 
-Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
+####### All points in gray  #######
 
-str(Cum.Plot.Data)
-
-Cum.Plot.CO2 <- xyplot(CO2 ~ CO2.ppm, 
+points(CO2 ~ CO2.ppm , data = GC.standards.3,
        
-       groups = GC.Date, 
-       
-       data = Cum.Plot.Data, 
-       
-       pch =16, 
+       pch = 16 , 
        
        main="CO2", 
        
-       auto.key = T, 
+       col = "gray")
+
+Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2],
        
-       panel=function(x, y, ...){
-         
-         panel.xyplot(x, y, ...)
-         
-         panel.text(x=x, y=y, 
-                    
-                    labels= rownames(Cum.Plot.Data), 
-                    
-                    pos=1)
-         
-       })
+       col = "red1")
 
-Cum.Plot.CO2
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2],
+       
+       col = "red1")
 
-## insert additional points
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][2],
+       
+       col = "red4")
 
-update(Cum.Plot.CO2, panel = function(...) {
-  
-  panel.xyplot(...)
-  
-  panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == "2022-06-29", "CO2.ppm" ],
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][2],
+       
+       col = "blue")
+#text(x = GC.standards.3$CO2.ppm , y = GC.standards.3$CO2, labels = GC.standards.3$P.ID )
+
+
+##### Select conditions  
+
+GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,]
+
+points(CO2 ~ CO2.ppm ,  data = GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,] ,
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       col = "red")
+
+text(x = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "CO2.ppm"] ,
+     
+     y = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "CO2"] ,
+     
+     labels = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "P.ID"])
+
+
+
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" ,]
+
+points(CO2 ~ CO2.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" ,] ,
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       col = "blue")
+
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" , "CO2.ppm"] ,
+     
+     y = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" , "CO2"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" , "P.ID"])
+
+
+
+###############################################################################################################
+#                           
+#                                       Check     N2O   Standards
+#
+###############################################################################################################
+
+OutRange.Points.All
+
+
+GC.standards[GC.standards$GC.Date == "2022-07-13",]
+
+
+plot(NULL, xlim = range(GC.standards.3$N2O.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.3$N2O , na.rm = T), 
+     
+     main = "N2O", xlab = "N2O.ppm" , ylab = "N2O" ) ;
+
+##### 95% confidence quartile polygon envelope   #########
+
+polygon.x <- c(min(GC.standards.3$N2O.ppm, na.rm = T) , max(GC.standards.3$N2O.ppm , na.rm = T) , 
                
-               y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == "2022-06-29", "CO2" ], 
+               max(GC.standards.3$N2O.ppm , na.rm = T) , min(GC.standards.3$N2O.ppm, na.rm = T)) ;
+
+polygon.y <- c(y = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1],  Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$N2O.ppm)),
                
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$N2O.ppm)),
                
-               pch = 19,
-               
-               col = "red",
-               
-               cex = 1.5
-               
-               )
-  
-  panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == "2022-06-29", "CO2.ppm" ],
-             
-             y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == "2022-06-29", "CO2" ], 
-             
-             labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == "2022-06-29",]), 
-             
-             pos=1)
-})
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] ) ;
 
-##### data to plot  N20 #####
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
 
-str(GC.standards$Sampling.Date)
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
 
 
-str(Cum.Plot.Data)
+####### All points in gray  #######
 
-Cum.Plot.N2O <- xyplot(N2O ~ N2O.ppm, 
+points(N2O ~ N2O.ppm , data = GC.standards.3,
        
-       groups = GC.Date, 
+       pch = 16 , 
        
-       data = Cum.Plot.Data, 
+       main="N2O", 
        
-       pch =16, 
-       
-       main = "N2O", 
-       
-       auto.key = T, 
-       
-       panel=function(x, y, ...){
-         
-         panel.xyplot(x, y, ...)
-         
-         panel.text(x=x, y=y, 
-                    
-                    labels= rownames(Cum.Plot.Data), 
-                    
-                    pos=1)
-         
-       }
-       
-)
+       col = "gray")
 
-Cum.Plot.N2O
+Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1]
 
-update(Cum.Plot.N2O, panel = function(...) {
-  
-  panel.xyplot(...)
-  
-  panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == "2022-06-29", "N2O.ppm" ],
-               
-               y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == "2022-06-29", "N2O" ], 
-               
-               
-               pch = 19,
-               
-               col = "red",
-               
-               cex = 1.5
-               
-  )
-  
-  panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == "2022-06-29", "N2O.ppm" ],
-             
-             y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == "2022-06-29", "N2O" ], 
-             
-             labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == "2022-06-29",]), 
-             
-             pos=1)
-})
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][2],
+       
+       col = "blue")
+#text(x = GC.standards.3$N2O.ppm , y = GC.standards.3$N2O, labels = GC.standards.3$P.ID )
+
+
+
+##### Select conditions
+
+GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,]
+
+points(N2O ~ N2O.ppm ,  data = GC.standards[GC.standards$Sampling.Date == "2022-06-29" ,] ,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "red")
+
+text(x = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "N2O.ppm"] ,
+     
+     y =GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "N2O"] ,
+     
+     labels = GC.standards[GC.standards$Sampling.Date == "2022-06-29" , "P.ID"])
 
 
 
 
-##### Remove outliers row names  ####### 
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" ,]
 
- GC.standards[rownames(GC.standards) == "924", ]
+points(N2O ~ N2O.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" ,] ,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "blue")
 
- GC.standards <- GC.standards[!rownames(GC.standards) == "924", ] ;
-
- GC.standards[rownames(GC.standards) == "842", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "842", ] ;
-
- GC.standards[rownames(GC.standards) == "888", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "888", ] ;
-
- GC.standards[rownames(GC.standards) == "1319", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "1319", ] ;
-
- GC.standards[rownames(GC.standards) == "877", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "877", ] ;
-
- GC.standards[rownames(GC.standards) == "893", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "893", ] ;
-
- GC.standards[rownames(GC.standards) == "842", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "842", ] ;
-
- GC.standards[rownames(GC.standards) == "926", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "926", ] ;
-
- GC.standards[rownames(GC.standards) == "1308", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "1308", ] ;
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" , "N2O.ppm"] ,
+     
+     y =GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" , "N2O"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-06-29" , "P.ID"])
 
 
- ##############################################################################################################
- #                           
- #                           GC Date [2022-08-31]  Sampling.Date [2022-06-15]
- #
- ###############################################################################################################
-  
- 
- 
- 
- GC.standards[GC.standards$GC.Date == "2022-08-31",]
- 
- 
- i = "2022-06-15" 
- 
- j = "2022_06_15"
- 
- ####### Plot Calibration line  for  CO2 #######
- 
- plot(CO2.ppm ~ CO2, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i ,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- 
- 
- ###### Calculate calibration line CO2 #######
- 
- assign(paste("CAL.CO2.", j, sep = ""), lm(CO2.ppm ~ CO2,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i , ]))
- 
- 
- summary(get(paste("CAL.CO2.", j, sep = "")))
- 
- get(paste("CAL.CO2.", j,sep = ""))[[1]][1]
- 
- abline(a = get(paste("CAL.CO2.", j,sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.CO2.", j,sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.CO2.", j,sep = ""))[[1]][1],3), 
-                      
-                      round(get(paste("CAL.CO2.", j,sep = ""))[[1]][2],3), 
-                      
-                      sep = "+")
- )
- 
- 
- 
- ####### Plot Calibration line  for N2O #######
- 
- plot(N2O.ppm ~ N2O, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i , "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i , "N2O.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "N2O.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- ###### Calculate calibration line N2O #######
- 
- assign(paste("CAL.N2O.", j, sep = ""), lm(N2O.ppm ~ N2O,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i,]))
- 
- 
- 
- summary(get(paste("CAL.N2O.", j, sep = "")))
- 
- abline(a = get(paste("CAL.N2O.", j, sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.N2O.", j, sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.N2O.", j, sep = ""))[[1]][1],3), round(get(paste("CAL.N2O.", j, sep = ""))[[1]][2],3), sep = "+")
-       
- )
- 
- 
- 
- 
- 
- 
- 
- points(N2O.ppm ~ N2O, 
-        
-        data = GC.standards[rownames(GC.standards) == "716", ],
-        
-        col = "red",
-        
-        cex = 2,
-        
-        pch = 19) ;
- 
- 
- ##### Remove outliers row names 454 ####### 
- 
-  GC.standards[rownames(GC.standards) == "576", ]
- 
-  GC.standards <- GC.standards[!rownames(GC.standards) == "576", ] ;
- 
- ##############################################################################################################
- #                           
- #                           Cumulative plot for 2022
- #
- ###############################################################################################################
- 
- ##### data to plot  CO2 #####
- 
- i ; j ;
- 
- 
- str(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09", "2022-06-23" , "2022-06-29" , "2022-06-15")
- 
- 
- Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.CO2 <- xyplot(CO2 ~ CO2.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main="CO2", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        })
- 
- Cum.Plot.CO2
- 
- ## insert additional points
- 
- update(Cum.Plot.CO2, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- ##### data to plot  N20 #####
- 
- str(GC.standards$Sampling.Date)
- 
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.N2O <- xyplot(N2O ~ N2O.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main = "N2O", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        }
-                        
- )
- 
- Cum.Plot.N2O
- 
- update(Cum.Plot.N2O, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
+####### all the remaining points are within range for N2O or for CO2. Points are OK  ###################
+
  
 
- ##############################################################################################################
- #                           
- #                           GC Date [2022-09-02]  Sampling.Date [2022-07-07]
- #
- ###############################################################################################################
- 
- 
- 
- 
- GC.standards[GC.standards$GC.Date == "2022-09-02",]
- 
- 
- i = "2022-07-07" 
- 
- j = "2022_07_07"
- 
- ####### Plot Calibration line  for  CO2 #######
- 
- plot(CO2.ppm ~ CO2, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i ,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- 
- 
- ###### Calculate calibration line CO2 #######
- 
- assign(paste("CAL.CO2.", j, sep = ""), lm(CO2.ppm ~ CO2,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i , ]))
- 
- 
- summary(get(paste("CAL.CO2.", j, sep = "")))
- 
- get(paste("CAL.CO2.", j,sep = ""))[[1]][1]
- 
- abline(a = get(paste("CAL.CO2.", j,sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.CO2.", j,sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.CO2.", j,sep = ""))[[1]][1],3), 
-                      
-                      round(get(paste("CAL.CO2.", j,sep = ""))[[1]][2],3), 
-                      
-                      sep = "+")
- )
- 
- 
- 
- ####### Plot Calibration line  for N2O #######
- 
- plot(N2O.ppm ~ N2O, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i , "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i , "N2O.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "N2O.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- ###### Calculate calibration line N2O #######
- 
- assign(paste("CAL.N2O.", j, sep = ""), lm(N2O.ppm ~ N2O,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i,]))
- 
- 
- 
- summary(get(paste("CAL.N2O.", j, sep = "")))
- 
- abline(a = get(paste("CAL.N2O.", j, sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.N2O.", j, sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.N2O.", j, sep = ""))[[1]][1],3), round(get(paste("CAL.N2O.", j, sep = ""))[[1]][2],3), sep = "+")
-       
- )
- 
- 
- 
-
- # points(N2O.ppm ~ N2O, 
- #        
- #        data = GC.standards[rownames(GC.standards) == "716", ],
- #        
- #        col = "red",
- #        
- #        cex = 2,
- #        
- #        pch = 19) ;
- # 
- 
- ##### Remove outliers row names 454 ####### 
- 
- # GC.standards[rownames(GC.standards) == "454", ]
- 
- # GC.standards <- GC.standards[!rownames(GC.standards) == "454", ] ;
- 
- ##############################################################################################################
- #                           
- #                           Cumulative plot for 2022
- #
- ###############################################################################################################
- 
- ##### data to plot  CO2 #####
- 
- i ; j ;
- 
- 
- str(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09", "2022-06-23" , "2022-06-29" , "2022-06-15", "2022-07-07" )
- 
- 
- Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.CO2 <- xyplot(CO2 ~ CO2.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main="CO2", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        })
- 
- Cum.Plot.CO2
- 
- ## insert additional points
- 
- update(Cum.Plot.CO2, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- ##### data to plot  N20 #####
- 
- str(GC.standards$Sampling.Date)
- 
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.N2O <- xyplot(N2O ~ N2O.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main = "N2O", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        }
-                        
- )
- 
- Cum.Plot.N2O
- 
- update(Cum.Plot.N2O, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
  
  
  ##############################################################################################################
@@ -2607,1227 +1703,239 @@ update(Cum.Plot.N2O, panel = function(...) {
  ############################################
  
  
- # Select conditions
- 
- 
- GC.standards.20220719B1B2 <- GC.standards[GC.standards$AnalysisName == "Summary20220719_B1B2.pdf",]
- 
- grep( pattern = "L" , x =  GC.standards.20220719B1B2$Sample.Name, invert = F)
-   
- GC.standards.20220719B1B2L <- GC.standards.20220719B1B2[grep( pattern = "L" , x =  GC.standards.20220719B1B2$Sample.Name, invert = F),]
- 
+OutRange.Points.All
 
- plot(CO2 ~ CO2.ppm , data = GC.standards.20220719B1B2 , col = "red" )
- 
- points(CO2 ~ CO2.ppm,  data = GC.standards.20220719B1B2L , col = "blue" )
- 
- 
- ##### Low Standards are defective according to the note (blue in the plot)
- 
+GC.standards[GC.standards$GC.Date == "2022-08-19",]
 
- 
- row.names(GC.standards.20220719B1B2L)
- 
- GC.standards[row.names(GC.standards.20220719B1B2L), ]
- 
- GC.standards.Rev1 <- GC.standards[ which(!row.names(GC.standards) %in% row.names(GC.standards.20220719B1B2L)),]
- 
- GC.standards.Rev1[GC.standards.Rev1$AnalysisName == "Summary20220719_B1B2.pdf", ] 
- 
- GC.standards.Rev2 <- GC.standards[row.names(GC.standards) %in% row.names(GC.standards.Rev1),]
- 
- GC.standards <- GC.standards.Rev2 
- 
- rm(GC.standards.Rev1, GC.standards.Rev2  )
- 
- ### check
- 
- GC.standards[GC.standards$AnalysisName == "Summary20220719_B1B2.pdf", ]  
- 
- 
- 
- 
- i = "2022-07-19" 
- 
- j = "2022_07_19"
- 
- ####### Plot Calibration line  for  CO2 #######
- 
- plot(CO2.ppm ~ CO2, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i ,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
+
+###############################################################################################################
+#                           
+#                                       Check     CO2   Standards
+#
+###############################################################################################################
+
+
+plot(NULL, xlim = range(GC.standards.3$CO2.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.3$CO2 , na.rm = T), 
+     
+     main = "CO2", xlab = "CO2.ppm" , ylab = "CO2" ) ;
+
+##### 95% confidence quartile polygon envelope   #########
+
+polygon.x <- c(min(GC.standards.3$CO2.ppm, na.rm = T) , max(GC.standards.3$CO2.ppm , na.rm = T) , 
+               
+               max(GC.standards.3$CO2.ppm , na.rm = T) , min(GC.standards.3$CO2.ppm, na.rm = T)) ;
+
+polygon.y <- c(y = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1],  Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
+
+
+####### All points in gray  #######
+
+points(CO2 ~ CO2.ppm , data = GC.standards.3,
        
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
+       pch = 16 , 
        
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
+       main="CO2", 
        
-       pos = 3);
- 
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
+       col = "gray")
+
+Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2],
        
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
+       col = "red1")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2],
        
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
+       col = "red1")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][2],
        
-       pos = 1);
- 
- 
- 
- ###### Calculate calibration line CO2 #######
- 
- assign(paste("CAL.CO2.", j, sep = ""), lm(CO2.ppm ~ CO2,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i , ]))
- 
- 
- summary(get(paste("CAL.CO2.", j, sep = "")))
- 
- get(paste("CAL.CO2.", j,sep = ""))[[1]][1]
- 
- abline(a = get(paste("CAL.CO2.", j,sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.CO2.", j,sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2")]),
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][2],
        
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2.ppm")]),
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][2],
        
-       labels = paste(round(get(paste("CAL.CO2.", j,sep = ""))[[1]][1],3), 
-                      
-                      round(get(paste("CAL.CO2.", j,sep = ""))[[1]][2],3), 
-                      
-                      sep = "+")
- )
- 
- 
- 
- ####### Plot Calibration line  for N2O #######
- 
- plot(N2O.ppm ~ N2O, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i , "N2O"],
+       col = "blue")
+#text(x = GC.standards.3$CO2.ppm , y = GC.standards.3$CO2, labels = GC.standards.3$P.ID )
+
+
+##### Select conditions  
+
+GC.standards[GC.standards$Sampling.Date == "2022-07-19" ,]
+
+points(CO2 ~ CO2.ppm ,  data = GC.standards[GC.standards$Sampling.Date == "2022-07-19" ,] ,
        
-       y = GC.standards[GC.standards$Sampling.Date == i , "N2O.ppm"],
+       pch = 16 , 
        
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
+       main="CO2", 
        
-       pos = 3);
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "N2O.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- ###### Calculate calibration line N2O #######
- 
- assign(paste("CAL.N2O.", j, sep = ""), lm(N2O.ppm ~ N2O,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i,]))
- 
- 
- 
- summary(get(paste("CAL.N2O.", j, sep = "")))
- 
- abline(a = get(paste("CAL.N2O.", j, sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.N2O.", j, sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.N2O.", j, sep = ""))[[1]][1],3), round(get(paste("CAL.N2O.", j, sep = ""))[[1]][2],3), sep = "+")
-       
- )
- 
- 
- 
- 
- # points(N2O.ppm ~ N2O, 
- #        
- #        data = GC.standards[rownames(GC.standards) == "716", ],
- #        
- #        col = "red",
- #        
- #        cex = 2,
- #        
- #        pch = 19) ;
- # 
- 
- ##### Remove outliers row names 1381 ####### 
- 
-GC.standards[rownames(GC.standards) == "1381", ]
- 
-GC.standards <- GC.standards[!rownames(GC.standards) == "1381", ] ;
- 
- ##############################################################################################################
- #                           
- #                           Cumulative plot for 2022
- #
- ###############################################################################################################
- 
- ##### data to plot  CO2 #####
- 
- i ; j ;
- 
- 
- str(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates <- c("2022-06-30" , 
-                         
-                         "2022-06-09", 
-                         
-                         "2022-06-23" , 
-                         
-                         "2022-06-29",
-                         
-                         "2022-06-15",
-                         
-                         "2022-07-07",
-                         
-                         "2022-07-19" )
- 
- 
- Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.CO2 <- xyplot(CO2 ~ CO2.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main="CO2", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        })
- 
- Cum.Plot.CO2
- 
- ## insert additional points
- 
- update(Cum.Plot.CO2, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- ##### data to plot  N20 #####
- 
- str(GC.standards$Sampling.Date)
- 
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.N2O <- xyplot(N2O ~ N2O.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main = "N2O", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        }
-                        
- )
- 
- Cum.Plot.N2O
- 
- update(Cum.Plot.N2O, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
+       col = "red")
+
+text(x = GC.standards[GC.standards$Sampling.Date == "2022-07-19" , "CO2.ppm"] ,
+     
+     y = GC.standards[GC.standards$Sampling.Date == "2022-07-19" , "CO2"] ,
+     
+     labels = GC.standards[GC.standards$Sampling.Date == "2022-07-19" , "P.ID"])
 
 
 
- ##############################################################################################################
- #                           
- #                           GC Date ["2022-10-15"]  Sampling.Date [2022-06-23]
- #
- ###############################################################################################################
- 
- 
- 
- 
- levels(GC.standards$ANAL.DATE)
- 
- GC.standards[GC.standards$GC.Date == "2022-10-15",]
- 
- 
- i = "2022-06-23" 
- 
- j = "2022_06_23"
- 
- ####### Plot Calibration line  for  CO2 #######
- 
- plot(CO2.ppm ~ CO2, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i ,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- 
- 
- ###### Calculate calibration line CO2 #######
- 
- assign(paste("CAL.CO2.", j, sep = ""), lm(CO2.ppm ~ CO2,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i , ]))
- 
- 
- summary(get(paste("CAL.CO2.", j, sep = "")))
- 
- get(paste("CAL.CO2.", j,sep = ""))[[1]][1]
- 
- abline(a = get(paste("CAL.CO2.", j,sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.CO2.", j,sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.CO2.", j,sep = ""))[[1]][1],3), 
-                      
-                      round(get(paste("CAL.CO2.", j,sep = ""))[[1]][2],3), 
-                      
-                      sep = "+")
- )
- 
- 
- 
- ####### Plot Calibration line  for N2O #######
- 
- plot(N2O.ppm ~ N2O, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i , "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i , "N2O.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "N2O.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- ###### Calculate calibration line N2O #######
- 
- assign(paste("CAL.N2O.", j, sep = ""), lm(N2O.ppm ~ N2O,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i,]))
- 
- 
- 
- summary(get(paste("CAL.N2O.", j, sep = "")))
- 
- abline(a = get(paste("CAL.N2O.", j, sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.N2O.", j, sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.N2O.", j, sep = ""))[[1]][1],3), round(get(paste("CAL.N2O.", j, sep = ""))[[1]][2],3), sep = "+")
-       
- )
- 
- 
- 
- 
- # points(N2O.ppm ~ N2O, 
- #        
- #        data = GC.standards[rownames(GC.standards) == "716", ],
- #        
- #        col = "red",
- #        
- #        cex = 2,
- #        
- #        pch = 19) ;
- # 
- 
- ##### Remove outliers row names 1381 ####### 
- 
- GC.standards[rownames(GC.standards) == "1381", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "1381", ] ;
- 
- ##############################################################################################################
- #                           
- #                           Cumulative plot for 2022
- #
- ###############################################################################################################
- 
- ##### data to plot  CO2 #####
- 
- i ; j ;
- 
- 
- str(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09", "2022-06-23" , "2022-06-29" , "2022-06-15", "2022-07-07" ,"2022-07-19" )
- 
- 
- Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.CO2 <- xyplot(CO2 ~ CO2.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main="CO2", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        })
- 
- Cum.Plot.CO2
- 
- ## insert additional points
- 
- update(Cum.Plot.CO2, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- ##### data to plot  N20 #####
- 
- str(GC.standards$Sampling.Date)
- 
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.N2O <- xyplot(N2O ~ N2O.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main = "N2O", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        }
-                        
- )
- 
- Cum.Plot.N2O
- 
- update(Cum.Plot.N2O, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- 
- 
- ##############################################################################################################
- #                           
- #                          GC Date ["2022-10-16"]  Sampling.Date [2022-07-19]
- #
- ###############################################################################################################
- 
- 
 
- 
- str(GC.standards)
- 
- levels(GC.standards$ANAL.DATE)
- 
- unique(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates
- 
- GC.standards[GC.standards$GC.Date == "2022-10-16",]
- 
- GC.standards[GC.standards$Sampling.Date == "2022-07-19",]
- 
- 
- i = "2022-07-19" 
- 
- j = "2022_07-19"
- 
- ####### Plot Calibration line  for  CO2 #######
- 
- plot(CO2.ppm ~ CO2, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i ,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- 
- 
- ###### Calculate calibration line CO2 #######
- 
- assign(paste("CAL.CO2.", j, sep = ""), lm(CO2.ppm ~ CO2,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i , ]))
- 
- 
- summary(get(paste("CAL.CO2.", j, sep = "")))
- 
- get(paste("CAL.CO2.", j,sep = ""))[[1]][1]
- 
- abline(a = get(paste("CAL.CO2.", j,sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.CO2.", j,sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.CO2.", j,sep = ""))[[1]][1],3), 
-                      
-                      round(get(paste("CAL.CO2.", j,sep = ""))[[1]][2],3), 
-                      
-                      sep = "+")
- )
- 
- 
- 
- ####### Plot Calibration line  for N2O #######
- 
- plot(N2O.ppm ~ N2O, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i , "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i , "N2O.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "N2O.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- ###### Calculate calibration line N2O #######
- 
- assign(paste("CAL.N2O.", j, sep = ""), lm(N2O.ppm ~ N2O,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i,]))
- 
- 
- 
- summary(get(paste("CAL.N2O.", j, sep = "")))
- 
- abline(a = get(paste("CAL.N2O.", j, sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.N2O.", j, sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.N2O.", j, sep = ""))[[1]][1],3), round(get(paste("CAL.N2O.", j, sep = ""))[[1]][2],3), sep = "+")
-       
- )
- 
- 
- 
- 
- # points(N2O.ppm ~ N2O, 
- #        
- #        data = GC.standards[rownames(GC.standards) == "716", ],
- #        
- #        col = "red",
- #        
- #        cex = 2,
- #        
- #        pch = 19) ;
- # 
- 
- ##### Remove outliers row names 1381 ####### 
- 
- GC.standards[rownames(GC.standards) == "1381", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "1381", ] ;
- 
- ##############################################################################################################
- #                           
- #                           Cumulative plot for 2022
- #
- ###############################################################################################################
- 
- ##### data to plot  CO2 #####
- 
- i ; j ;
- 
- 
- str(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates <- c("2022-06-30" , "2022-06-09", "2022-06-23" , "2022-06-29" , "2022-06-15", "2022-07-07" ,"2022-07-19" )
- 
- 
- Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.CO2 <- xyplot(CO2 ~ CO2.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main="CO2", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        })
- 
- Cum.Plot.CO2
- 
- ## insert additional points
- 
- update(Cum.Plot.CO2, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- ##### data to plot  N20 #####
- 
- str(GC.standards$Sampling.Date)
- 
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.N2O <- xyplot(N2O ~ N2O.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main = "N2O", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        }
-                        
- )
- 
- Cum.Plot.N2O
- 
- update(Cum.Plot.N2O, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- 
- ##############################################################################################################
- #                           
- #                         GC Date ["2022-10-23"]  Sampling.Date [2022-09-01] 
- #
- ###############################################################################################################
- 
- 
- 
- str(GC.standards)
- 
- levels(GC.standards$ANAL.DATE)
- 
- unique(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates
- 
- GC.standards[GC.standards$GC.Date == "2022-10-23",]
- 
- GC.standards[GC.standards$Sampling.Date == "2022-09-01",]
- 
- 
- i = "2022-09-01" 
- 
- j = "2022_09_01"
- 
- ####### Plot Calibration line  for  CO2 #######
- 
- plot(CO2.ppm ~ CO2, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i ,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- 
- 
- ###### Calculate calibration line CO2 #######
- 
- assign(paste("CAL.CO2.", j, sep = ""), lm(CO2.ppm ~ CO2,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i , ]))
- 
- 
- summary(get(paste("CAL.CO2.", j, sep = "")))
- 
- get(paste("CAL.CO2.", j,sep = ""))[[1]][1]
- 
- abline(a = get(paste("CAL.CO2.", j,sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.CO2.", j,sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.CO2.", j,sep = ""))[[1]][1],3), 
-                      
-                      round(get(paste("CAL.CO2.", j,sep = ""))[[1]][2],3), 
-                      
-                      sep = "+")
- )
- 
- 
- 
- ####### Plot Calibration line  for N2O #######
- 
- plot(N2O.ppm ~ N2O, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i , "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i , "N2O.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "N2O.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- ###### Calculate calibration line N2O #######
- 
- assign(paste("CAL.N2O.", j, sep = ""), lm(N2O.ppm ~ N2O,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i,]))
- 
- 
- 
- summary(get(paste("CAL.N2O.", j, sep = "")))
- 
- abline(a = get(paste("CAL.N2O.", j, sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.N2O.", j, sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.N2O.", j, sep = ""))[[1]][1],3), round(get(paste("CAL.N2O.", j, sep = ""))[[1]][2],3), sep = "+")
-       
- )
- 
- 
- 
- 
- # points(N2O.ppm ~ N2O, 
- #        
- #        data = GC.standards[rownames(GC.standards) == "716", ],
- #        
- #        col = "red",
- #        
- #        cex = 2,
- #        
- #        pch = 19) ;
- # 
- 
- ##### Remove outliers row names 1623 and 1745 ####### 
- 
- GC.standards[rownames(GC.standards) == "1623", ]
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-07-19" ,]
 
- GC.standards <- GC.standards[!rownames(GC.standards) == "1623", ] ;
- 
- GC.standards[rownames(GC.standards) == "1745", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "1745", ] ;
+points(CO2 ~ CO2.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-07-19" ,] ,
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       col = "blue")
 
- ##############################################################################################################
- #                           
- #                           Cumulative plot for 2022
- #
- ###############################################################################################################
- 
- ##### data to plot  CO2 #####
- 
- i ; j ;
- 
- 
- str(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates <- c("2022-06-30",
-                         
-                         "2022-06-09", 
-                         
-                         "2022-06-23", 
-                         
-                         "2022-06-29", 
-                         
-                         "2022-06-15", 
-                         
-                         "2022-07-07",
-                         
-                         "2022-07-19",
-                         
-                         "2022-09-01")
- 
- 
- Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.CO2 <- xyplot(CO2 ~ CO2.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main="CO2", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        })
- 
- Cum.Plot.CO2
- 
- ## insert additional points
- 
- update(Cum.Plot.CO2, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- ##### data to plot  N20 #####
- 
- str(GC.standards$Sampling.Date)
- 
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.N2O <- xyplot(N2O ~ N2O.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main = "N2O", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        }
-                        
- )
- 
- Cum.Plot.N2O
- 
- update(Cum.Plot.N2O, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- 
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-07-19" , "CO2.ppm"] ,
+     
+     y = GC.standards.3[GC.standards.3$Sampling.Date == "2022-07-19" , "CO2"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-07-19" , "P.ID"])
+
+
+######### All standards were below the median   for CO2 ########
+
+
+###############################################################################################################
+#                           
+#                                       Check     N2O   Standards
+#
+###############################################################################################################
+
+OutRange.Points.All
+
+
+GC.standards[GC.standards$GC.Date == "2022-09-04",]
+
+
+plot(NULL, xlim = range(GC.standards.3$N2O.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.3$N2O , na.rm = T), 
+     
+     main = "N2O", xlab = "N2O.ppm" , ylab = "N2O" ) ;
+
+
+
+# plot(NULL, xlim = c(0,5), 
+#      
+#      ylim = c(0, 2000), 
+#      
+#      main = "N2O", xlab = "N2O.ppm" , ylab = "N2O" ) ;
+
+##### 95% confidence quartile polygon envelope   #########
+
+polygon.x <- c(min(GC.standards.3$N2O.ppm, na.rm = T) , max(GC.standards.3$N2O.ppm , na.rm = T) , 
+               
+               max(GC.standards.3$N2O.ppm , na.rm = T) , min(GC.standards.3$N2O.ppm, na.rm = T)) ;
+
+polygon.y <- c(y = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1],  Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
+
+
+####### All points in gray  #######
+
+points(N2O ~ N2O.ppm , data = GC.standards.3,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "gray")
+
+Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][2],
+       
+       col = "blue")
+#text(x = GC.standards.3$N2O.ppm , y = GC.standards.3$N2O, labels = GC.standards.3$P.ID )
+
+
+
+##### Select conditions
+
+GC.standards[GC.standards$Sampling.Date == "2022-07-19" ,]
+
+points(N2O ~ N2O.ppm ,  data = GC.standards[GC.standards$Sampling.Date == "2022-07-19" ,] ,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "red")
+
+text(x = GC.standards[GC.standards$Sampling.Date == "2022-07-19" , "N2O.ppm"] ,
+     
+     y =GC.standards[GC.standards$Sampling.Date == "2022-07-19" , "N2O"] ,
+     
+     labels = GC.standards[GC.standards$Sampling.Date == "2022-07-19" , "P.ID"])
+
+GC.standards[GC.standards$Sampling.Date == "2022-07-19" ,]
+
+
+
+points(N2O ~ N2O.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-07-19" ,] ,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "blue")
+
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-07-19" , "N2O.ppm"] ,
+     
+     y =GC.standards.3[GC.standards.3$Sampling.Date == "2022-07-19" , "N2O"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-07-19" , "P.ID"])
+
+
+######### All standards were below the median for CO2 and N2O ########  What to do?
+
+OutRange.Points.All
+
  
  
  ##############################################################################################################
@@ -3846,388 +1954,228 @@ GC.standards <- GC.standards[!rownames(GC.standards) == "1381", ] ;
  # 
  # #############################
  
- 
- ### Get the conditions ######
- 
- GC.standards[GC.standards$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" , ]
- 
- row.names(GC.standards[GC.standards$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" & GC.standards$Factor.Name == "L50" , ])
- 
- L50.Rev <- GC.standards[GC.standards$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" & GC.standards$Factor.Name == "L50" , ]
- 
- row.names(L50.Rev)
- 
- L50.Rev.Pos <- L50.Rev[order(L50.Rev$Position),]
- 
- row.names(L50.Rev.Pos)
+OutRange.Points.All
 
- plot(L50.Rev.Pos$CO2, col = "blue")
- 
- plot(L50.Rev.Pos$N2O, col = "red")
- 
- plot(L50.Rev.Pos$CH4, col = "green")
-      
- ####### Two last L50 Standards are defective as the note describe. Remove #####
- 
- dim(L50.Rev.Pos)
- 
- row.names(L50.Rev.Pos[4:5,])
- 
- GC.standards.L50.Rev <- GC.standards[which(!row.names(GC.standards) %in% row.names(L50.Rev.Pos[4:5,])), ] ;
- 
- row.names(GC.standards[GC.standards$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" & GC.standards$Factor.Name == "L50" , ])
- 
- 
-row.names(GC.standards.L50.Rev[GC.standards.L50.Rev$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" & GC.standards.L50.Rev$Factor.Name == "L50" , ])
- 
+GC.standards[GC.standards$GC.Date == "2022-09-10",]
 
- GC.standards.L50.Rev[GC.standards.L50.Rev$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" &
-                        
-                        GC.standards.L50.Rev$Factor.Name == "L50",  ]
- 
- GC.standards[!row.names(GC.standards) %in% row.names(GC.standards.L50.Rev),] ;
- 
- 
- GC.standards <- GC.standards.L50.Rev ;
- 
- 
- rm(L50.Rev , GC.standards.L50.Rev)
- 
- 
-###### check ###
- 
- GC.standards[GC.standards$AnalysisName == "SummaryGCN2O20220910_B3B4.pdf" & GC.standards$Factor.Name == "L50" ,]
- 
- 
- 
- levels(GC.standards$ANAL.DATE)
- 
- unique(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates
- 
- GC.standards[GC.standards$GC.Date == "2022-11-24",]
- 
- GC.standards[GC.standards$Sampling.Date == "2022-09-10",]
- 
- 
- i = "2022-09-10" 
- 
- j = "2022_09_10"
- 
- ####### Plot Calibration line  for  CO2 #######
- 
- plot(CO2.ppm ~ CO2, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i ,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
+
+###############################################################################################################
+#                           
+#                                       Check     CO2   Standards
+#
+###############################################################################################################
+
+
+plot(NULL, xlim = range(GC.standards.3$CO2.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.3$CO2 , na.rm = T), 
+     
+     main = "CO2", xlab = "CO2.ppm" , ylab = "CO2" ) ;
+
+##### 95% confidence quartile polygon envelope   #########
+
+polygon.x <- c(min(GC.standards.3$CO2.ppm, na.rm = T) , max(GC.standards.3$CO2.ppm , na.rm = T) , 
+               
+               max(GC.standards.3$CO2.ppm , na.rm = T) , min(GC.standards.3$CO2.ppm, na.rm = T)) ;
+
+polygon.y <- c(y = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1],  Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
+
+
+####### All points in gray  #######
+
+points(CO2 ~ CO2.ppm , data = GC.standards.3,
        
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
+       pch = 16 , 
        
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
+       main="CO2", 
        
-       pos = 3);
- 
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
+       col = "gray")
+
+Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2],
        
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
+       col = "red1")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2],
        
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
+       col = "red1")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][2],
        
-       pos = 1);
- 
- 
- 
- ###### Calculate calibration line CO2 #######
- 
- assign(paste("CAL.CO2.", j, sep = ""), lm(CO2.ppm ~ CO2,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i , ]))
- 
- 
- summary(get(paste("CAL.CO2.", j, sep = "")))
- 
- get(paste("CAL.CO2.", j,sep = ""))[[1]][1]
- 
- abline(a = get(paste("CAL.CO2.", j,sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.CO2.", j,sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2")]),
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][2],
        
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2.ppm")]),
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][2],
        
-       labels = paste(round(get(paste("CAL.CO2.", j,sep = ""))[[1]][1],3), 
-                      
-                      round(get(paste("CAL.CO2.", j,sep = ""))[[1]][2],3), 
-                      
-                      sep = "+")
- )
- 
- 
- 
- ####### Plot Calibration line  for N2O #######
- 
- plot(N2O.ppm ~ N2O, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i , "N2O"],
+       col = "blue")
+#text(x = GC.standards.3$CO2.ppm , y = GC.standards.3$CO2, labels = GC.standards.3$P.ID )
+
+
+##### Select conditions  
+
+
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-10" ,]
+
+points(CO2 ~ CO2.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-10" ,] ,
        
-       y = GC.standards[GC.standards$Sampling.Date == i , "N2O.ppm"],
+       pch = 16 , 
        
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
+       main="CO2", 
        
-       pos = 3);
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "N2O"],
+       col = "red")
+
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-10" , "CO2.ppm"] ,
+     
+     y = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-10" , "CO2"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-10" , "P.ID"])
+
+
+######### All standards are within the 95 quartile ########
+
+
+###############################################################################################################
+#                           
+#                                       Check     N2O   Standards
+#
+###############################################################################################################
+
+OutRange.Points.All
+
+
+GC.standards[GC.standards$GC.Date == "2022-09-10",]
+
+
+plot(NULL, xlim = range(GC.standards.3$N2O.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.3$N2O , na.rm = T), 
+     
+     main = "N2O", xlab = "N2O.ppm" , ylab = "N2O" ) ;
+
+
+
+# plot(NULL, xlim = c(0,5), 
+#      
+#      ylim = c(0, 2000), 
+#      
+#      main = "N2O", xlab = "N2O.ppm" , ylab = "N2O" ) ;
+
+##### 95% confidence quartile polygon envelope   #########
+
+polygon.x <- c(min(GC.standards.3$N2O.ppm, na.rm = T) , max(GC.standards.3$N2O.ppm , na.rm = T) , 
+               
+               max(GC.standards.3$N2O.ppm , na.rm = T) , min(GC.standards.3$N2O.ppm, na.rm = T)) ;
+
+polygon.y <- c(y = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1],  Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
+
+
+####### All points in gray  #######
+
+points(N2O ~ N2O.ppm , data = GC.standards.3,
        
-       y = GC.standards[GC.standards$Sampling.Date == i, "N2O.ppm"],
+       pch = 16 , 
        
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
+       main="N2O", 
        
-       pos = 1);
- 
- ###### Calculate calibration line N2O #######
- 
- assign(paste("CAL.N2O.", j, sep = ""), lm(N2O.ppm ~ N2O,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i,]))
- 
- 
- 
- summary(get(paste("CAL.N2O.", j, sep = "")))
- 
- abline(a = get(paste("CAL.N2O.", j, sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.N2O.", j, sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O")]),
+       col = "gray")
+
+Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2],
        
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O.ppm")]),
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2],
        
-       labels = paste(round(get(paste("CAL.N2O.", j, sep = ""))[[1]][1],3), round(get(paste("CAL.N2O.", j, sep = ""))[[1]][2],3), sep = "+")
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][2],
        
- )
- 
- 
- 
- 
- # points(N2O.ppm ~ N2O, 
- #        
- #        data = GC.standards[rownames(GC.standards) == "716", ],
- #        
- #        col = "red",
- #        
- #        cex = 2,
- #        
- #        pch = 19) ;
- # 
- 
- ##### Remove outliers row names 194 ####### 
- 
- GC.standards[rownames(GC.standards) == "194", ]
- 
- GC.standards <- GC.standards[!rownames(GC.standards) == "194", ] ;
- 
- 
- ##############################################################################################################
- #                           
- #                           Cumulative plot for 2022
- #
- ###############################################################################################################
- 
- ##### data to plot  CO2 #####
- 
- i ; j ;
- 
- 
- str(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates <- c("2022-06-30",
-                         
-                         "2022-06-09", 
-                         
-                         "2022-06-23", 
-                         
-                         "2022-06-29", 
-                         
-                         "2022-06-15", 
-                         
-                         "2022-07-07",
-                         
-                         "2022-07-19",
-                         
-                         "2022-09-01",
-                         
-                         "2022-09-10")
- 
- 
- Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.CO2 <- xyplot(CO2 ~ CO2.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main="CO2", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        })
- 
- Cum.Plot.CO2
- 
- ## insert additional points
- 
- update(Cum.Plot.CO2, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- ##### data to plot  N20 #####
- 
- str(GC.standards$Sampling.Date)
- 
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.N2O <- xyplot(N2O ~ N2O.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main = "N2O", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        }
-                        
- )
- 
- Cum.Plot.N2O
- 
- update(Cum.Plot.N2O, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- 
- 
- 
- ##############################################################################################################
- #                           
- #                         GC Date ["2022-11-25"]  Sampling.Date [2022-09-10]
- #
- ###############################################################################################################
- 
- 
- 
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][2],
+       
+       col = "blue")
+#text(x = GC.standards.3$N2O.ppm , y = GC.standards.3$N2O, labels = GC.standards.3$P.ID )
+
+
+
+##### Select conditions
+
+GC.standards[GC.standards$Sampling.Date == "2022-09-10" ,]
+
+points(N2O ~ N2O.ppm ,  data = GC.standards[GC.standards$Sampling.Date == "2022-09-10" ,] ,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "red")
+
+text(x = GC.standards[GC.standards$Sampling.Date == "2022-09-10" , "N2O.ppm"] ,
+     
+     y =GC.standards[GC.standards$Sampling.Date == "2022-09-10" , "N2O"] ,
+     
+     labels = GC.standards[GC.standards$Sampling.Date == "2022-09-10" , "P.ID"])
+
+
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-10" ,]
+
+points(N2O ~ N2O.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-10" ,] ,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "blue")
+
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-10" , "N2O.ppm"] ,
+     
+     y =GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-10" , "N2O"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-10" , "P.ID"])
+
+
+
+######### All standards were within the 95 quartile ########  
+
+OutRange.Points.All
+
+
  ##############################################################################################################
  #                           
  #                         GC Date ["2022-11-27"]  Sampling.Date [2022-09-27]
  #
  ###############################################################################################################
  
- str(GC.standards)
- 
- levels(GC.standards$ANAL.DATE)
- 
- unique(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates
- 
- GC.standards[GC.standards$GC.Date == "2022-11-27",]
- 
- GC.standards[GC.standards$Sampling.Date == "2022-09-27",]
  
 ########### GC Note
  # 202200927_B1B2
@@ -4236,705 +2184,230 @@ row.names(GC.standards.L50.Rev[GC.standards.L50.Rev$AnalysisName == "SummaryGCN2
  # Those vials do not have any gas except what was left from the previous GC analysis.
 ###########
  
- ## Select conditions 
- 
- GC.standards[GC.standards$Sampling.Date == "2022-09-27" & GC.standards$AnalysisName == "SummaryGCN2O20220927_B1B2.pdf" &
-                
-                (GC.standards$Factor.Name == "L100" | GC.standards$Factor.Name == "L50"),]
- 
- GC.standards.L <- GC.standards[GC.standards$Sampling.Date == "2022-09-27" & 
-                                  
-                                  GC.standards$AnalysisName == "SummaryGCN2O20220927_B1B2.pdf" &
-                                  
-                                  (GC.standards$Factor.Name == "L100" | GC.standards$Factor.Name == "L50"),]
- 
- GC.standards.L.1 <- GC.standards[GC.standards$Sampling.Date == "2022-09-10" & 
-                                    
-                                    GC.standards$AnalysisName == "SummaryGCN2O20220910_B1B2.pdf" &
-                                    
-                                    (GC.standards$Factor.Name == "L100" | GC.standards$Factor.Name == "L50"),]
-                                                              
-                                                              
- 
- plot(CO2 ~ CO2.ppm , data = GC.standards.L.1 , col = "blue", ylim = c(0,3000) )
 
- points(CO2 ~ CO2.ppm , data = GC.standards.L , col = "red")
- 
- 
- plot(N2O ~ N2O.ppm , data = GC.standards.L.1 , col = "blue", ylim = c(0,1000) )
- 
- points(N2O ~ N2O.ppm , data = GC.standards.L , col = "red")
- 
- 
- plot(CH4 ~ CH4.ppm , data = GC.standards.L.1 , col = "blue", ylim = c(0,50) )
- 
- points(CH4 ~ CH4.ppm , data = GC.standards.L , col = "red")
- 
- 
- #### low standards (L-100%, L-50%) standards are defective. Remove  ###
- 
- row.names(GC.standards[GC.standards$Sampling.Date == "2022-09-27" & 
-                          
-                          GC.standards$AnalysisName == "SummaryGCN2O20220927_B1B2.pdf" &
-                          
-                          (GC.standards$Factor.Name == "L100" | GC.standards$Factor.Name == "L50"),])
- 
- 
- 
- GC.standards.L <- GC.standards[GC.standards$Sampling.Date == "2022-09-27" & 
-                                  
-                                  GC.standards$AnalysisName == "SummaryGCN2O20220927_B1B2.pdf" &
-                                  
-                                  (GC.standards$Factor.Name == "L100" | GC.standards$Factor.Name == "L50"),]
- 
-row.names(GC.standards.L)
- 
-GC.standards.Rev.L <- GC.standards[which(!row.names(GC.standards) %in% row.names(GC.standards.L) ),] ;
+###############################################################################################################
+#                           
+#                                       Check     CO2   Standards
+#
+###############################################################################################################
 
 
-GC.standards <- GC.standards.Rev.L ;
+plot(NULL, xlim = range(GC.standards.3$CO2.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.3$CO2 , na.rm = T), 
+     
+     main = "CO2", xlab = "CO2.ppm" , ylab = "CO2" ) ;
 
-#### check 
- 
-GC.standards[GC.standards$Sampling.Date == "2022-09-27" & GC.standards$AnalysisName == "SummaryGCN2O20220927_B1B2.pdf",]
+##### 95% confidence quartile polygon envelope   #########
+
+polygon.x <- c(min(GC.standards.3$CO2.ppm, na.rm = T) , max(GC.standards.3$CO2.ppm , na.rm = T) , 
+               
+               max(GC.standards.3$CO2.ppm , na.rm = T) , min(GC.standards.3$CO2.ppm, na.rm = T)) ;
+
+polygon.y <- c(y = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1],  Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
+
+
+####### All points in gray  #######
+
+points(CO2 ~ CO2.ppm , data = GC.standards.3,
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       col = "gray")
+
+Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][2],
+       
+       col = "blue")
+#text(x = GC.standards.3$CO2.ppm , y = GC.standards.3$CO2, labels = GC.standards.3$P.ID )
+
+
+##### Select conditions  
+
+
+GC.standards[GC.standards$Sampling.Date == "2022-09-27" ,]
+
+points(CO2 ~ CO2.ppm ,  data = GC.standards[GC.standards$Sampling.Date == "2022-09-27" ,] ,
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       col = "red")
+
+text(x = GC.standards[GC.standards$Sampling.Date == "2022-09-27" , "CO2.ppm"] ,
+     
+     y = GC.standards[GC.standards$Sampling.Date == "2022-09-27" , "CO2"] ,
+     
+     labels = GC.standards[GC.standards$Sampling.Date == "2022-09-27" , "P.ID"])
 
 
 
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" ,]
 
- 
- i = "2022-09-27" 
- 
- j = "2022_09_27"
- 
- ####### Plot Calibration line  for  CO2 #######
- 
- plot(CO2.ppm ~ CO2, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i ,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- 
- 
- ###### Calculate calibration line CO2 #######
- 
- assign(paste("CAL.CO2.", j, sep = ""), lm(CO2.ppm ~ CO2,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i , ]))
- 
- 
- summary(get(paste("CAL.CO2.", j, sep = "")))
- 
- get(paste("CAL.CO2.", j,sep = ""))[[1]][1]
- 
- abline(a = get(paste("CAL.CO2.", j,sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.CO2.", j,sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.CO2.", j,sep = ""))[[1]][1],3), 
-                      
-                      round(get(paste("CAL.CO2.", j,sep = ""))[[1]][2],3), 
-                      
-                      sep = "+")
- )
- 
- 
- 
- ####### Plot Calibration line  for N2O #######
- 
- plot(N2O.ppm ~ N2O, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i , "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i , "N2O.ppm"],
-       
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
-       
-       pos = 3);
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "N2O"],
-       
-       y = GC.standards[GC.standards$Sampling.Date == i, "N2O.ppm"],
-       
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
-       
-       pos = 1);
- 
- ###### Calculate calibration line N2O #######
- 
- assign(paste("CAL.N2O.", j, sep = ""), lm(N2O.ppm ~ N2O,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i,]))
- 
- 
- 
- summary(get(paste("CAL.N2O.", j, sep = "")))
- 
- abline(a = get(paste("CAL.N2O.", j, sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.N2O.", j, sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O")]),
-       
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O.ppm")]),
-       
-       labels = paste(round(get(paste("CAL.N2O.", j, sep = ""))[[1]][1],3), round(get(paste("CAL.N2O.", j, sep = ""))[[1]][2],3), sep = "+")
-       
- )
- 
- 
- 
- 
- # points(N2O.ppm ~ N2O, 
- #        
- #        data = GC.standards[rownames(GC.standards) == "716", ],
- #        
- #        col = "red",
- #        
- #        cex = 2,
- #        
- #        pch = 19) ;
- # 
- 
- ##### Remove outliers row names 2060 & 2159  ####### 
- 
-  GC.standards[rownames(GC.standards) == "2060", ]
-  
-  GC.standards <- GC.standards[!rownames(GC.standards) == "2060", ] ;
-  
-  GC.standards[rownames(GC.standards) == "2159", ]
-  
-  GC.standards <- GC.standards[!rownames(GC.standards) == "2159", ] ;
-  
- 
- 
- ##############################################################################################################
- #                           
- #                           Cumulative plot for 2022
- #
- ###############################################################################################################
- 
- ##### data to plot  CO2 #####
- 
- i ; j ;
- 
- 
- str(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates <- c("2022-06-30",
-                         
-                         "2022-06-09", 
-                         
-                         "2022-06-23", 
-                         
-                         "2022-06-29", 
-                         
-                         "2022-06-15", 
-                         
-                         "2022-07-07",
-                         
-                         "2022-07-19",
-                         
-                         "2022-09-01",
-                         
-                         "2022-09-10",
-                         
-                         "2022-09-27")
- 
- 
- Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.CO2 <- xyplot(CO2 ~ CO2.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main="CO2", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        })
- 
- Cum.Plot.CO2
- 
- ## insert additional points
- 
- update(Cum.Plot.CO2, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- ##### data to plot  N20 #####
- 
- str(GC.standards$Sampling.Date)
- 
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.N2O <- xyplot(N2O ~ N2O.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main = "N2O", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        }
-                        
- )
- 
- Cum.Plot.N2O
- 
- update(Cum.Plot.N2O, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- 
 
- 
- ##############################################################################################################
- #                           
- #                         GC Date ["2022-11-28"]  Sampling.Date [2022-09-27]
- #
- ###############################################################################################################
- 
- 
- 
- ##############################################################################################################
- #                           
- #                         GC Date ["2022-12-05"]  Sampling.Date ["2022-10-05"]
- #
- ###############################################################################################################
- 
- str(GC.standards)
- 
- levels(GC.standards$ANAL.DATE)
- 
- unique(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates
- 
- GC.standards[GC.standards$GC.Date == "2022-12-05",]
- 
- GC.standards[GC.standards$Sampling.Date == "2022-10-05",]
- 
- 
- i = "2022-10-05" 
- 
- j = "2022_10_05"
- 
- ####### Plot Calibration line  for  CO2 #######
- 
- plot(CO2.ppm ~ CO2, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i ,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
+points(CO2 ~ CO2.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" ,] ,
        
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
+       pch = 16 , 
        
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
+       main="CO2", 
        
-       pos = 3);
- 
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "CO2"],
+       col = "blue")
+
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" , "CO2.ppm"] ,
+     
+     y = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" , "CO2"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" , "P.ID"])
+
+
+
+######### All standards are within the 95 quartile ########
+
+
+###############################################################################################################
+#                           
+#                                       Check     N2O   Standards
+#
+###############################################################################################################
+
+OutRange.Points.All
+
+
+GC.standards[GC.standards$GC.Date == "2022-09-27",]
+
+
+plot(NULL, xlim = range(GC.standards.3$N2O.ppm, na.rm = T), 
+     
+     ylim = range(GC.standards.3$N2O , na.rm = T), 
+     
+     main = "N2O", xlab = "N2O.ppm" , ylab = "N2O" ) ;
+
+
+
+# plot(NULL, xlim = c(0,5), 
+#      
+#      ylim = c(0, 2000), 
+#      
+#      main = "N2O", xlab = "N2O.ppm" , ylab = "N2O" ) ;
+
+##### 95% confidence quartile polygon envelope   #########
+
+polygon.x <- c(min(GC.standards.3$N2O.ppm, na.rm = T) , max(GC.standards.3$N2O.ppm , na.rm = T) , 
+               
+               max(GC.standards.3$N2O.ppm , na.rm = T) , min(GC.standards.3$N2O.ppm, na.rm = T)) ;
+
+polygon.y <- c(y = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1],  Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2] * max(GC.standards.3$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2] * max(GC.standards.3$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
+
+
+####### All points in gray  #######
+
+points(N2O ~ N2O.ppm , data = GC.standards.3,
        
-       y = GC.standards[GC.standards$Sampling.Date == i, "CO2.ppm"],
+       pch = 16 , 
        
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
+       main="N2O", 
        
-       pos = 1);
- 
- 
- 
- ###### Calculate calibration line CO2 #######
- 
- assign(paste("CAL.CO2.", j, sep = ""), lm(CO2.ppm ~ CO2,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i , ]))
- 
- 
- summary(get(paste("CAL.CO2.", j, sep = "")))
- 
- get(paste("CAL.CO2.", j,sep = ""))[[1]][1]
- 
- abline(a = get(paste("CAL.CO2.", j,sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.CO2.", j,sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2")]),
+       col = "gray")
+
+Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2],
        
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("CO2.ppm")]),
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2],
        
-       labels = paste(round(get(paste("CAL.CO2.", j,sep = ""))[[1]][1],3), 
-                      
-                      round(get(paste("CAL.CO2.", j,sep = ""))[[1]][2],3), 
-                      
-                      sep = "+")
- )
- 
- 
- 
- ####### Plot Calibration line  for N2O #######
- 
- plot(N2O.ppm ~ N2O, 
-      
-      data = GC.standards[GC.standards$Sampling.Date == i,],
-      
-      main = i,
-      
-      col = "blue",
-      
-      type = "p")  ;
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i , "N2O"],
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][2],
        
-       y = GC.standards[GC.standards$Sampling.Date == i , "N2O.ppm"],
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][2],
        
-       labels = GC.standards[GC.standards$Sampling.Date == i , "Sample.Name"],
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][2],
        
-       pos = 3);
- 
- text( x = GC.standards[GC.standards$Sampling.Date == i, "N2O"],
+       col = "blue")
+#text(x = GC.standards.3$N2O.ppm , y = GC.standards.3$N2O, labels = GC.standards.3$P.ID )
+
+
+
+##### Select conditions
+
+GC.standards[GC.standards$Sampling.Date == "2022-09-27" ,]
+
+points(N2O ~ N2O.ppm ,  data = GC.standards[GC.standards$Sampling.Date == "2022-09-27" ,] ,
        
-       y = GC.standards[GC.standards$Sampling.Date == i, "N2O.ppm"],
+       pch = 16 , 
        
-       labels = rownames(GC.standards[GC.standards$Sampling.Date == i ,]),
+       main="N2O", 
        
-       pos = 1);
- 
- ###### Calculate calibration line N2O #######
- 
- assign(paste("CAL.N2O.", j, sep = ""), lm(N2O.ppm ~ N2O,
-                                           
-                                           data = GC.standards[GC.standards$Sampling.Date == i,]))
- 
- 
- 
- summary(get(paste("CAL.N2O.", j, sep = "")))
- 
- abline(a = get(paste("CAL.N2O.", j, sep = ""))[[1]][1] ,
-        
-        b = get(paste("CAL.N2O.", j, sep = ""))[[1]][2], 
-        
-        col = "red") ;
- 
- text( x = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O")]),
+       col = "red")
+
+text(x = GC.standards[GC.standards$Sampling.Date == "2022-09-27" , "N2O.ppm"] ,
+     
+     y =GC.standards[GC.standards$Sampling.Date == "2022-09-27" , "N2O"] ,
+     
+     labels = GC.standards[GC.standards$Sampling.Date == "2022-09-27" , "P.ID"])
+
+
+GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" ,]
+
+points(N2O ~ N2O.ppm ,  data = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" ,] ,
        
-       y = mean(GC.standards[GC.standards$Sampling.Date == i , c("N2O.ppm")]),
+       pch = 16 , 
        
-       labels = paste(round(get(paste("CAL.N2O.", j, sep = ""))[[1]][1],3), round(get(paste("CAL.N2O.", j, sep = ""))[[1]][2],3), sep = "+")
+       main="N2O", 
        
- )
- 
- 
- 
- 
- # points(N2O.ppm ~ N2O, 
- #        
- #        data = GC.standards[rownames(GC.standards) == "716", ],
- #        
- #        col = "red",
- #        
- #        cex = 2,
- #        
- #        pch = 19) ;
- # 
- 
- ##### Remove outliers row names 2326 , 2512 , 2406 , 2430  ####### 
- 
-  GC.standards[rownames(GC.standards) == "2326", ]
- 
-  GC.standards <- GC.standards[!rownames(GC.standards) == "2326", ] ;
-  
-  GC.standards[rownames(GC.standards) == "2512", ]
-  
-  GC.standards <- GC.standards[!rownames(GC.standards) == "2512", ] ;
-  
-  GC.standards[rownames(GC.standards) == "2406", ]
-  
-  GC.standards <- GC.standards[!rownames(GC.standards) == "2406", ] ; 
-  
-  GC.standards[rownames(GC.standards) == "2430", ]
-  
-  GC.standards <- GC.standards[!rownames(GC.standards) == "2430", ] ; 
- 
- ##############################################################################################################
- #                           
- #                           Cumulative plot for 2022
- #
- ###############################################################################################################
- 
- ##### data to plot  CO2 #####
- 
- i ; j ;
- 
- 
- str(GC.standards$Sampling.Date)
- 
- Cum.Sampling.Dates <- c("2022-06-30",
-                         
-                         "2022-06-09", 
-                         
-                         "2022-06-23", 
-                         
-                         "2022-06-29", 
-                         
-                         "2022-06-15", 
-                         
-                         "2022-07-07",
-                         
-                         "2022-07-19",
-                         
-                         "2022-09-01",
-                         
-                         "2022-09-10",
-                         
-                         "2022-09-27",
-                         
-                         "2022-10-05")
- 
- 
- Cum.Plot.Data <-  GC.standards[which(GC.standards$Sampling.Date %in% Cum.Sampling.Dates),] ;
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.CO2 <- xyplot(CO2 ~ CO2.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main="CO2", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        })
- 
- Cum.Plot.CO2
- 
- ## insert additional points
- 
- update(Cum.Plot.CO2, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i, "CO2" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "CO2" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- ##### data to plot  N20 #####
- 
- str(GC.standards$Sampling.Date)
- 
- 
- str(Cum.Plot.Data)
- 
- Cum.Plot.N2O <- xyplot(N2O ~ N2O.ppm, 
-                        
-                        groups = GC.Date, 
-                        
-                        data = Cum.Plot.Data, 
-                        
-                        pch =16, 
-                        
-                        main = "N2O", 
-                        
-                        auto.key = T, 
-                        
-                        panel=function(x, y, ...){
-                          
-                          panel.xyplot(x, y, ...)
-                          
-                          panel.text(x=x, y=y, 
-                                     
-                                     labels= rownames(Cum.Plot.Data), 
-                                     
-                                     pos=1)
-                          
-                        }
-                        
- )
- 
- Cum.Plot.N2O
- 
- update(Cum.Plot.N2O, panel = function(...) {
-   
-   panel.xyplot(...)
-   
-   panel.xyplot(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-                
-                y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-                
-                
-                pch = 19,
-                
-                col = "red",
-                
-                cex = 1.5
-                
-   )
-   
-   panel.text(x = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O.ppm" ],
-              
-              y = Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i , "N2O" ], 
-              
-              labels= rownames(Cum.Plot.Data[Cum.Plot.Data$Sampling.Date == i ,]), 
-              
-              pos=1)
- })
- 
- 
- 
- 
+       col = "blue")
+
+text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" , "N2O.ppm"] ,
+     
+     y =GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" , "N2O"] ,
+     
+     labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" , "P.ID"])
  
  ###############################################################################################################
  #                           
@@ -4950,6 +2423,6 @@ GC.standards[GC.standards$Sampling.Date == "2022-09-27" & GC.standards$AnalysisN
  # 
  # "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\Standards2022_",
  # 
- # Working.Date , ".csv"), append = F , row.names = F )
- 
+ # Working.Date , ".csv"), row.names = F )
+ # 
  
