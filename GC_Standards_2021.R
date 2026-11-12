@@ -84,7 +84,7 @@ Year = 2021
 #
 ###############################################################################################################
 
-GC.standards <- read.csv(file = "FluxDataAnalysisResults\\StandardsDataset2021_2026_11_04_09_13_48.csv" )  ;
+GC.standards <- read.csv(file = "FluxDataAnalysisResults\\Standards2021_2026_11_04_09_19_14.csv" )  ;
 
 
 ###############################################################################################################
@@ -1176,6 +1176,8 @@ xyplot(N2O ~ N2O.ppm, groups = GC.Date, data= GC.standards,
        pch = 16 , 
        
        main="N2O", 
+       
+       # xlim = c(-10 , 500),
        
        color.palette = paletteer_d("ggsci::default_ucscgb"),
        
