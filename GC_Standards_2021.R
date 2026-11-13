@@ -1760,7 +1760,14 @@ points(N2O ~ N2O.ppm , data = OutRange.Points.N2O.1 ,
        col = "blue")
 
 
+###### Remove points that are out of range   #######
 
+
+#### Gather together all the out of range points   ####3
+
+OutRange.Points.All <- c(OutRange.Points.N2O , OutRange.Points.CO2 ) 
+
+GC.standards.Final <- GC.standards[ !GC.standards$P.ID %in% OutRange.Points.All , ]
 
 ###############################################################################################################
 #                           
@@ -1770,7 +1777,7 @@ points(N2O ~ N2O.ppm , data = OutRange.Points.N2O.1 ,
 
 # Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
 # 
-# write.csv(x = GC.standards, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# write.csv(x = GC.standards.Final , file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
 # 
 # "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
 # 
