@@ -80,7 +80,7 @@ setwd(Working.Directory.File.Path)
 ###############################################################################################################
 
 
-C.GC.Standards.2021 <- read.csv(file = "StandardsDataset2021_2026_11_03_17_36_53.csv" , header = T);
+C.GC.Standards.2021 <- read.csv(file = "Standards2021_2026_11_13_16_43_14.csv" , header = T);
 
 str(C.GC.Standards.2021)
 
@@ -89,7 +89,7 @@ head(C.GC.Standards.2021, 20)
 tail(C.GC.Standards.2021, 20)
 
 
-C.GC.Standards.2022 <- read.csv(file = "StandardsDataset2022_2026_11_03_17_34_08.csv" , header = T);
+C.GC.Standards.2022 <- read.csv(file = "Standards2022_2026_11_15_16_07_56.csv" , header = T);
 
 str(C.GC.Standards.2022)
 
@@ -101,31 +101,30 @@ names(C.GC.Standards.2021)
 
 names(C.GC.Standards.2022)
 
-######### C.GC.Standards.2022 have two column names that do not match C.GC.Standards.2021 #####
+######### C.GC.Standards.2022 have columns names that do not match C.GC.Standards.2021 #####
 
 ######### "X" and "Factor.Name" ########
 
 names(C.GC.Standards.2022)
 
-str(C.GC.Standards.2022$Factor.Name)
+names(C.GC.Standards.2021)
 
-######## Change column name from "X" to "Rownames"#######
+which(names(C.GC.Standards.2022) %in%  names(C.GC.Standards.2021))
 
-colnames(C.GC.Standards.2022) [colnames(C.GC.Standards.2022) == "X" ] <- "Rownames" ;
+which(!names(C.GC.Standards.2021) %in%  names(C.GC.Standards.2022))  #  1 , 2
 
-######## Remove the "Factor.Name" column #########
+names(C.GC.Standards.2021)[ c( 1 , 2 )] # "X.1" "X" 
 
-C.GC.Standards.2022 <- subset(C.GC.Standards.2022, select = - Factor.Name)
+which(!names(C.GC.Standards.2022) %in%  names(C.GC.Standards.2021)) # 11 , 12
 
-colnames(C.GC.Standards.2022)
+names(C.GC.Standards.2022)[ c( 11 , 12 )] # "AnalysisName" "Factor.Name"
+
 
 ###### Add a factor name that identifies the year of sampling ########
 
 C.GC.Standards.2021$YEAR <- 2021 ;
 
 C.GC.Standards.2022$YEAR <- 2022 ;
-
-
 
 
 ###############################################################################################################
@@ -135,11 +134,21 @@ C.GC.Standards.2022$YEAR <- 2022 ;
 ###############################################################################################################
 
 
-C.GC.Standards.All <- rbind(C.GC.Standards.2021,C.GC.Standards.2022 ) ;
+
+
+C.GC.Standards.All <- rbind(C.GC.Standards.2021[ , - c( 1,2 )], C.GC.Standards.2022[ , -c( 11 , 12)] ) ;
 
 str(C.GC.Standards.All)
 
 C.GC.Standards.All$YEAR <- as.factor(C.GC.Standards.All$YEAR) ;
+
+######## Column P. ID has IDs from 2021 and 2022 and they repeat #######
+
+duplicated(C.GC.Standards.All$P.ID)
+
+C.GC.Standards.All$New.ID <- row.names(C.GC.Standards.All) ;
+
+
 
 ###### Plot Standards  #####
 
@@ -233,6 +242,231 @@ xyplot(CH4 ~ CH4.ppm,
        ))
 
 
+######   There are points in 2021 that are well below other points, in all three analytes , CO2, N2O, CH4 #####
+
+
+##### Do quantile regression to differentiate the points that are out of range  ######
+
+
+####################################### CO2 #############################################
+
+Quantile.Reg.CO2 <- rq( CO2 ~ CO2.ppm, data = C.GC.Standards.All, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
+
+summary(Quantile.Reg.CO2)
+
+plot(NULL, xlim = range(C.GC.Standards.All$CO2.ppm),
+     
+     ylim = range(C.GC.Standards.All$CO2),
+     
+     main = "CO2", xlab = "CO2" , ylab = "CO2.ppm" ) ;
+
+
+# plot(NULL, xlim = c(4900, 5100),
+#      
+#      ylim = c(1500, 3000),
+#      
+#      main = "CO2", xlab = "CO2" , ylab = "CO2.ppm" ) ;
+# 
+
+####### calculations to plot quantile bands  #######
+
+range(C.GC.Standards.All$CO2.ppm)
+min(C.GC.Standards.All$CO2.ppm)
+
+
+##### 95% confidence quartile polygon envelope   #########
+
+polygon.x <- c(min(C.GC.Standards.All$CO2.ppm) , max(C.GC.Standards.All$CO2.ppm) ,max(C.GC.Standards.All$CO2.ppm) , min(C.GC.Standards.All$CO2.ppm)) ;
+
+polygon.y <- c(y = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1],  Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2] * max(C.GC.Standards.All$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2] * max(C.GC.Standards.All$CO2.ppm)),
+               
+               Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
+
+
+####### All points in gray  #######
+
+points(CO2 ~ CO2.ppm , data = C.GC.Standards.All,
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       col = "gray")
+
+Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.05"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.95"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.25"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.75"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.CO2$coefficients[,"tau= 0.50"][2],
+       
+       col = "blue")
+text(x = C.GC.Standards.All$CO2.ppm , y = C.GC.Standards.All$CO2, labels = C.GC.Standards.All$New.ID)
+
+
+############ Points out of range in CO2 and N2O #####################
+
+Out.Range.Points.CO2 <- as.character(c( 75 , 81 , 93 , 87 , 64 , 156 , 76 , 82 , 88 ,  162 , 168 , 94 )) ;
+
+
+##### ad out of range points to the plot  ############
+
+
+points(CO2 ~ CO2.ppm , data = C.GC.Standards.All[C.GC.Standards.All$New.ID %in% Out.Range.Points.CO2, ] ,
+       
+       pch = 16 , 
+       
+       main="CO2", 
+       
+       col = "red")
+
+
+
+
+####################################### N2O #############################################
+
+Quantile.Reg.N2O <- rq( N2O ~ N2O.ppm, data = C.GC.Standards.All, tau = c(0.05 , 0.25, 0.50 , 0.75 , 0.95)) ;
+
+summary(Quantile.Reg.N2O)
+
+range(C.GC.Standards.All$N2O.ppm)
+
+range(C.GC.Standards.All$N2O)
+
+which(is.na(C.GC.Standards.All$N2O))
+
+names(C.GC.Standards.All)
+
+C.GC.Standards.All[which(is.na(C.GC.Standards.All$N2O)) ,]
+
+C.GC.Standards.All[which(is.na(C.GC.Standards.All$N2O)) , c("Sample.Name" , "CH4" , "CO2" , "N2O" ,  "Sampling.Date" , 
+                                                            
+                                                            "CH4.ppm" , "CO2.ppm" , "N2O.ppm" , "P.ID" , "YEAR")]
+
+# There are three samples without N2O data 
+# 
+# 
+# Sample.Name   CH4     CO2 N2O Sampling.Date CH4.ppm CO2.ppm N2O.ppm P.ID YEAR
+# 317           0 1.914 188.711  NA    2022-06-23     0.0       0     0.0  138 2022
+# 430         L50 1.879 278.501  NA    2022-07-19     2.5     250     0.5  268 2022
+# 463           0 1.225 387.675  NA    2022-08-19     0.0       0     0.0  303 2022
+
+
+
+
+
+
+plot(NULL, xlim = range(C.GC.Standards.All$N2O.ppm),
+     
+     ylim = range(C.GC.Standards.All$N2O, na.rm = T),
+     
+     main = "N2O", xlab = "N2O" , ylab = "N2O.ppm" ) ;
+
+####### calculations to plot quantile bands  #######
+
+range(C.GC.Standards.All$N2O.ppm)
+min(C.GC.Standards.All$N2O.ppm)
+
+
+##### 95% confidence quartile polygon envelope   #########
+
+polygon.x <- c(min(C.GC.Standards.All$N2O.ppm) , max(C.GC.Standards.All$N2O.ppm) ,max(C.GC.Standards.All$N2O.ppm) , min(C.GC.Standards.All$N2O.ppm)) ;
+
+polygon.y <- c(y = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1],  Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] +
+                 
+                 (Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2] * max(C.GC.Standards.All$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] + (Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2] * max(C.GC.Standards.All$N2O.ppm)),
+               
+               Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] ) ;
+
+points(polygon.x,polygon.y, pch = 16 , col = "magenta")
+
+polygon(x = polygon.x ,  y = polygon.y, col = adjustcolor( col = "gray", alpha.f = 0.1), border = NA)
+
+
+####### All points in gray  #######
+
+points(N2O ~ N2O.ppm , data = C.GC.Standards.All,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "gray")
+
+Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1]
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.05"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.95"][2],
+       
+       col = "red1")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.25"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.75"][2],
+       
+       col = "red4")
+
+abline(a = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][1] , b = Quantile.Reg.N2O$coefficients[,"tau= 0.50"][2],
+       
+       col = "blue")
+text(x = C.GC.Standards.All$N2O.ppm , y = C.GC.Standards.All$N2O, labels = row.names(C.GC.Standards.All) )
+
+
+########## Add points out of range from CO2 #################
+
+points(N2O ~ N2O.ppm , data = C.GC.Standards.All[C.GC.Standards.All$New.ID %in% Out.Range.Points.CO2, ],
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "red")
+
+
+
+############  The points out of range in CO2 are the same in N2O #####################
+
+############  Remove out of range points #############
+
+str(C.GC.Standards.All)
+
+C.GC.Standards.All.1 <- C.GC.Standards.All[!C.GC.Standards.All$New.ID %in% Out.Range.Points.CO2, ] ;
+
+str(C.GC.Standards.All.1)
+
+C.GC.Standards.All <- C.GC.Standards.All.1 ;
+
+str(C.GC.Standards.All)
+
+rm(C.GC.Standards.All.1)
 
 ###############################################################################################################
 #                           
@@ -683,9 +917,8 @@ legend("topleft", legend = c("CO2.ppm", "OLS-CO2", "OLS-Sqrt(CO2)", "Quant 50"),
 # 
 # Coefficients:
 #   coefficients lower bd  upper bd 
-# (Intercept) 797.91013    740.63252 845.75477
-# CO2.ppm       3.30048      3.22693   3.47683
-# 
+# (Intercept) 780.52553    728.42348 820.06204
+# CO2.ppm       3.39109      3.26413   3.49989# 
 # 
 # ###############################################################################################################
 
@@ -720,14 +953,14 @@ C.GC.Standards.All[which(is.na(C.GC.Standards.All$N2O)),]
 ##### Do the calibration without NA  records ###
 
 
-C.GC.Standards.no.NA <- C.GC.Standards.All[which(!is.na(C.GC.Standards.All$N2O)),]  ;
+C.GC.Standards.no.NA.N2O <- C.GC.Standards.All[which(!is.na(C.GC.Standards.All$N2O)),]  ;
 
-which(is.na(C.GC.Standards.no.NA$N2O))
+which(is.na(C.GC.Standards.no.NA.N2O$N2O))
 
 
 OLS.regression.N2O <- lm(N2O ~ N2O.ppm, 
                          
-                         data = C.GC.Standards.no.NA) ;
+                         data = C.GC.Standards.no.NA.N2O) ;
 
 summary(OLS.regression.N2O)
 
@@ -736,7 +969,7 @@ summary(OLS.regression.N2O)
 
 plot(OLS.regression.N2O$fitted.values, OLS.regression.N2O$residuals)
 
-plot(C.GC.Standards.no.NA$N2O.ppm , OLS.regression.N2O$residuals ) 
+plot(C.GC.Standards.no.NA.N2O$N2O.ppm , OLS.regression.N2O$residuals ) 
 
 
 ##### Residuals grow as the level of CO2 increases. Heteroscedasticity . Do Box-Cox method like CO2 
@@ -765,17 +998,17 @@ plot(C.GC.Standards.no.NA$N2O.ppm , OLS.regression.N2O$residuals )
  
 #### ratio of the largest to smallest response data  ####
 
-max(C.GC.Standards.no.NA$N2O)/min(C.GC.Standards.no.NA$N2O)
+max(C.GC.Standards.no.NA.N2O$N2O)/min(C.GC.Standards.no.NA.N2O$N2O)
   
   
 boxcox(OLS.regression.N2O)
 
-boxcox(N2O ~ N2O.ppm , data = C.GC.Standards.no.NA , lambda = seq(from = 0, to = 1 , by = 0.01),
+boxcox(N2O ~ N2O.ppm , data = C.GC.Standards.no.NA.N2O , lambda = seq(from = 0, to = 1 , by = 0.01),
        
        plotit = T )
  
 
-OLS.regression.N2O.BoxCox <-boxcox(N2O ~ N2O.ppm , data = C.GC.Standards.no.NA , lambda = seq(from = 0.2, to = 0.4 , by = 0.01),
+OLS.regression.N2O.BoxCox <-boxcox(N2O ~ N2O.ppm , data = C.GC.Standards.no.NA.N2O , lambda = seq(from = 0.2, to = 0.4 , by = 0.01),
        
        plotit = T )
 
@@ -791,14 +1024,14 @@ OLS.regression.N2O.BoxCox$x[53]
 
 #### The optimal transformation according to the Box-Cox transformation analysis is y^0.3 = a + X1...
 
-C.GC.Standards.no.NA$N2O.pwr.0_3 <- (C.GC.Standards.no.NA$N2O)^0.3 ;
+C.GC.Standards.no.NA.N2O$N2O.pwr.0_3 <- (C.GC.Standards.no.NA.N2O$N2O)^0.3 ;
 
-str(C.GC.Standards.no.NA)
+str(C.GC.Standards.no.NA.N2O)
 
 
-OLS.regression.N2O.pwr.0_3 <- lm(C.GC.Standards.no.NA$N2O.pwr.0_3 ~ N2O.ppm, 
+OLS.regression.N2O.pwr.0_3 <- lm(C.GC.Standards.no.NA.N2O$N2O.pwr.0_3 ~ N2O.ppm, 
                               
-                              data = C.GC.Standards.no.NA) ;
+                              data = C.GC.Standards.no.NA.N2O) ;
 
 summary(OLS.regression.N2O.pwr.0_3)  
 
@@ -832,7 +1065,7 @@ summary(OLS.regression.N2O.pwr.0_3)
 
 plot(N2O ~ N2O.ppm,
      
-     data = C.GC.Standards.no.NA, 
+     data = C.GC.Standards.no.NA.N2O, 
      
      main = "N2O",
      
@@ -842,11 +1075,11 @@ plot(N2O ~ N2O.ppm,
      
      col = "red")
 
-points(predict(OLS.regression.N2O) ~ C.GC.Standards.no.NA$N2O.ppm, pch = 16, cex = 1.5 , col = "blue")
+points(predict(OLS.regression.N2O) ~ C.GC.Standards.no.NA.N2O$N2O.ppm, pch = 16, cex = 1.5 , col = "blue")
 
 abline( a = OLS.regression.N2O$coefficients[1] , b = OLS.regression.N2O$coefficients[2] , col = "blue")
 
-points((predict(OLS.regression.N2O.pwr.0_3))^(10/3) ~ C.GC.Standards.no.NA$N2O.ppm, pch = 16, cex = 1.5 , col = "green")
+points((predict(OLS.regression.N2O.pwr.0_3))^(10/3) ~ C.GC.Standards.no.NA.N2O$N2O.ppm, pch = 16, cex = 1.5 , col = "green")
 
 legend("topleft", legend = c("N2O.ppm", "OLS" , "OLS 0.3 power"), col = c("red" , "blue" , "green"), pch = c(16, 16 , 16))
 
@@ -854,12 +1087,12 @@ legend("topleft", legend = c("N2O.ppm", "OLS" , "OLS 0.3 power"), col = c("red" 
 
 ################## TESTING SQUARE ROOT FOR N2O #####################
 
-C.GC.Standards.no.NA$N2O.sqrt <- sqrt(C.GC.Standards.no.NA$N2O) ;
+C.GC.Standards.no.NA.N2O$N2O.sqrt <- sqrt(C.GC.Standards.no.NA.N2O$N2O) ;
 
 
-OLS.regression.sqrt_N2O <- lm(C.GC.Standards.no.NA$N2O.sqrt ~ N2O.ppm, 
+OLS.regression.sqrt_N2O <- lm(C.GC.Standards.no.NA.N2O$N2O.sqrt ~ N2O.ppm, 
                                  
-                                 data = C.GC.Standards.no.NA) ;
+                                 data = C.GC.Standards.no.NA.N2O) ;
 
 summary(OLS.regression.sqrt_N2O)
 
@@ -867,17 +1100,17 @@ summary(OLS.regression.sqrt_N2O)
 
 plot(OLS.regression.sqrt_N2O$fitted.values, OLS.regression.sqrt_N2O$residuals)
 
-plot(C.GC.Standards.no.NA$N2O.ppm , OLS.regression.sqrt_N2O$residuals ) 
+plot(C.GC.Standards.no.NA.N2O$N2O.ppm , OLS.regression.sqrt_N2O$residuals ) 
 
-plot(C.GC.Standards.no.NA$N2O.ppm , OLS.regression.sqrt_N2O$residuals ) 
+plot(C.GC.Standards.no.NA.N2O$N2O.ppm , OLS.regression.sqrt_N2O$residuals ) 
 
 
-plot(C.GC.Standards.no.NA$N2O.ppm , OLS.regression.sqrt_N2O$fitted.values ) 
+plot(C.GC.Standards.no.NA.N2O$N2O.ppm , OLS.regression.sqrt_N2O$fitted.values ) 
 
 
 plot(N2O ~ N2O.ppm,
      
-     data = C.GC.Standards.no.NA, 
+     data = C.GC.Standards.no.NA.N2O, 
      
      main = "N2O",
      
@@ -887,9 +1120,9 @@ plot(N2O ~ N2O.ppm,
      
      col = "red")
 
-points(predict(OLS.regression.N2O) ~ C.GC.Standards.no.NA$N2O.ppm, pch = 16, cex = 1.5 , col = "blue")
+points(predict(OLS.regression.N2O) ~ C.GC.Standards.no.NA.N2O$N2O.ppm, pch = 16, cex = 1.5 , col = "blue")
 
-points(predict(OLS.regression.sqrt_N2O)^2 ~ C.GC.Standards.no.NA$N2O.ppm, pch = 16, cex = 1.5 , col = "green")
+points(predict(OLS.regression.sqrt_N2O)^2 ~ C.GC.Standards.no.NA.N2O$N2O.ppm, pch = 16, cex = 1.5 , col = "green")
 
 
 legend("topleft", legend = c("N2O.ppm", "OLS" , "SQRT OLS"), col = c("red" , "blue" , "green"), pch = c(16, 16 , 16))
@@ -898,7 +1131,7 @@ legend("topleft", legend = c("N2O.ppm", "OLS" , "SQRT OLS"), col = c("red" , "bl
 
 ############## quantile regression  N2O ###########
 
-Quantile.Reg.N2O <- rq( N2O ~ N2O.ppm, data = C.GC.Standards.no.NA, tau = seq(from = 0.1, to = 0.9 , by = 0.1) ) ;
+Quantile.Reg.N2O <- rq( N2O ~ N2O.ppm, data = C.GC.Standards.no.NA.N2O, tau = seq(from = 0.1, to = 0.9 , by = 0.1) ) ;
 
 str(Quantile.Reg.N2O )
 
@@ -911,7 +1144,7 @@ coefficients(Quantile.Reg.N2O)
 
 xyplot(N2O ~ N2O.ppm ,
        
-       data = C.GC.Standards.no.NA, 
+       data = C.GC.Standards.no.NA.N2O, 
        
        main = "N2O",
        
@@ -939,7 +1172,7 @@ xyplot(N2O ~ N2O.ppm ,
          
          panel.xyplot(x,y, ...)
          
-         panel.xyplot(C.GC.Standards.no.NA$N2O.ppm ,C.GC.Standards.no.NA$N2O, col = "black", lwd =2)
+         panel.xyplot(C.GC.Standards.no.NA.N2O$N2O.ppm ,C.GC.Standards.no.NA.N2O$N2O, col = "black", lwd =2)
          
          panel.abline(a = coefficients(Quantile.Reg.N2O)[1,1] , b = coefficients(Quantile.Reg.N2O)[2,1],
                       
@@ -1004,7 +1237,7 @@ xyplot(N2O ~ N2O.ppm ,
 
 
 
-Quantile.Reg.N2O.05 <- rq( N2O ~ N2O.ppm, data = C.GC.Standards.no.NA, tau = 0.5 )
+Quantile.Reg.N2O.05 <- rq( N2O ~ N2O.ppm, data = C.GC.Standards.no.NA.N2O, tau = 0.5 )
 
 summary(Quantile.Reg.N2O.05)
 
@@ -1012,7 +1245,7 @@ summary(Quantile.Reg.N2O.05)
 
 plot(N2O ~ N2O.ppm,
      
-     data = C.GC.Standards.no.NA, 
+     data = C.GC.Standards.no.NA.N2O, 
      
      main = "N2O",
      
@@ -1022,13 +1255,13 @@ plot(N2O ~ N2O.ppm,
      
      col = "red")
 
-points(predict(OLS.regression.N2O)  ~  C.GC.Standards.no.NA$N2O.ppm  , pch = 17 , cex = 1.5 , col = "green")
+points(predict(OLS.regression.N2O)  ~  C.GC.Standards.no.NA.N2O$N2O.ppm  , pch = 17 , cex = 1.5 , col = "green")
 
 abline(a = OLS.regression.N2O$coefficients[1], b = OLS.regression.N2O$coefficients[2], col = "green")
 
-points(predict(OLS.regression.sqrt_N2O)^2 ~ C.GC.Standards.no.NA$N2O.ppm, pch = 16 , cex = 1.5 , col = "blue")
+points(predict(OLS.regression.sqrt_N2O)^2 ~ C.GC.Standards.no.NA.N2O$N2O.ppm, pch = 16 , cex = 1.5 , col = "blue")
 
-points(predict(Quantile.Reg.N2O.05) ~ C.GC.Standards.no.NA$N2O.ppm  , pch = 18 , cex = 1.5 , col = "magenta") 
+points(predict(Quantile.Reg.N2O.05) ~ C.GC.Standards.no.NA.N2O$N2O.ppm  , pch = 18 , cex = 1.5 , col = "magenta") 
 
 abline(a = Quantile.Reg.N2O.05$coefficients[1], b = Quantile.Reg.N2O.05$coefficients[2], col = "magenta")
 
@@ -1060,14 +1293,14 @@ legend("topleft", legend = c("N2O.ppm", "OLS-N2O", "OLS-Sqrt(N2O)", "Quant 50"),
 # ###############################################################################################################
 # 
 # 
-# Call: rq(formula = N2O ~ N2O.ppm, tau = 0.5, data = C.GC.Standards.no.NA)
+# Call: rq(formula = N2O ~ N2O.ppm, tau = 0.5, data = C.GC.Standards.no.NA.N2O)
 # 
 # tau: [1] 0.5
 # 
 # Coefficients:
 #   coefficients lower bd upper bd
-# (Intercept) 134.9825     127.2636 149.5451
-# N2O.ppm     624.6675     608.9579 634.0715 
+# (Intercept) 132.5570     121.8779 140.0965
+# N2O.ppm     621.8412     608.1284 634.2923
 # 
 # ###############################################################################################################
 
@@ -1097,7 +1330,7 @@ Calibration.coeff <- rbind(Calibration.coeff.CO2,Calibration.coeff.N2O) ;
 # 
 # "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\Calibration_coeff",
 # 
-# Working.Date , ".csv"), append = F , row.names = T )
+# Working.Date , ".csv"), row.names = T )
 
 
 ################################################################################################################
@@ -1117,37 +1350,37 @@ Calibration.coeff <- rbind(Calibration.coeff.CO2,Calibration.coeff.N2O) ;
 ################################################################################################################
 
 
-str(C.GC.Standards.no.NA)
+str(C.GC.Standards.All)
 
-C.GC.Standards.no.NA$CO2.ppm.F <- as.factor(C.GC.Standards.no.NA$CO2.ppm) ;
+C.GC.Standards.All$CO2.ppm.F <- as.factor(C.GC.Standards.All$CO2.ppm) ;
 
-levels(C.GC.Standards.no.NA$CO2.ppm.F)
+levels(C.GC.Standards.All$CO2.ppm.F)
 
 
 ######## Z-scores can also be computed using the scale(function)
 
-(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CO2.ppm.F == "500", "CO2" ] - 
+(C.GC.Standards.All[C.GC.Standards.All$CO2.ppm.F == "500", "CO2" ] - 
     
-    mean(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CO2.ppm.F == "500", "CO2" ])) /
+    mean(C.GC.Standards.All[C.GC.Standards.All$CO2.ppm.F == "500", "CO2" ])) /
   
-  sd(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CO2.ppm.F == "500", "CO2" ])
+  sd(C.GC.Standards.All[C.GC.Standards.All$CO2.ppm.F == "500", "CO2" ])
 
-scale(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CO2.ppm.F == "500", "CO2" ], center = T, scale = T)
+scale(C.GC.Standards.All[C.GC.Standards.All$CO2.ppm.F == "500", "CO2" ], center = T, scale = T)
 
 
 
 ########################################################################################
 
 
-CO2.ppm.mean <- by( data = C.GC.Standards.no.NA[, "CO2"] , INDICES = C.GC.Standards.no.NA[,"CO2.ppm.F"] , 
+CO2.ppm.mean <- by( data = C.GC.Standards.All[, "CO2"] , INDICES = C.GC.Standards.All[,"CO2.ppm.F"] , 
                     
                     FUN = function(x) mean(x) ) ;
 
-CO2.ppm.sd <- by( data = C.GC.Standards.no.NA[, "CO2"] , INDICES = C.GC.Standards.no.NA[,"CO2.ppm.F"] , 
+CO2.ppm.sd <- by( data = C.GC.Standards.All[, "CO2"] , INDICES = C.GC.Standards.All[,"CO2.ppm.F"] , 
                   
                   FUN = function(x) sd(x) ) ;
 
-CO2.ppm.Z <- by(data = C.GC.Standards.no.NA[, "CO2"] , INDICES = C.GC.Standards.no.NA[,"CO2.ppm.F"],
+CO2.ppm.Z <- by(data = C.GC.Standards.All[, "CO2"] , INDICES = C.GC.Standards.All[,"CO2.ppm.F"],
                 
                 FUN = function(x) {(x - mean(x) ) / sd(x) })  ;
 
@@ -1167,7 +1400,7 @@ str(CO2.ppm.Z.density, max.level = 1)
 
 Range.CO2.Z.Density <- data.frame(Min.x = double() , Max.x = double(), Min.y = double() , Max.y = double() ) ;
 
-levels(C.GC.Standards.no.NA$CO2.ppm.F)
+levels(C.GC.Standards.All$CO2.ppm.F)
 
 
 for (i in seq(from = 1, to = length(CO2.ppm.Z.density), by = 1)) {
@@ -1229,24 +1462,24 @@ legend("topleft", legend = paste0(names(CO2.ppm.Z.density), " ppm"),
 ################################################################################################################
 
 
-str(C.GC.Standards.no.NA)
+str(C.GC.Standards.no.NA.N2O)
 
-C.GC.Standards.no.NA$N2O.ppm.F <- as.factor(C.GC.Standards.no.NA$N2O.ppm) ;
+C.GC.Standards.no.NA.N2O$N2O.ppm.F <- as.factor(C.GC.Standards.no.NA.N2O$N2O.ppm) ;
 
-levels(C.GC.Standards.no.NA$N2O.ppm.F)
+levels(C.GC.Standards.no.NA.N2O$N2O.ppm.F)
 
 ########################################################################################
 
 
-N2O.ppm.mean <- by( data = C.GC.Standards.no.NA[, "N2O"] , INDICES = C.GC.Standards.no.NA[,"N2O.ppm.F"] , 
+N2O.ppm.mean <- by( data = C.GC.Standards.no.NA.N2O[, "N2O"] , INDICES = C.GC.Standards.no.NA.N2O[,"N2O.ppm.F"] , 
                     
                     FUN = function(x) mean(x) ) ;
 
-N2O.ppm.sd <- by( data = C.GC.Standards.no.NA[, "N2O"] , INDICES = C.GC.Standards.no.NA[,"N2O.ppm.F"] , 
+N2O.ppm.sd <- by( data = C.GC.Standards.no.NA.N2O[, "N2O"] , INDICES = C.GC.Standards.no.NA.N2O[,"N2O.ppm.F"] , 
                   
                   FUN = function(x) sd(x) ) ;
 
-N2O.ppm.Z <- by(data = C.GC.Standards.no.NA[, "N2O"] , INDICES = C.GC.Standards.no.NA[,"N2O.ppm.F"],
+N2O.ppm.Z <- by(data = C.GC.Standards.no.NA.N2O[, "N2O"] , INDICES = C.GC.Standards.no.NA.N2O[,"N2O.ppm.F"],
                 
                 FUN = function(x) {(x - mean(x) ) / sd(x) })  ;
 
@@ -1266,7 +1499,7 @@ str(N2O.ppm.Z.density, max.level = 1)
 
 Range.N2O.Z.Density <- data.frame(Min.x = double() , Max.x = double(), Min.y = double() , Max.y = double() ) ;
 
-levels(C.GC.Standards.no.NA$N2O.ppm.F)
+levels(C.GC.Standards.no.NA.N2O$N2O.ppm.F)
 
 
 for (i in seq(from = 1, to = length(N2O.ppm.Z.density), by = 1)) {
@@ -1329,39 +1562,49 @@ legend("topleft", legend = paste0(names(N2O.ppm.Z.density), " ppm"),
 ################################################################################################################
 
 
-str(C.GC.Standards.no.NA)
+str(C.GC.Standards.All)
 
-C.GC.Standards.no.NA$CH4.ppm.F <- as.factor(C.GC.Standards.no.NA$CH4.ppm) ;
+which(is.na(C.GC.Standards.All$CH4))
 
-levels(C.GC.Standards.no.NA$CH4.ppm.F)
+C.GC.Standards.All[which(is.na(C.GC.Standards.All$CH4)),]
+
+C.GC.Standards.no.NA.CH4 <- C.GC.Standards.All[which(!is.na(C.GC.Standards.All$CH4)),]  ;
+
+str(C.GC.Standards.no.NA.CH4)
+
+C.GC.Standards.no.NA.CH4$CH4.ppm.F <- as.factor(C.GC.Standards.no.NA.CH4$CH4.ppm) ;
+
+levels(C.GC.Standards.no.NA.CH4$CH4.ppm.F)
 
 
 ######## Z-scores can also be computed using the scale(function)
 
-(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CH4.ppm.F == "5", "CH4" ] - 
+(C.GC.Standards.no.NA.CH4[C.GC.Standards.no.NA.CH4$CH4.ppm.F == "5", "CH4" ] - 
     
-    mean(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CH4.ppm.F == "5", "CH4" ])) /
+    mean(C.GC.Standards.no.NA.CH4[C.GC.Standards.no.NA.CH4$CH4.ppm.F == "5", "CH4" ])) /
   
-  sd(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CH4.ppm.F == "5", "CH4" ])
+  sd(C.GC.Standards.no.NA.CH4[C.GC.Standards.no.NA.CH4$CH4.ppm.F == "5", "CH4" ])
 
-scale(C.GC.Standards.no.NA[C.GC.Standards.no.NA$CH4.ppm.F == "5", "CH4" ], center = T, scale = T)
+scale(C.GC.Standards.no.NA.CH4[C.GC.Standards.no.NA.CH4$CH4.ppm.F == "5", "CH4" ], center = T, scale = T)
 
 
 
 ########################################################################################
 
 
-CH4.ppm.mean <- by( data = C.GC.Standards.no.NA[, "CH4"] , INDICES = C.GC.Standards.no.NA[,"CH4.ppm.F"] , 
+CH4.ppm.mean <- by( data = C.GC.Standards.no.NA.CH4[, "CH4"] , INDICES = C.GC.Standards.no.NA.CH4[,"CH4.ppm.F"] , 
     
     FUN = function(x) mean(x) ) ;
 
-CH4.ppm.sd <- by( data = C.GC.Standards.no.NA[, "CH4"] , INDICES = C.GC.Standards.no.NA[,"CH4.ppm.F"] , 
+CH4.ppm.sd <- by( data = C.GC.Standards.no.NA.CH4[, "CH4"] , INDICES = C.GC.Standards.no.NA.CH4[,"CH4.ppm.F"] , 
                   
                   FUN = function(x) sd(x) ) ;
 
-CH4.ppm.Z <- by(data = C.GC.Standards.no.NA[, "CH4"] , INDICES = C.GC.Standards.no.NA[,"CH4.ppm.F"],
+CH4.ppm.Z <- by(data = C.GC.Standards.no.NA.CH4[, "CH4"] , INDICES = C.GC.Standards.no.NA.CH4[,"CH4.ppm.F"],
                 
                 FUN = function(x) {(x - mean(x) ) / sd(x) })  ;
+
+CH4.ppm.Z
 
 
 #### Calculate densities for plotting ####
@@ -1379,7 +1622,7 @@ str(CH4.ppm.Z.density, max.level = 1)
 
 Range.CH4.Z.Density <- data.frame(Min.x = double() , Max.x = double(), Min.y = double() , Max.y = double() ) ;
 
-levels(C.GC.Standards.no.NA$CH4.ppm.F)
+levels(C.GC.Standards.no.NA.CH4$CH4.ppm.F)
 
 
 for (i in seq(from = 1, to = length(CH4.ppm.Z.density), by = 1)) {

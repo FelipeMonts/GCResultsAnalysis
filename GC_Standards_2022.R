@@ -521,27 +521,33 @@ GC.standards$P.ID <- row.names.data.frame(GC.standards) ;
 
 #### points that are outside of the 95 percentile ###
 
- OutRange.Points <- c('150' , '170' , '525' , '365', '90' , '63' , '241' , '491' , '122' , '161' , '281' , '55' , '74' , 
+ OutRange.Points.CO2 <- c('150' , '170' , '525' , '365', '90' , '63' , '241' , '491' , '122' , '161' , '281' , '55' , '74' , 
                       
                       '226' , '167' , '162' , '192' , '551' , '471' , '282' , '332' ,'426' , '172') ;
  
- anyDuplicated(OutRange.Points)
+ anyDuplicated(OutRange.Points.CO2)
 
- OutRange.Points[18]
+ GC.standards[GC.standards$P.ID %in% OutRange.Points.CO2 ,]
  
- anyDuplicated(OutRange.Points)
+ OutRange.Points.CO2.1 <- GC.standards[GC.standards$P.ID %in% OutRange.Points.CO2 ,];
  
- GC.standards[GC.standards$P.ID %in% OutRange.Points ,]
+ OutRange.Points.CO2.1 <- OutRange.Points.CO2.1[order(OutRange.Points.CO2.1$Sampling.Date) ,]
  
- OutRange.Points.1 <- GC.standards[GC.standards$P.ID %in% OutRange.Points ,];
- 
- 
- OutRange.Points.1 <- OutRange.Points.1[order(OutRange.Points.1$Sampling.Date) ,]
- 
-
  str(GC.standards)
  
  str(OutRange.Points.1)
+ 
+##### Plot the points outside of the 95 percentile  
+ 
+
+ points(CO2 ~ CO2.ppm , data =  OutRange.Points.CO2.1,
+        
+        pch = 16 , 
+        
+        main="CO2", 
+        
+        col = "red")
+ 
 
 ###############################################################################################################
 #                           
@@ -840,19 +846,17 @@ points(N2O ~ N2O.ppm , data = OutRange.Points.1,
 ###############################################################################################################
 
 
-##### remove out of range points  ######
-
 str(GC.standards)
 
-str(GC.standards[!GC.standards$P.ID %in% OutRange.Points ,])
+str(GC.standards[!GC.standards$P.ID %in% OutRange.Points.CO2 ,])
 
-GC.standards.2 <- GC.standards[!GC.standards$P.ID %in% OutRange.Points ,];
+GC.standards.2 <- GC.standards[!GC.standards$P.ID %in% OutRange.Points.CO2 ,];
 
 str(GC.standards.2)
 
 #####  check  ### 
 
-GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points ,]
+GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.CO2 ,]
 
 
 ##### Do Quantile Regression  ####
@@ -937,13 +941,15 @@ text(x = GC.standards.2$N2O.ppm , y = GC.standards.2$N2O, labels = GC.standards.
 
 ########## Points that are outside the 95% interval ############################
 
-OutRange.Points.2 <- as.character(sort(c(221 , 44 , 80 , 166 , 89 , 531 , 245 , 231 , 250 , 95 , 100 , 45 , 197 , 20 , 246 , 257 , 507 ))) ;
+OutRange.Points.N2O <- as.character(sort(c(221 , 44 , 80 , 166 , 89 , 531 , 245 , 231 , 250 , 95 , 100 , 45 , 197 , 20 , 246 , 257 , 507 ))) ;
 
-GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.2 ,]
+GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.N2O ,]
 
-GC.standards.3 <- GC.standards.2[!GC.standards.2$P.ID %in% OutRange.Points.2 ,]
+GC.standards.3 <- GC.standards.2[!GC.standards.2$P.ID %in% OutRange.Points.N2O ,]
 
 str(GC.standards.3)
+
+OutRange.Points.N2O.1 <- GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.N2O ,] ;
 
 
 points(N2O ~ N2O.ppm , data = GC.standards.3,
@@ -955,21 +961,28 @@ points(N2O ~ N2O.ppm , data = GC.standards.3,
        col = "blue")
 
 
+points(N2O ~ N2O.ppm , data = OutRange.Points.N2O.1,
+       
+       pch = 16 , 
+       
+       main="N2O", 
+       
+       col = "red")
+
+
 
 ###### check out of range points #####
 
-OutRange.Points.1
+OutRange.Points.CO2
 
-OutRange.Points.3 <- GC.standards.2[GC.standards.2$P.ID %in% OutRange.Points.2 ,] ;
+OutRange.Points.N2O
 
-OutRange.Points.3 <- OutRange.Points.3 [order(OutRange.Points.3$Sampling.Date) , ] ;
-
-OutRange.Points.All <- rbind(OutRange.Points.1 , OutRange.Points.3)
+OutRange.Points.All <- c(OutRange.Points.CO2 , OutRange.Points.N2O)
 
 
 ##############################################################################################################
 #                           
-#                           Do Quantile Regresion with out out of range points
+#                           Do Quantile Regression with out out of range points
 #
 ###############################################################################################################
 
@@ -2408,6 +2421,13 @@ text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" , "N2O.ppm"
      y =GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" , "N2O"] ,
      
      labels = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" , "P.ID"])
+
+
+
+
+
+
+
  
  ###############################################################################################################
  #                           
@@ -2417,12 +2437,12 @@ text(x = GC.standards.3[GC.standards.3$Sampling.Date == "2022-09-27" , "N2O.ppm"
  
  # Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
  # 
- # write.csv(x =GC.standards, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+ # write.csv(x =GC.standards.3, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
  # 
  # "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
  # 
  # "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\Standards2022_",
  # 
  # Working.Date , ".csv"), row.names = F )
- # 
+
  
