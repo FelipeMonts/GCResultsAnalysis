@@ -14,6 +14,7 @@
 ############################################################################################################### 
 
 
+
 ###############################################################################################################
 #                            Install the packages that are needed                       
 ###############################################################################################################
@@ -64,6 +65,9 @@ library(HMR)
 setwd(paste0( "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\Current_Projects\\" , 
 
      "CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\DataAnalysis\\RCode\\GCResultsAnalysis"));
+
+
+#  source(file = "DataCurationGCAnalysis2021.R", verbose = T )
 
 
 #### Read data  #####
@@ -366,6 +370,8 @@ unique(PeakArea.results.2021.Repeated.measures$File)
 # 
 # Check which records are duplicated and remove them.
 
+
+
 PeakArea.results.2021[PeakArea.results.2021$File == "20210528B1B4peakareasMERGED.pdf" |
                         
                         PeakArea.results.2021$File == "20210528peakareas.pdf",] 
@@ -387,12 +393,13 @@ range(Data.20210528B1B4peakareasMERGED$CH4)
 
 range(Data.20210528peakareas$CH4)
 
+anyNA(Data.20210528peakareas$CH4)
 
-plot(Data.20210528B1B4peakareasMERGED$CH4, Data.20210528B1B4peakareasMERGED$N2O, col = "red", cex = 1.2)
+range(range(Data.20210528B1B4peakareasMERGED$CH4) , range(Data.20210528peakareas$CH4))
 
-points(Data.20210528peakareas$CH4,Data.20210528peakareas$N2O,
-       
-       pch = 19 , col = "blue" ,  cex = 0.9)
+
+plot(Data.20210528B1B4peakareasMERGED$CH4, Data.20210528peakareas$CH4, col = "red", cex = 1.2)
+
 
 
 
@@ -403,79 +410,69 @@ range(Data.20210528B1B4peakareasMERGED$CO2)
 range(Data.20210528peakareas$CO2)
 
 
-plot(Data.20210528B1B4peakareasMERGED$CO2,Data.20210528B1B4peakareasMERGED$N2O, col = "red", cex = 1.2) ;
-
-points(Data.20210528peakareas$CO2,Data.20210528peakareas$N2O,
-       
-       pch = 19 , col = "blue" ,  cex = 0.9) ;
+plot(Data.20210528B1B4peakareasMERGED$CO2,Data.20210528peakareas$CO2, col = "red", cex = 1.2) ;
 
 
-#### There are some data points that are duplicated and some that are not. Need to figure out which are 
-#### repeated and which are not. Afterwards the records that are not repeated need to be verified.
-
-str(Data.20210528B1B4peakareasMERGED)
-
-str(Data.20210528peakareas)
-
-
-which(!Data.20210528peakareas$CH4 %in% Data.20210528B1B4peakareasMERGED$CH4)
-
-which(!Data.20210528B1B4peakareasMERGED$CH4 %in% Data.20210528peakareas$CH4)
-
-#### It seems that all data is in both data sets. It might be the case that some of the data occurs
-#### in different rows in either set. 
+### N2O ####
 
 range(Data.20210528B1B4peakareasMERGED$N2O)
 
 range(Data.20210528peakareas$N2O)
 
-range(c(range(Data.20210528B1B4peakareasMERGED$N2O) ,range(Data.20210528peakareas$N2O) ))
 
-plot(Data.20210528B1B4peakareasMERGED$Position , Data.20210528B1B4peakareasMERGED$N2O, col = "red", cex = 1.2,
+plot(x = Data.20210528B1B4peakareasMERGED$N2O, y = Data.20210528peakareas$N2O, col = "red", cex = 1.2,
      
-     ylim = range(c(range(Data.20210528B1B4peakareasMERGED$N2O) , range(Data.20210528peakareas$N2O) ))) ;
+     xlim = c( 0 , 500) , ylim = c( 0,300)) ;
 
-points(Data.20210528peakareas$Position , Data.20210528peakareas$N2O,
-       
-       pch = 19 , col = "blue" ,  cex = 0.9) ;
-
-
-plot(Data.20210528B1B4peakareasMERGED$Position,Data.20210528B1B4peakareasMERGED$CO2, col = "red", cex = 1.2,
+text(x = Data.20210528B1B4peakareasMERGED$N2O , y = Data.20210528peakareas$N2O , 
      
-     ylim = range(c(range(Data.20210528B1B4peakareasMERGED$CO2) , range(Data.20210528peakareas$CO2) ))) ;
-
-points(Data.20210528peakareas$Position,Data.20210528peakareas$CO2,
-       
-       pch = 19 , col = "blue" ,  cex = 0.9) ;
+     labels = Data.20210528peakareas$Sample.Name , col = "blue", pos = 1)
 
 
-
-plot(Data.20210528B1B4peakareasMERGED$Position , Data.20210528B1B4peakareasMERGED$CH4, col = "red", cex = 1.2,
+text(x = Data.20210528B1B4peakareasMERGED$N2O , y = Data.20210528peakareas$N2O , 
      
-     ylim = range(c(range(Data.20210528B1B4peakareasMERGED$CH4) , range(Data.20210528peakareas$CH4) ))) ;
-
-points(Data.20210528peakareas$Position,Data.20210528peakareas$CH4,
-       
-       pch = 19 , col = "blue" ,  cex = 0.9) ;
+     labels = Data.20210528B1B4peakareasMERGED$Sample.Name , col = "red" , pos = 3)
 
 
-#### It seems that the problem is with the N2O data #####################################
 
-which(! Data.20210528B1B4peakareasMERGED$N2O %in% Data.20210528peakareas$N2O )
+#### There are some data points that are duplicated and some that are not. Need to figure out which are 
+#### repeated and which are not. 
 
-which(! Data.20210528peakareas$N2O  %in% Data.20210528B1B4peakareasMERGED$N2O )
+Data.20210528peakareas[Data.20210528peakareas$N2O <= 300 , ]
 
-
-Data.20210528B1B4peakareasMERGED[which(! Data.20210528B1B4peakareasMERGED$N2O %in% Data.20210528peakareas$N2O ),]
-
-Data.20210528peakareas[which(! Data.20210528peakareas$N2O  %in% Data.20210528B1B4peakareasMERGED$N2O ),]
+Data.20210528peakareas[Data.20210528peakareas$N2O <= 300 ,  "Sample.Name"]
 
 
-##### How different are the results between each other?
+##### points that are duplicated but are not the same value; are lower in Data.20210528peakareas
 
-Data.20210528B1B4peakareasMERGED[which(! Data.20210528B1B4peakareasMERGED$N2O %in% Data.20210528peakareas$N2O ),"N2O"] - 
-  
-  Data.20210528peakareas[which(! Data.20210528peakareas$N2O  %in% Data.20210528B1B4peakareasMERGED$N2O ), "N2O"]
+# > Data.20210528peakareas[Data.20210528peakareas$N2O <= 300 ,  "Sample.Name"]
+# [1] "25PerSTD"     "B1TritBT15"   "50PerSTD"     "B1CloverCT0"  "B4TritBT0"    "B4CloverBT15"
+# [7] "B4CloverCT0"  "B4CloverDT0"  "B1TritBT0"
+# 
+
+Low.Values.N2O <- c( "25PerSTD" , "B1TritBT15" ,  "50PerSTD" , "B1CloverCT0" , "B4TritBT0" ,  
+                     
+                     "B4CloverBT15" , "B4CloverCT0", "B4CloverDT0" , "B1TritBT0" ) ;
+
+
+Data.20210528B1B4peakareasMERGED[Data.20210528B1B4peakareasMERGED$Sample.Name %in% Low.Values.N2O, ]
+
+Data.20210528peakareas[Data.20210528peakareas$Sample.Name %in% Low.Values.N2O , ]
+
+Low.Values.N2O.All <- merge(Data.20210528B1B4peakareasMERGED[Data.20210528B1B4peakareasMERGED$Sample.Name %in% Low.Values.N2O, ] ,
+      
+      Data.20210528peakareas[Data.20210528peakareas$Sample.Name %in% Low.Values.N2O , ], by = "Sample.Name") ;
+
+names(Low.Values.N2O.All)[6] <- "B1B4peakareasMERGED" ;
+
+names(Low.Values.N2O.All)[15] <- "peakareas" ;
+
+barplot( cbind(B1B4peakareasMERGED , peakareas)  ~ Sample.Name, data = Low.Values.N2O.All, col = c("red" , "blue" ) , 
+         
+         beside = T, legend = T )
+
+
+#### The data in 20210528peakareas is always lower that the data in 20210528B1B4peakareasMERGED #######
 
 
 #### It seems that all the N2O data from Data.20210528B1B4peakareasMERGED is higher. Therefore I am going to keep
@@ -498,6 +495,15 @@ str(PeakArea.results.2021)
 PeakArea.results.2021[PeakArea.results.2021$File == "20210528peakareas.pdf" ,]
 
 rm(PeakArea.results.2021.5, PeakArea.results.2021.Repeated, PeakArea.results.2021.Repeated.measures )
+
+
+PeakArea.results.2021[PeakArea.results.2021$Sampling.Date == "2021-05-28" , c( "CH4" , "CO2" , "N2O")]
+
+PeakArea.results.2021[PeakArea.results.2021$Sampling.Date == "2021-05-28" , "N2O"]
+
+PeakArea.results.2021[PeakArea.results.2021$Sampling.Date == "2021-05-28" , "CO2"]
+
+PeakArea.results.2021[PeakArea.results.2021$Sampling.Date == "2021-05-28" , "CH4"]
 
 
 # #################################################################################################################
@@ -598,6 +604,7 @@ PeakArea.results.2021[PeakArea.results.2021$File== "2021027B3B4peakareas.pdf", "
 
 PeakArea.results.2021[PeakArea.results.2021$File== "2021027B3B4peakareas.pdf",]
 
+str(PeakArea.results.2021)
 
 ###############################################################################################################
 #                           
@@ -636,6 +643,10 @@ str(Standards.Dataset.2021)
 ###############################################################################################################
 
 
+
+str(PeakArea.results.2021)
+
+
 GC.Data.NoSTD.2021 <- PeakArea.results.2021[grep( pattern = "B" , x = PeakArea.results.2021$Sample.Name, invert = F) ,] ;
 
 ##### Data with no standards included
@@ -652,7 +663,7 @@ str(GC.Data.NoSTD.2021)
 #
 ##############################################################################################################
 
-GC.Data.NoSTD.2021
+
 
 
 ### Add treatment information ###
@@ -660,22 +671,26 @@ GC.Data.NoSTD.2021
 
 unique(GC.Data.NoSTD.2021$Sample.Name)
 
-GC.Data.NoSTD.2021$Treatment<-c("NONE");
+GC.Data.NoSTD.2021$Treatment <- c("NONE");
 
 
-GC.Data.NoSTD.2021[grep("AT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T), c("Treatment")]<-c("A");
+GC.Data.NoSTD.2021[grep("AT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T), c("Treatment")] <- c("A");
 
-GC.Data.NoSTD.2021[grep("BT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T), c("Treatment")]<-c("B");
+GC.Data.NoSTD.2021[grep("BT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T), c("Treatment")] <- c("B");
 
-GC.Data.NoSTD.2021[grep("CT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T) , c("Treatment")]<-c("C");
+GC.Data.NoSTD.2021[grep("CT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T) , c("Treatment")] <- c("C");
 
-GC.Data.NoSTD.2021[grep("DT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T) , c("Treatment")]<-c("D");
+GC.Data.NoSTD.2021[grep("DT",GC.Data.NoSTD.2021$Sample.Name , ignore.case = T) , c("Treatment")] <- c("D");
+
+
+str(GC.Data.NoSTD.2021)
+
 
 ### Check if there was any treatment left with "NONE" label
 
 GC.Data.NoSTD.2021[which(GC.Data.NoSTD.2021$Treatment == "NONE"), ];
 
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sample.Name == "B4TritC30",] <- "B4TritCT30" ;
+GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sample.Name == "B4TritC30", "Sample.Name" ] <- "B4TritCT30" ;
 
 GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sample.Name == "B4TritCT30", c("Treatment")] <- c("C") ;
 
@@ -694,7 +709,7 @@ str(GC.Data.NoSTD.2021)
 
 grep("B1",GC.Data.NoSTD.2021$Sample.Name)
 
-GC.Data.NoSTD.2021$BLOCK<-c(9999);
+GC.Data.NoSTD.2021$BLOCK <- c(9999);
 
 GC.Data.NoSTD.2021[grep("B1",GC.Data.NoSTD.2021$Sample.Name), c("BLOCK")] <- c(1);
 
@@ -837,6 +852,8 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCro
 GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "3Spp" , ] 
 
 
+
+
 ### Plot 212 ###
 
 #  levels(GC.Data.NoSTD.2021$CoverCrop)
@@ -875,7 +892,7 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCro
 GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" , ] 
 
 
-
+str(GC.Data.NoSTD.2021)
 
 
 ### Plot 406 ###
@@ -1129,7 +1146,7 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCro
 GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "4" & GC.Data.NoSTD.2021$CoverCrop == "Trit" , ]
 
 
-
+str(GC.Data.NoSTD.2021)
 
 
 ### Plot 1201 ###
@@ -1251,6 +1268,9 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$BLOCK == "3" & GC.Data.NoSTD.2021$CoverCro
 GC.Data.NoSTD.2021$Plot <- factor(GC.Data.NoSTD.2021$Plot) ;
 
 GC.Data.NoSTD.2021$Location <- factor(GC.Data.NoSTD.2021$Location) ;
+
+
+str(GC.Data.NoSTD.2021)
 
 ##############################################################################################################
 #                           
@@ -1501,7 +1521,7 @@ Comment.06_04.B1CloverB$Note <- "Broken glass vials no samples"  ;
 
 Comment.06_04.B1CloverB
 
-
+str(GC.Data.NoSTD.2021)
 
 ### Sampling.Date == 2021-06-04  ; Sample.Name == B1CloverD ;
 
@@ -1566,6 +1586,8 @@ GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$Sample.Name == "B1CloverBT0" &  GC.Data.No
 
 
 rm(GC.Data.NoSTD.2021.add)
+
+str(GC.Data.NoSTD.2021)
 
 ### Sampling.Date == 2021-06-21  ; Sample.Name == B3TriCT30 ;
 
@@ -1788,6 +1810,8 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-29") 
                     
                     "Note" ] <- "No T 15" ;
 
+
+str(GC.Data.NoSTD.2021)
 
 
 ### Sampling.Date == 2021-06-29  ; Sample.Name == B3ClovAT45 ;
@@ -2132,8 +2156,7 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-07") 
                       GC.Data.NoSTD.2021$Treatment == "B"  &   GC.Data.NoSTD.2021$Sampling.Time == 45,
                     
                     "Note" ] <- "T3 Syringe Stuck" ;
-  
-  
+
   
   
 ### Sampling.Date == 2021-07-07  ; Sample.Name == B4CloverCT45  and B4CloverC30 ; T45 is T30 and T30 is T45
@@ -2271,7 +2294,7 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-20") 
                     "Note" ] <- "T15 plunger" ;
 
 
-
+str(GC.Data.NoSTD.2021)
 
 ### Sampling.Date == 2021-07-20  ; Sample.Name == B4TritBT45 and B4TritBT15  ;
 
@@ -2348,7 +2371,7 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30") 
 
 
 
-
+str(GC.Data.NoSTD.2021)
 
 ##???????????????????????????????????????????????????????????????????????????????????????????????????????????????
 
@@ -2357,6 +2380,8 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30") 
 ##???????????????????????????????????????????????????????????????????????????????????????????????????????????????
 
 
+
+str(GC.Data.NoSTD.2021)
 
 GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-07-30"),] 
 
@@ -3105,28 +3130,36 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-09-17") 
 ###############################################################################################################
 
 
+GC.Calibration.coef <- read.csv(file = "FluxDataAnalysisResults\\Calibration_coeff2026_11_16_13_31_43.csv", header = T) ;
+
+str(GC.Calibration.coef)
+
+names(GC.Calibration.coef)[1] <- "Parameter" ;
+
+GC.Calibration.coef
+
+
 # ###############################################################################################################
 # 
-#                      Best calibration equation for CO2
+#                      Calibration equation for CO2
 # 
 # ###############################################################################################################
 # 
+# Parameter coefficients   lower.bd   upper.bd
+# 1 CO2.Intercept   780.525526 728.423482 820.062038
+# 2     CO2.Slope     3.391092   3.264132   3.499893
+# 3 N2O.Intercept   132.557000 121.877913 140.096478
+# 4     N2O.Slope   621.841160 608.128356 634.292285
 # 
-# Call: rq(formula = CO2 ~ CO2.ppm, tau = 0.5, data = C.GC.Standards.All)
-# 
-# tau: [1] 0.5
-# 
-# Coefficients:
-#   coefficients lower bd  upper bd 
-# (Intercept) 797.91013    740.63252 845.75477
-# CO2.ppm       3.30048      3.22693   3.47683
+#
+# Calibration equation
 # 
 # 
-#  Calibration equation
+# CO2 = 780.525526 + (3.391092 * CO2.ppm)
+#
+# CO2 = 780.526 + (3.391 * CO2.ppm)
 # 
-# CO2 = 798 + (3.3 * CO2.ppm)
-# 
-# CO2.ppm =(CO2-798)/3.3
+# CO2.ppm =( CO2 - 780.526 ) / 3.391
 # 
 # 
 # ###############################################################################################################
@@ -3137,15 +3170,34 @@ str(GC.Data.NoSTD.2021)
 
 anyNA(GC.Data.NoSTD.2021$CO2)
 
-GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$CO2)), ]
+GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$CO2)), c( "Sample.Name" , "Field.Notes" , "Note")]
 
+str(GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$CO2)), c( "Sample.Name" , "Field.Notes" , "Note")])  
+
+######## The NA are "2021-06-04 Broken glass vials no samples" and "2021-07-07 Block 1 was not sampled on 2021-07-07"
+
+
+####### Remove NA from the data set #########
+
+str(GC.Data.NoSTD.2021)
+
+GC.Data.NoSTD.2021.NA <- GC.Data.NoSTD.2021[which(!is.na(GC.Data.NoSTD.2021$CO2)), ] ;
+
+str(GC.Data.NoSTD.2021.NA)
+
+GC.Data.NoSTD.2021 <- GC.Data.NoSTD.2021.NA ;
+
+str(GC.Data.NoSTD.2021)
+
+rm(GC.Data.NoSTD.2021.NA)
 
 ##### CO2 ######
 
-GC.Data.NoSTD.2021$CO2.ppm <- (as.numeric(GC.Data.NoSTD.2021$CO2) - 798) / 3.3  ;
+GC.Data.NoSTD.2021$CO2.ppm <- (as.numeric(GC.Data.NoSTD.2021$CO2) - 780.526) / 3.391  ;
 
 GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$CO2.ppm)), ]
 
+which(is.na(GC.Data.NoSTD.2021$CO2.ppm))
 
 plot(GC.Data.NoSTD.2021$CO2.ppm )
 
@@ -3157,20 +3209,19 @@ plot(GC.Data.NoSTD.2021$CO2.ppm )
 # ###############################################################################################################
 # 
 # 
-# Call: rq(formula = N2O ~ N2O.ppm, tau = 0.5, data = C.GC.Standards.no.NA)
-# 
-# tau: [1] 0.5
-# 
-# Coefficients:
-#   coefficients lower bd upper bd
-# (Intercept) 134.9825     127.2636 149.5451
-# N2O.ppm     624.6675     608.9579 634.0715 
+# Parameter coefficients   lower.bd   upper.bd
+# 1 CO2.Intercept   780.525526 728.423482 820.062038
+# 2     CO2.Slope     3.391092   3.264132   3.499893
+# 3 N2O.Intercept   132.557000 121.877913 140.096478
+# 4     N2O.Slope   621.841160 608.128356 634.292285
 # 
 # Calibration equation
 # 
-# N2O = 135 + ( 625 * N2O.ppm )
+# N2O = 132.557000 + ( 621.841160 * N2O.ppm )
 # 
-# N2O.ppm = (N20 - 135) / 625
+# N2O = 132.56 + ( 621.84 * N2O.ppm )
+#
+# N2O.ppm = ( N20 - 132.56 ) / 621.84
 # 
 # 
 # 
@@ -3187,7 +3238,7 @@ GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$N2O)), ]
 ##### N2O ######
 
 
-GC.Data.NoSTD.2021$N2O.ppm <- (as.numeric(GC.Data.NoSTD.2021$N2O) - 135) / 625  ;
+GC.Data.NoSTD.2021$N2O.ppm <- (as.numeric(GC.Data.NoSTD.2021$N2O) - 132.56) / 621.84  ;
 
 GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$CO2.ppm)), ]
 
@@ -3215,59 +3266,6 @@ plot(GC.Data.NoSTD.2021$N2O.ppm )
 
 
 #read.csv(file = paste0("FluxDataAnalysisResults\\GC_data_Curated_20212026_10_22_11_34_59.csv" ))
-
-
-###############################################################################################################
-#                           
-#                               Corrections based on Field measurements notes 
-#
-###############################################################################################################
-
-#Block 1, Clover, D,
-
-
-
-
-
-
-
-
-
-
-GC.Data.NoSTD.2021$Series <- paste( GC.Data.NoSTD.2021$Sampling.Day , GC.Data.NoSTD.2021$BLOCK.F , 
-                               
-                                    GC.Data.NoSTD.2021$CoverCrop.F , GC.Data.NoSTD.2021$Treatment.F, sep = "_") ;
-
-head(GC.Data.NoSTD.2021)
-
-
-
-str(GC.Data.NoSTD.2021)
-
-
-levels(GC.Data.NoSTD.2021$Treatment.F)
-
-levels(GC.Data.NoSTD.2021$BLOCK.F)
-
-levels(GC.Data.NoSTD.2021$CoverCrop.F)
-
-GC.Data.NoSTD.2021[GC.Data.NoSTD.2021$CoverCrop.F == "Clover" ,]
-
-
-xyplot(CO2.ppm ~ Sampling.Time | Treatment.F * BLOCK.F * CoverCrop.F, 
-       
-       data = GC.Data.NoSTD.2021 , xlim=c(0,45), ylim = c(0, max(GC.Data.NoSTD.2021$CO2.ppm)) ,   
-       
-       type="o", auto.key = T, main = "CO2");
-
-
-xyplot(N2O.ppm ~ Sampling.Time | Treatment.F * BLOCK.F * CoverCrop.F, 
-       
-       data = GC.Data.NoSTD.2021 , xlim=c(0,45), ylim = c(0, max(GC.Data.NoSTD.2021$N2O.ppm)) ,   
-       
-       type="o", auto.key = T , main = "N2O");
-
-
 
 
 ###############################################################################################################
