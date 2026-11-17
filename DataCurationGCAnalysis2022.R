@@ -219,7 +219,7 @@ str(GC.Data.NoSTD.2022)
 
 grep("B1",GC.Data.NoSTD.2022$Sample.Name)
 
-GC.Data.NoSTD.2022$BLOCK<-c(9999);
+GC.Data.NoSTD.2022$BLOCK <- c(9999);
 
 GC.Data.NoSTD.2022[grep("B1",GC.Data.NoSTD.2022$Sample.Name), c("BLOCK")] <- c(1);
 
@@ -290,7 +290,7 @@ GC.Data.NoSTD.2022[grep("T45",GC.Data.NoSTD.2022$Sample.Name), c("Sampling.Time"
 
 ### Check if there was any Sampling.Time left with "NONE" label
 
-GC.Data.NoSTD.2022[which(GC.Data.NoSTD.2022$Sampling.Time==9999),];
+GC.Data.NoSTD.2022[which(GC.Data.NoSTD.2022$Sampling.Time == 9999),];
 
 str(GC.Data.NoSTD.2022)
 
@@ -781,6 +781,7 @@ GC.Data.NoSTD.2022$Plot <- factor(GC.Data.NoSTD.2022$Plot) ;
 GC.Data.NoSTD.2022$Location <- factor(GC.Data.NoSTD.2022$Location) ;
 
 
+browser()
 
 ##############################################################################################################
 #                           
@@ -2162,8 +2163,54 @@ GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-06-15") 
 
 "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\",
 
-"Calibration.coeff2026_10_27_14_40_12", ".csv"), header = T )
+"Calibration_coeff2026_11_16_13_31_43", ".csv"), header = T )
 
+# ###############################################################################################################
+
+
+
+###############################################################################################################
+#                          
+#            Calculation of concentration based on the Standard gas concentrations
+#             
+#            The calibration curves were calculated with the StandardCalibration.R code
+#  
+#
+###############################################################################################################
+
+
+GC.Calibration.coef <- read.csv(file = "FluxDataAnalysisResults\\Calibration_coeff2026_11_16_13_31_43.csv", header = T) ;
+
+str(GC.Calibration.coef)
+
+names(GC.Calibration.coef)[1] <- "Parameter" ;
+
+GC.Calibration.coef
+
+
+# ###############################################################################################################
+# 
+#                      Calibration equation for CO2
+# 
+# ###############################################################################################################
+# 
+# Parameter coefficients   lower.bd   upper.bd
+# 1 CO2.Intercept   780.525526 728.423482 820.062038
+# 2     CO2.Slope     3.391092   3.264132   3.499893
+# 3 N2O.Intercept   132.557000 121.877913 140.096478
+# 4     N2O.Slope   621.841160 608.128356 634.292285
+# 
+#
+# Calibration equation
+# 
+# 
+# CO2 = 780.525526 + (3.391092 * CO2.ppm)
+#
+# CO2 = 780.526 + (3.391 * CO2.ppm)
+# 
+# CO2.ppm =( CO2 - 780.526 ) / 3.391
+# 
+# 
 # ###############################################################################################################
 
 
@@ -2172,15 +2219,18 @@ str(GC.Data.NoSTD.2022)
 
 anyNA(GC.Data.NoSTD.2022$CO2)
 
-GC.Data.NoSTD.2022[which(is.na(GC.Data.NoSTD.2022$CO2)), ]
+GC.Data.NoSTD.2022[which(is.na(GC.Data.NoSTD.2022$CO2)), c( "Sample.Name" , "Field.Notes" , "Note.Field")]
+
+str(GC.Data.NoSTD.2022[which(is.na(GC.Data.NoSTD.2022$CO2)), c( "Sample.Name" , "Field.Notes" , "Note.Field")])  
 
 
 ##### CO2 ######
 
-GC.Data.NoSTD.2022$CO2.ppm <- (as.numeric(GC.Data.NoSTD.2022$CO2) - 798) / 3.3  ;
+GC.Data.NoSTD.2022$CO2.ppm <- (as.numeric(GC.Data.NoSTD.2022$CO2) - 780.526) / 3.391  ;
 
 GC.Data.NoSTD.2022[which(is.na(GC.Data.NoSTD.2022$CO2.ppm)), ]
 
+which(is.na(GC.Data.NoSTD.2022$CO2.ppm))
 
 plot(GC.Data.NoSTD.2022$CO2.ppm )
 
@@ -2192,20 +2242,19 @@ plot(GC.Data.NoSTD.2022$CO2.ppm )
 # ###############################################################################################################
 # 
 # 
-# Call: rq(formula = N2O ~ N2O.ppm, tau = 0.5, data = C.GC.Standards.no.NA)
-# 
-# tau: [1] 0.5
-# 
-# Coefficients:
-#   coefficients lower bd upper bd
-# (Intercept) 134.9825     127.2636 149.5451
-# N2O.ppm     624.6675     608.9579 634.0715 
+# Parameter coefficients   lower.bd   upper.bd
+# 1 CO2.Intercept   780.525526 728.423482 820.062038
+# 2     CO2.Slope     3.391092   3.264132   3.499893
+# 3 N2O.Intercept   132.557000 121.877913 140.096478
+# 4     N2O.Slope   621.841160 608.128356 634.292285
 # 
 # Calibration equation
 # 
-# N2O = 135 + ( 625 * N2O.ppm )
+# N2O = 132.557000 + ( 621.841160 * N2O.ppm )
 # 
-# N2O.ppm = (N20 - 135) / 625
+# N2O = 132.56 + ( 621.84 * N2O.ppm )
+#
+# N2O.ppm = ( N20 - 132.56 ) / 621.84
 # 
 # 
 # 
@@ -2215,23 +2264,26 @@ str(GC.Data.NoSTD.2022)
 
 anyNA(GC.Data.NoSTD.2022$N2O)
 
-GC.Data.NoSTD.2022[which(is.na(GC.Data.NoSTD.2022$N2O)), ]
-
-
-
 ##### N2O ######
 
+GC.Data.NoSTD.2022$N2O.ppm <- (as.numeric(GC.Data.NoSTD.2022$N2O) - 132.56) / 621.84  ;
 
-GC.Data.NoSTD.2022$N2O.ppm <- (as.numeric(GC.Data.NoSTD.2022$N2O) - 135) / 625  ;
+GC.Data.NoSTD.2022[which(is.na(GC.Data.NoSTD.2022$N2O.ppm)), ]
 
-GC.Data.NoSTD.2022[which(is.na(GC.Data.NoSTD.2022$CO2.ppm)), ]
-
-
+which(is.na(GC.Data.NoSTD.2022$N2O.ppm))
 
 plot(GC.Data.NoSTD.2022$N2O.ppm )
 
+###############################################################################################################
+#                           
+#                               Writing curated Data 2022 
+#
+###############################################################################################################
 
-# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ; 
+
+
+
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
 # 
 # write.csv(x = GC.Data.NoSTD.2022, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
 # 
@@ -2239,19 +2291,11 @@ plot(GC.Data.NoSTD.2022$N2O.ppm )
 # 
 # "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GC_data_Curated_2022",
 # 
-# Working.Date , ".csv"), append = F , row.names = F )
-
-
-#read.csv(file = paste0("FluxDataAnalysisResults\\GC_data_Curated_20222026_10_22_11_34_59.csv" ))
-
-
-###############################################################################################################
-#                           
-#                               Corrections based on Field measurements notes 
-#
-###############################################################################################################
-
-
+# Working.Date , ".csv"), row.names = F )
+# 
+# 
+# read.csv(file = paste0("FluxDataAnalysisResults\\GC_data_Curated_20222026_11_17_16_52_59.csv" ))
+# 
 
 
 
