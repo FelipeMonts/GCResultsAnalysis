@@ -3138,6 +3138,11 @@ names(GC.Calibration.coef)[1] <- "Parameter" ;
 
 GC.Calibration.coef
 
+GC.Calibration.coef[GC.Calibration.coef$Parameter == "CO2.Intercept", "coefficients"]
+
+GC.Calibration.coef[GC.Calibration.coef$Parameter == "CO2.Slope", "coefficients"]
+
+browser()
 
 # ###############################################################################################################
 # 
@@ -3193,13 +3198,20 @@ rm(GC.Data.NoSTD.2021.NA)
 
 ##### CO2 ######
 
-GC.Data.NoSTD.2021$CO2.ppm <- (as.numeric(GC.Data.NoSTD.2021$CO2) - 780.526) / 3.391  ;
+GC.Data.NoSTD.2021$CO2.ppm <- (GC.Data.NoSTD.2021$CO2 - 
+                                 
+                                 GC.Calibration.coef[GC.Calibration.coef$Parameter == "CO2.Intercept", "coefficients"]) / 
+            
+                               GC.Calibration.coef[GC.Calibration.coef$Parameter == "CO2.Slope", "coefficients"] ;
+
 
 GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$CO2.ppm)), ]
 
 which(is.na(GC.Data.NoSTD.2021$CO2.ppm))
 
-plot(GC.Data.NoSTD.2021$CO2.ppm )
+plot(GC.Data.NoSTD.2021$CO2.ppm, col = "red" , pch = 16 , cex = 1.5)
+
+points((GC.Data.NoSTD.2021$CO2 - 780.526 ) / 3.391,col = "blue")
 
 
 # ###############################################################################################################
@@ -3234,60 +3246,34 @@ anyNA(GC.Data.NoSTD.2021$N2O)
 GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$N2O)), ]
 
 
+GC.Calibration.coef
+
+GC.Calibration.coef[GC.Calibration.coef$Parameter == "N2O.Intercept", "coefficients"]
+
+GC.Calibration.coef[GC.Calibration.coef$Parameter == "N2O.Slope", "coefficients"]
+
+
 
 ##### N2O ######
 
 
-GC.Data.NoSTD.2021$N2O.ppm <- (as.numeric(GC.Data.NoSTD.2021$N2O) - 132.56) / 621.84  ;
+GC.Data.NoSTD.2021$N2O.ppm <- (GC.Data.NoSTD.2021$N2O -  
+                                 
+                                 GC.Calibration.coef[GC.Calibration.coef$Parameter == "N2O.Intercept", "coefficients"]) /
 
-GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$CO2.ppm)), ]
+                                 GC.Calibration.coef[GC.Calibration.coef$Parameter == "N2O.Slope", "coefficients"] ;
 
-
-
-plot(GC.Data.NoSTD.2021$N2O.ppm )
-
-
-###############################################################################################################
-#                           
-#                               Writing out curated data
-#
-###############################################################################################################
-
-
-# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ; 
-# 
-# write.csv(x = GC.Data.NoSTD.2021, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
-# 
-# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
-# 
-# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GC_data_Curated_2021",
-# 
-# Working.Date , ".csv"), append = F , row.names = F )
-
-
-#read.csv(file = paste0("FluxDataAnalysisResults\\GC_data_Curated_20212026_10_22_11_34_59.csv" ))
-
-
-###############################################################################################################
-#
-#               Reference data taken from Allison Kohele's Calculations Excel Files
-#
-###############################################################################################################
+GC.Data.NoSTD.2021[which(is.na(GC.Data.NoSTD.2021$N2O.ppm)), ]
 
 
 
 
 
-Chamber.Dimensions<-data.frame(DIMENSION=c("Length", "Width" , "Height", "Volume" , "Surface.Area"), UNITS = c("m"), VALUE=c(0.52705, 0.32385, 0.1016, 9999, 9999));
+plot(GC.Data.NoSTD.2021$N2O.ppm, col = "red" , pch = 16 , cex = 1.5 )
 
-Chamber.Dimensions[Chamber.Dimensions$DIMENSION =="Volume", c("VALUE")]<-Chamber.Dimensions[1,3]*Chamber.Dimensions[2,3]*Chamber.Dimensions[3,3] ;
+points((GC.Data.NoSTD.2021$N2O - 132.56 ) / 621.84 ,col = "blue")
 
 
-Chamber.Dimensions[Chamber.Dimensions$DIMENSION =="Surface.Area", c("VALUE")]<-Chamber.Dimensions[1,3]*Chamber.Dimensions[2,3] ;
-
-Molar.Mass<-data.frame(GAS=c("CH4" , "CO2" , "N2O"), UNITS=c("g/mol"), VALUE=c(16.04, 44.01, 44.013));
-
-Gas.Law<-data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K-Mol", "m3-atm/K-Mol"), VALUE=c(0.08205736, 8.314462,8.314462, 8.314462, 8.205736e-5 ))  ;
 
 
 ###############################################################################################################
@@ -3300,20 +3286,127 @@ Gas.Law<-data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K
 # 
 # https://doi.org/10.1111/j.1365-2389.2010.01291.x.
 # 
+# Pullens, Johannes Wilhelmus Maria, Diego Abalos, Søren O. Petersen, and Asger R. Pedersen.
+# 
+# “Identifying Criteria for Greenhouse Gas Flux Estimation with Automatic and Manual Chambers:
+#   
+# A Case Study for N2O.” European Journal of Soil Science 74, no. 1 (2023): e13340. https://doi.org/10.1111/ejss.13340.
 # 
 # and the r package : 
-
-# Pedersen, Asger R. “HMR: Flux Estimation with Static Chamber Data,” May 20, 2020. https://CRAN.R-project.org/package=HMR.
+#
+# Pedersen, Asger Roer. HMR: Flux Estimation with Static Chamber Data. V. 1.0.5. 
 # 
+# Released December 17, 2025. https://cran.r-project.org/web/packages/HMR/index.html.
+# 
+# The chosen units do, however, determine the unit of the estimated flux, which has the physical unit of 
+# (VC)/(At), where  t and C denote, respectively, time and concentration. 
+# 
+#  V[L] , A[m2] ,t[h] , C[micro g/L] ==> fo [micro g/m2 /h ] 
+#  
+#  V[L] , A[m2] ,t[min] , C[micro L/L] ==> fo [micro L/m2 /min ] 
+#  
+#  V[L] , A[Km2] ,t[s] , C[Kg/m3] ==> fo [Kg/Km2/s ] 
+#  
+#
+#   The results in Alli's Thesis are in N2O flux in g N2O-N ha-1 d-1, and cumulative emissions in kg N2O-N ha-1'.
+# 
+#   Therefore the units of concentration to be used in the HMR analysis needs to be
+# 
+#    V[m3] , A[m2] , t[h], C[g/m3] ==> fo [g/m2/h]
+# 
+# 
+#   To convert from ppm(1/10^6) to g/m3;
+# 
+#   PV = nRT ; PV/RT = n ;
+# 
+#   P = 1 atm ; T = 273 K + 20°C = 293 K ; V = 1 m3 ;  R = m3-atm/K-Mol  with 1 Mol = MW in g
+#   
+#   (1 [m3] X * 1 [atm] )/ (293 [K] * 8.205736e-5 [m3-atm/K-Mol ]) = n [Mol] * g / [Mol] = n g
+# 
+#   n [g] / 10^6 [m3] = n [g] / [m3]
+# 
+#   n [g] / [m3] * 1000 [mg] / 1 [g] = n [mg] / [m3]
+# 
+# ###############################################################################################################
+
+###############################################################################################################
+#
+#               Reference data taken from Allison Kohele's Calculations Excel Files
 #
 ###############################################################################################################
 
-# write.table(x = Test.data.HMR.CO2.1, sep = ";", dec = "." ,file = "TEST_DATA.csv", row.names = F)
+
+Chamber.Dimensions <- data.frame(DIMENSION = c("Length", "Width" , "Height", "Volume" , "Surface.Area"), 
+                                 
+                                 UNITS = c("m", "m" , "m" , "m2" , "m3" ), VALUE = c(0.52705, 0.32385, 0.1016, 9999, 9999));
+
+Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Volume", c("VALUE")] <- Chamber.Dimensions[1,3] * 
+  
+                                                   Chamber.Dimensions[2,3]*Chamber.Dimensions[3,3] ;
+
+
+Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Surface.Area", c("VALUE")] <- Chamber.Dimensions[1,3] * 
+  
+                                                   Chamber.Dimensions[2,3] ; 
+
+
+Molar.Mass <- data.frame(GAS = c("CH4" , "CO2" , "N2O"), UNITS = c("g/mol"), VALUE = c(16.04, 44.01, 44.013));
+
+Gas.Law <- data.frame(UNITS = c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K-Mol", "m3-atm/K-Mol"), 
+                      
+                      VALUE = c(0.08205736, 8.314462,8.314462, 8.314462, 8.205736e-5 ))  ;
+
+################################# Test conversion #############################################################
+# 
+# 100 ppm N2O == > g/m3
+# 
+# 
+# 100 * 1 / (293 * 8.205736e-5) = 4159.248 Mol  ; 4159.248 * 44.013 / 1e6 = 0.183 g N2O /m3 ; 
+# 
+# 0.183 * 1000 = 183 mg N2O / m3
+# 
+#   (100  * Molar.Mass[Molar.Mass$GAS == "CO2" , "VALUE"] * 1000) /
+#   
+#   (Gas.Law[Gas.Law$UNITS == "m3-atm/K-Mol" , "VALUE"] * 293 * 1e6)
+# 
+# 
+###############################################################################################################
+
+
+GC.Data.NoSTD.2021$CO2.mg.m3 <- (GC.Data.NoSTD.2021$CO2.ppm  * Molar.Mass[Molar.Mass$GAS == "CO2" , "VALUE"] * 1000) /
+  
+                                (Gas.Law[Gas.Law$UNITS == "m3-atm/K-Mol" , "VALUE"] * 293 * 1e6) ;
 
 
 
-# save.image(file = paste0("FluxDataAnalysisResults\\GCAnalysis" , Year , ".RData"))
+GC.Data.NoSTD.2021$N2O.mg.m3 <- (GC.Data.NoSTD.2021$N2O.ppm  * Molar.Mass[Molar.Mass$GAS == "N2O" , "VALUE"] * 1000) /
+  
+  (Gas.Law[Gas.Law$UNITS == "m3-atm/K-Mol" , "VALUE"] * 293 * 1e6) ;
 
 
- 
+str(GC.Data.NoSTD.2021)
+
+
+
+###############################################################################################################
+#                           
+#                               Writing out curated data
+#
+###############################################################################################################
+
+
+Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+
+write.csv(x = GC.Data.NoSTD.2021, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+
+"Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+
+"DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GC_data_Curated_2021",
+
+Working.Date , ".csv") , row.names = F )
+
+
+# read.csv(file = paste0("FluxDataAnalysisResults\\GC_data_Curated_20212026_11_19_16_42_12.csv" ))
+
+
   
