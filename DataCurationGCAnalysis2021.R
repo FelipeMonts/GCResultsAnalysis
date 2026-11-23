@@ -1497,11 +1497,17 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04") 
                       
                       GC.Data.NoSTD.2021$Treatment == "B", ]
 
+# GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")  & 
+#                       
+#                       GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" &
+#                       
+#                       GC.Data.NoSTD.2021$Treatment == "B",]
+
 
 # There are no samples with both  Sampling date "2021-06-04" and B1CloverB  because the glass
 # Sampling vials broke
 
-
+browser()
 
 # Add NA data to those broken vials records
 
@@ -1510,6 +1516,14 @@ Comment.06_04.B1CloverB <- GC.Data.NoSTD.2021[0,]
 Comment.06_04.B1CloverB[c(1:4),] <- NA ;
 
 Comment.06_04.B1CloverB$Sample.Name <- paste0("B1CloverB",c("T0" , "T15", "T30" , "T45"));
+
+Comment.06_04.B1CloverB$CoverCrop <- "Clover" ;
+
+Comment.06_04.B1CloverB$BLOCK <- 1 ;
+
+Comment.06_04.B1CloverB$Treatment <- "B";
+
+Comment.06_04.B1CloverB$Sampling.Time <- c(0 , 15 , 30 , 45 ) ;
 
 Comment.06_04.B1CloverB$Sampling.Date <- "2021-06-04" ;
 
@@ -1527,9 +1541,6 @@ str(GC.Data.NoSTD.2021)
 
 # Selecting set with the conditions 
 
-
-
-
 GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04")  & 
                       
                       GC.Data.NoSTD.2021$BLOCK == "1" & GC.Data.NoSTD.2021$CoverCrop == "Clover" &
@@ -1537,7 +1548,7 @@ GC.Data.NoSTD.2021[ GC.Data.NoSTD.2021$Sampling.Date == paste0("2021","-06-04") 
                       GC.Data.NoSTD.2021$Treatment == "D", ]
 
 
-# There are no samples with both  Sampling date "2021-06-04" and B1CloverB  because the glass
+# There are no samples with both  Sampling date "2021-06-04" and B1CloverD  because the glass
 # Sampling vials broke
 
 # Add NA data to those broken vials records
@@ -1548,6 +1559,14 @@ Comment.06_04.B1CloverD <- GC.Data.NoSTD.2021[0,] ;
 Comment.06_04.B1CloverD[c(1:4),] <- NA ;
 
 Comment.06_04.B1CloverD$Sample.Name <- paste0("B1CloverD",c("T0" , "T15", "T30" , "T45"));
+
+Comment.06_04.B1CloverD$CoverCrop <- "Clover" ;
+
+Comment.06_04.B1CloverD$BLOCK <- 1 ;
+
+Comment.06_04.B1CloverD$Treatment <- "D";
+
+Comment.06_04.B1CloverD$Sampling.Time <- c(0 , 15 , 30 , 45 ) ;
 
 Comment.06_04.B1CloverD$Sampling.Date <- "2021-06-04" ;
 
@@ -3330,24 +3349,53 @@ points((GC.Data.NoSTD.2021$N2O - 132.56 ) / 621.84 ,col = "blue")
 # ###############################################################################################################
 
 ###############################################################################################################
+#           
+#                             CONSTANTS FOR MASS CALCULATIONS
+#    
+#             Universal Gas Constant
+#
+#             https://en.wikipedia.org/wiki/Gas_constant
+# 
+#             R = 8.31446261815324   	m3⋅Pa⋅K−1⋅mol−1
+#
+#             R = 0.082057366080960   	L⋅atm⋅K−1⋅mol
+#
+#      
+#    Atmospheric Pressure Patm = 101325 Pa  ,  1 atm
+#    
+#    Degrees Kelvin  K = 273.15 + T °C
+#    
+#    Day = 60 * 24 min = 1440 min
+#    
+#    Year = 1440 min * 365 days = 525600 min
+#    
+#    Hectare Ha = 100m * 100 m = 1000 m2 
+#    
+#    Fluxm kg X · ha-1 day-1 
+# 
+#    CO2 = 44.0095 g mol-1  https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Units=SI
+#    
+#    N2O = 44.0128 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?ID=C10024972&Units=SI
+#    
+#    CH4 = 16.0425 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?ID=C74828&Units=SI
+#    
+#    C = 12.0107  g mol-1  https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440440&Units=SI
+#    
+#    O = 15.9994 g mol-1   https://webbook.nist.gov/cgi/cbook.cgi?Formula=O&NoIon=on&Units=SI
+#    
+#    N = 14.0067 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?Formula=N&NoIon=on&Units=SI
+#    
+#    H = 1.00794 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?ID=C12385136&Units=SI
+# 
+# 
+############################################################################################################### 
+
+
+###############################################################################################################
 #
 #               Reference data taken from Allison Kohele's Calculations Excel Files
 #
 ###############################################################################################################
-
-
-Chamber.Dimensions <- data.frame(DIMENSION = c("Length", "Width" , "Height", "Volume" , "Surface.Area"), 
-                                 
-                                 UNITS = c("m", "m" , "m" , "m2" , "m3" ), VALUE = c(0.52705, 0.32385, 0.1016, 9999, 9999));
-
-Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Volume", c("VALUE")] <- Chamber.Dimensions[1,3] * 
-  
-                                                   Chamber.Dimensions[2,3]*Chamber.Dimensions[3,3] ;
-
-
-Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Surface.Area", c("VALUE")] <- Chamber.Dimensions[1,3] * 
-  
-                                                   Chamber.Dimensions[2,3] ; 
 
 
 Molar.Mass <- data.frame(GAS = c("CH4" , "CO2" , "N2O"), UNITS = c("g/mol"), VALUE = c(16.04, 44.01, 44.013));
@@ -3395,18 +3443,18 @@ str(GC.Data.NoSTD.2021)
 ###############################################################################################################
 
 
-Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
-
-write.csv(x = GC.Data.NoSTD.2021, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
-
-"Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
-
-"DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GC_data_Curated_2021",
-
-Working.Date , ".csv") , row.names = F )
-
-
-# read.csv(file = paste0("FluxDataAnalysisResults\\GC_data_Curated_20212026_11_19_16_42_12.csv" ))
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+# 
+# write.csv(x = GC.Data.NoSTD.2021, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# 
+# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+# 
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\GC_data_Curated_2021",
+# 
+# Working.Date , ".csv") , row.names = F )
+# 
+# 
+# read.csv(file = paste0("FluxDataAnalysisResults\\GC_data_Curated_20212026_11_23_15_16_41.csv" ))
 
 
   

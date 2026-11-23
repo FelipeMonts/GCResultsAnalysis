@@ -2341,22 +2341,60 @@ plot(GC.Data.NoSTD.2022$N2O.ppm )
 
 
 ###############################################################################################################
+#           
+#                             CONSTANTS FOR MASS CALCULATIONS
+#    
+#             Universal Gas Constant
+#
+#             https://en.wikipedia.org/wiki/Gas_constant
+# 
+#             R = 8.31446261815324   	m3⋅Pa⋅K−1⋅mol−1
+#
+#             R = 0.082057366080960   	L⋅atm⋅K−1⋅mol
+#
+#      
+#    Atmospheric Pressure Patm = 101325 Pa  ,  1 atm
+#    
+#    Degrees Kelvin  K = 273.15 + T °C
+#    
+#    Day = 60 * 24 min = 1440 min
+#    
+#    Year = 1440 min * 365 days = 525600 min
+#    
+#    Hectare Ha = 100m * 100 m = 1000 m2 
+#    
+#    Fluxm kg X · ha-1 day-1 
+# 
+#    CO2 = 44.0095 g mol-1  https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Units=SI
+#    
+#    N2O = 44.0128 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?ID=C10024972&Units=SI
+#    
+#    CH4 = 16.0425 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?ID=C74828&Units=SI
+#    
+#    C = 12.0107  g mol-1  https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440440&Units=SI
+#    
+#    O = 15.9994 g mol-1   https://webbook.nist.gov/cgi/cbook.cgi?Formula=O&NoIon=on&Units=SI
+#    
+#    N = 14.0067 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?Formula=N&NoIon=on&Units=SI
+#    
+#    H = 1.00794 g mol-1 https://webbook.nist.gov/cgi/cbook.cgi?ID=C12385136&Units=SI
+# 
+# 
+############################################################################################################### 
+
+
+
+###############################################################################################################
 #
 #               Reference data taken from Allison Kohele's Calculations Excel Files
 #
 ###############################################################################################################
 
 
-Chamber.Dimensions<-data.frame(DIMENSION=c("Length", "Width" , "Height", "Volume" , "Surface.Area"), UNITS = c("m"), VALUE=c(0.52705, 0.32385, 0.1016, 9999, 9999));
 
-Chamber.Dimensions[Chamber.Dimensions$DIMENSION =="Volume", c("VALUE")]<-Chamber.Dimensions[1,3]*Chamber.Dimensions[2,3]*Chamber.Dimensions[3,3] ;
+Molar.Mass <- data.frame(GAS=c("CH4" , "CO2" , "N2O"), UNITS=c("g/mol"), VALUE = c(16.04, 44.01, 44.013));
 
-
-Chamber.Dimensions[Chamber.Dimensions$DIMENSION =="Surface.Area", c("VALUE")]<-Chamber.Dimensions[1,3]*Chamber.Dimensions[2,3] ;
-
-Molar.Mass<-data.frame(GAS=c("CH4" , "CO2" , "N2O"), UNITS=c("g/mol"), VALUE=c(16.04, 44.01, 44.013));
-
-Gas.Law<-data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K-Mol", "m3-atm/K-Mol"), VALUE=c(0.08205736, 8.314462,8.314462, 8.314462, 8.205736e-5 ))  ;
+Gas.Law <- data.frame(UNITS=c("L-atm/Mol-K", "J/K-Mol", "m3-Pa/K-Mol", "Kg-m2-s2/K-Mol", "m3-atm/K-Mol"), VALUE = c(0.08205736, 8.314462,8.314462, 8.314462, 8.205736e-5 ))  ;
 
 
 
