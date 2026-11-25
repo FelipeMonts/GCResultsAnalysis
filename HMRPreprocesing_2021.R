@@ -326,7 +326,7 @@ Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-06-01",]
 
 ##### Sampling.Date == "2021-06-01" & "BLOCK" == 2 & CoverCrop == "Trit" & Treatment == "C" ,
 ##### Sampling.Time == 45
-##### Needle clogged no sample pusshed in the vial
+##### Needle clogged no sample pushed in the vial
 
 
 Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-06-01" & Notes.2021.1$BLOCK == 2 &  
@@ -353,20 +353,32 @@ plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-06-01" & Data.2021.2$BL
 
 plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-06-01" & Data.2021.2$BLOCK == 2 & 
                         
-                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
       
       
       
       y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-06-01" & Data.2021.2$BLOCK == 2 & 
                         
-                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "C" , "N2O.mg.m3"],
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" , "N2O.mg.m3"],
       
       main = "N2O",
       
       col = "blue") ;
 
 
-#### Leave with the note #####
+#### Leave with remove note #####
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-06-01" & Data.2021.2$BLOCK == 2 & 
+              
+              Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" &
+              
+              Data.2021.2$Sampling.Time == 45, c("Field.Notes" , "Note") ] <- c( "NO" , NA) ;
+
+
+
+
+
 
 Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-06-01",]
 
@@ -1473,7 +1485,6 @@ Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-07" & Data.2021.2$BLOCK == 4 &
 
 
 
-
 unique(Notes.2021.1$Sampling.Date)
 
 Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-07-15",]
@@ -1513,7 +1524,7 @@ plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-15" & Data.2021.2$BL
       col = "blue") ;   
 
 
-###### change T30 for T15 and then remove T15 ######
+###### change T30 for T15, remove T15 and then remove note ######
 
 Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-15" & Data.2021.2$BLOCK == 1 & 
               
@@ -1537,7 +1548,8 @@ Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-15" & Data.2021.2$BLOCK == 1 &
 Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-15" & Data.2021.2$BLOCK == 1 & 
               
               Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" ,] 
-              
+
+
       
 Data.Remove.2021.T <- rbind(Data.Remove.2021,
                             
@@ -1553,6 +1565,17 @@ Data.Remove.2021 <- Data.Remove.2021.T ;
 rm(Data.Remove.2021.T) ;
 
 Data.Remove.2021 
+
+#### remove note ####
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-15" & Data.2021.2$BLOCK == 1 & 
+              
+              Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" ,
+            
+            c("Field.Notes" , "Note") ] <- c( rep("NO" , 4) , rep (NA , 4) )  ;
+
+
                             
 
 Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-07-15",]
@@ -1746,6 +1769,25 @@ plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-20" & Data.2021.2$BL
 
 
 
+##### Remove Note ######
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-20" & Data.2021.2$BLOCK == 4 & 
+              
+              Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "B" &
+              
+              Data.2021.2$Sampling.Time == 15, c("Field.Notes" , "Note")] <- c("NO" , NA) ;
+  
+  
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-20" & Data.2021.2$BLOCK == 4 & 
+                
+                Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "B" &
+                
+                Data.2021.2$Sampling.Time == 45, c("Field.Notes" , "Note")] <- c("NO" , NA) ;
+  
+  
+  
+
+
 unique(Notes.2021.1$Sampling.Date)
 
 Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-07-30",]
@@ -1761,10 +1803,966 @@ Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-07-30" & Notes.2021.1$BLOCK == 
                Notes.2021.1$Sampling.Time == 45, ]
 
 
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-30" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "A" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-30" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "A", "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
 
 
 
 
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-30" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "A" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-30" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "A", "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+
+#### remove Sampling.Time == 45  #######
+
+
+Data.Remove.2021.T <- rbind(Data.Remove.2021,
+                            
+                            Data.2021.2[Data.2021.2$Sampling.Date == "2021-07-30" & Data.2021.2$BLOCK == 1 & 
+                                          
+                                          Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "A" &
+                                          
+                                          Data.2021.2$Sampling.Time == 45 ,])
+
+
+Data.Remove.2021 <- Data.Remove.2021.T ;
+
+rm(Data.Remove.2021.T) ;
+
+Data.Remove.2021 
+
+
+
+
+unique(Notes.2021.1$Sampling.Date)
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-05",]
+
+##### Sampling.Date == "2021-08-05" & $BLOCK == 1 & & CoverCrop == "Clover" & Treatment == "C"
+##### Sampling.Time == 15 
+##### No T30 put T30 into T 15
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-05" & Notes.2021.1$BLOCK == 1 & 
+               
+               Notes.2021.1$CoverCrop == "Clover" & Notes.2021.1$Treatment == "C" &
+               
+               Notes.2021.1$Sampling.Time == 15, ]
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C", "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C", "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+####### Change T15 to T30 and remove T15 #######
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+              
+              Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C" &
+            
+             Data.2021.2$Sampling.Time == 30 , c("CO2.mg.m3" , "N2O.mg.m3")] <- 
+  
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+                
+                Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C" &
+                
+                Data.2021.2$Sampling.Time == 15 , c("CO2.mg.m3" , "N2O.mg.m3")] ;
+
+
+
+Data.Remove.2021.T <- rbind(Data.Remove.2021,
+                            
+                            Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+                                          
+                                          Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C" &
+                                          
+                                          Data.2021.2$Sampling.Time == 15, ]) ;
+                            
+ 
+
+Data.Remove.2021 <- Data.Remove.2021.T ;
+
+rm(Data.Remove.2021.T) ;
+
+Data.Remove.2021 
+
+
+######## Remove Note ##################
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+              
+              Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C" &
+              
+              Data.2021.2$Sampling.Time == 30 , c("Field.Notes" , "Note" )] <- c( "NO" , NA) ;
+
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-05",]
+
+##### Sampling.Date == "2021-08-05" & $BLOCK == 1 & & CoverCrop == "Clover" & Treatment == "D"
+##### Sampling.Time == 15
+##### No T 15
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-05" & Notes.2021.1$BLOCK == 1 & 
+               
+               Notes.2021.1$CoverCrop == "Clover" & Notes.2021.1$Treatment == "D" &
+               
+               Notes.2021.1$Sampling.Time == 15, ]
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D", "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D", "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+
+####### Remove T15 #######
+
+
+Data.Remove.2021.T <- rbind(Data.Remove.2021,
+                            
+                            Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 1 & 
+                                          
+                                          Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D" &
+                                          
+                                          Data.2021.2$Sampling.Time == 15 , ] ) ;
+
+
+Data.Remove.2021 <- Data.Remove.2021.T ;
+
+rm(Data.Remove.2021.T) ;
+
+Data.Remove.2021 
+
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-05",]
+
+##### Sampling.Date == "2021-08-05" & $BLOCK == 2 & & CoverCrop == "3Spp" & Treatment == "A"
+##### Sampling.Time == all
+##### Vials not well evacuated
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-05" & Notes.2021.1$BLOCK == 2 & 
+               
+               Notes.2021.1$CoverCrop == "3Spp" & Notes.2021.1$Treatment == "A", ]
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "A" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "A" , "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "A" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "A" , "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+##### The whole series is bad. Remove the whole series  #####
+
+
+Data.Remove.2021.T <- rbind(Data.Remove.2021,
+                            
+                            Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+                                          
+                                          Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "A" ,] )  ;
+                            
+                            
+                            
+Data.Remove.2021 <- Data.Remove.2021.T ;
+
+rm(Data.Remove.2021.T) ;
+
+Data.Remove.2021 
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-05",]
+
+##### Sampling.Date == "2021-08-05" & $BLOCK == 2 & & CoverCrop == "3Spp" & Treatment == "B"
+##### Sampling.Time == T30 and T45
+##### T30 and T45 are interchanged
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-05" & Notes.2021.1$BLOCK == 2 & 
+               
+               Notes.2021.1$CoverCrop == "3Spp" & Notes.2021.1$Treatment == "B" & 
+               
+               Notes.2021.1$Sampling.Time == 30, ]
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-05" & Notes.2021.1$BLOCK == 2 & 
+               
+               Notes.2021.1$CoverCrop == "3Spp" & Notes.2021.1$Treatment == "B" & 
+               
+               Notes.2021.1$Sampling.Time == 45, ]
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" , "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" , "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+##### It seems that T15 and T30 are interchanged instead of T30 and T45 are interchanged
+##### Switch T15 to T30 and T30 to T15 #####
+
+
+
+T30 <- Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+                     
+                     Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" & 
+                     
+                     Data.2021.2$Sampling.Time == 15, c("CO2.mg.m3" , "N2O.mg.m3")] ;
+
+T15 <- Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+                     
+                     Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" & 
+                     
+                     Data.2021.2$Sampling.Time == 30, c("CO2.mg.m3" , "N2O.mg.m3")] ;
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+              
+              Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" & 
+              
+              Data.2021.2$Sampling.Time == 30, c("CO2.mg.m3" , "N2O.mg.m3")] <- T30 ;
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+              
+              Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" & 
+              
+              Data.2021.2$Sampling.Time == 15, c("CO2.mg.m3" , "N2O.mg.m3")] <- T15 ;
+
+
+rm(T15)
+
+###### Remove Note ######
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+              
+              Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" & 
+              
+              Data.2021.2$Sampling.Time == 30, c("Field.Notes" , "Note")] <- c( "NO" , NA) ;
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-05" & Data.2021.2$BLOCK == 2 & 
+              
+              Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" & 
+              
+              Data.2021.2$Sampling.Time == 45, c("Field.Notes" , "Note")] <- c( "NO" , NA) ; 
+
+
+
+
+
+
+
+
+unique(Notes.2021.1$Sampling.Date)
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-12",]
+
+##### Sampling.Date == "2021-08-12" & $BLOCK == 3 & & CoverCrop == "Trit" & Treatment == "B"
+##### Sampling.Time == 30
+##### No T 30, Syringe did not work
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-12" & Notes.2021.1$BLOCK == 3 & 
+               
+               Notes.2021.1$CoverCrop == "Trit" & Notes.2021.1$Treatment == "B" & 
+               
+               Notes.2021.1$Sampling.Time == 30, ]
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-12" & Data.2021.2$BLOCK == 3 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "B" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-12" & Data.2021.2$BLOCK == 3 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "B" , "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-12" & Data.2021.2$BLOCK == 3 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "B" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-12" & Data.2021.2$BLOCK == 3 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "B" , "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+
+##### T30 seems fine, leave it as is . Remove Note ##################
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-12" & Data.2021.2$BLOCK == 3 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "B" &
+              
+              Data.2021.2$Sampling.Time == 30 , c("Field.Notes" , "Note" )] <- c( "NO" , NA) ;
+
+
+
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-12",]
+
+##### Sampling.Date == "2021-08-12" & $BLOCK == 4 & & CoverCrop == "Trit" & Treatment == "C"
+##### Sampling.Time == 15 
+##### T 15 no Sample, Syringe did not work
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-12" & Notes.2021.1$BLOCK == 4 & 
+               
+               Notes.2021.1$CoverCrop == "Trit" & Notes.2021.1$Treatment == "C" & 
+               
+               Notes.2021.1$Sampling.Time == 15, ]
+
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-12" & Data.2021.2$BLOCK == 4 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-12" & Data.2021.2$BLOCK == 4 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C"  , "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-12" & Data.2021.2$BLOCK == 4 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-12" & Data.2021.2$BLOCK == 4 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C"  , "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+
+####### Remove T15 #######
+
+
+Data.Remove.2021.T <- rbind(Data.Remove.2021,
+                            
+                            Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-12" & Data.2021.2$BLOCK == 4 & 
+                                          
+                                          Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" & 
+                                          
+                                          Data.2021.2$Sampling.Time == 15, ] ) ;
+
+
+Data.Remove.2021 <- Data.Remove.2021.T ;
+
+rm(Data.Remove.2021.T) ;
+
+Data.Remove.2021 
+
+
+
+
+unique(Notes.2021.1$Sampling.Date)
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-19",]
+
+##### Sampling.Date == "2021-08-19" & $BLOCK == 4 & & CoverCrop == "Clover" & Treatment == "A"
+##### Sampling.Time == 30 
+##### Syringe 30 in did not take the full 30 ml 
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-08-19" & Notes.2021.1$BLOCK == 4 & 
+               
+               Notes.2021.1$CoverCrop == "Clover" & Notes.2021.1$Treatment == "A" & 
+               
+               Notes.2021.1$Sampling.Time == 30, ]
+
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-19" & Data.2021.2$BLOCK == 4 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "A" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-19" & Data.2021.2$BLOCK == 4 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "A", "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-19" & Data.2021.2$BLOCK == 4 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "A" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-19" & Data.2021.2$BLOCK == 4 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "A", "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+
+##### T30 seems fine, leave it as is. Remove note ##################
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-08-19" & Data.2021.2$BLOCK == 4 & 
+              
+              Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "A" &
+              
+              Data.2021.2$Sampling.Time == 30 , c("Field.Notes" , "Note" )] <- c( "NO" , NA) ;
+
+
+
+
+
+unique(Notes.2021.1$Sampling.Date)
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-02",]
+
+##### Sampling.Date == "2021-09-02" & $BLOCK == 1 & & CoverCrop == "Trit" & Treatment == "C"
+##### Sampling.Time == 15 
+##### T15 Syringe did not go
+
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-02" & Notes.2021.1$BLOCK == 1 & 
+               
+               Notes.2021.1$CoverCrop == "Trit" & Notes.2021.1$Treatment == "C" & 
+               
+               Notes.2021.1$Sampling.Time == 15, ]
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" , "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" , "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+####### Remove T15 #######
+
+
+
+Data.Remove.2021.T <- rbind(Data.Remove.2021,
+                            
+                            Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 1 & 
+                                          
+                                          Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" & 
+                                          
+                                          Data.2021.2$Sampling.Time == 15 ,] )
+
+
+
+Data.Remove.2021 <- Data.Remove.2021.T ;
+
+rm(Data.Remove.2021.T) ;
+
+Data.Remove.2021
+
+
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-02",]
+
+##### Sampling.Date == "2021-09-02" & $BLOCK == 2 & & CoverCrop == "Clover" & Treatment == "A"
+##### Sampling.Time == 15 
+##### T15 only took 15 ml
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-02" & Notes.2021.1$BLOCK == 2 & 
+               
+               Notes.2021.1$CoverCrop == "Clover" & Notes.2021.1$Treatment == "A" & 
+               
+               Notes.2021.1$Sampling.Time == 15, ]
+
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "A" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "A", "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "A" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "A", "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+
+##### T15 seems fine, leave it as is. Remove note ##################
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+              
+              Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "A" &
+              
+              Data.2021.2$Sampling.Time == 15, c("Field.Notes" , "Note" )] <- c( "NO" , NA) ;
+
+
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-02",]
+
+##### Sampling.Date == "2021-09-02" & $BLOCK == 2 & & CoverCrop == "Clover" & Treatment == "C"
+##### Sampling.Time == 45
+##### T 45 Syringe did not go
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-02" & Notes.2021.1$BLOCK == 2 & 
+               
+               Notes.2021.1$CoverCrop == "Clover" & Notes.2021.1$Treatment == "C" & 
+               
+               Notes.2021.1$Sampling.Time == 45, ]
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C", "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C", "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+
+####### Remove T45 #######
+
+
+
+Data.Remove.2021.T <- rbind(Data.Remove.2021,
+                            
+                            Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                                          
+                                          Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "C" &
+                                          
+                                          Data.2021.2$Sampling.Time == 45,] ) ;
+                            
+                            
+
+Data.Remove.2021 <- Data.Remove.2021.T ;
+
+rm(Data.Remove.2021.T) ;
+
+Data.Remove.2021
+
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-02",]
+
+##### Sampling.Date == "2021-09-02" & $BLOCK == 2 & & CoverCrop == "Clover" & Treatment == "D"
+##### Sampling.Time == 30 and 45
+##### T30 and T45 are exchanged; T30 is T45 and T45 is T 30
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-02" & Notes.2021.1$BLOCK == 2 & 
+               
+               Notes.2021.1$CoverCrop == "Clover" & Notes.2021.1$Treatment == "D" & 
+               
+               Notes.2021.1$Sampling.Time == 30, ]
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-02" & Notes.2021.1$BLOCK == 2 & 
+               
+               Notes.2021.1$CoverCrop == "Clover" & Notes.2021.1$Treatment == "D" & 
+               
+               Notes.2021.1$Sampling.Time == 45, ]
+
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D", "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                        
+                        Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D", "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+
+
+
+##### Switch T30 to T45 and T45 to T30, And Remove Note #####
+
+
+T30 <- Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                    
+                    Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D" &
+                     
+                     Data.2021.2$Sampling.Time == 45 , c("CO2.mg.m3" , "N2O.mg.m3")] ;
+
+
+
+T45 <- Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+                     
+                     Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D" &
+                     
+                     Data.2021.2$Sampling.Time == 30 , c("CO2.mg.m3" , "N2O.mg.m3")] ;
+
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+              
+              Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D" &
+              
+              Data.2021.2$Sampling.Time == 45 , c("CO2.mg.m3" , "N2O.mg.m3")]  <- T45 ;
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+              
+              Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D" &
+              
+              Data.2021.2$Sampling.Time == 30 , c("CO2.mg.m3" , "N2O.mg.m3")] <- T30 ;
+
+rm(T30,T45)
+
+
+
+######### Remove Note  #####
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+              
+              Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D" &
+              
+              Data.2021.2$Sampling.Time == 30 , c("Field.Notes" , "Note")] <- c("NO" , NA) ;
+
+
+Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-02" & Data.2021.2$BLOCK == 2 & 
+              
+              Data.2021.2$CoverCrop == "Clover" & Data.2021.2$Treatment == "D" &
+              
+              Data.2021.2$Sampling.Time == 45 , c("Field.Notes" , "Note")] <- c("NO" , NA) ;
+
+
+
+
+
+
+
+unique(Notes.2021.1$Sampling.Date)
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-17",]
+
+##### Sampling.Date == "2021-09-17" & $BLOCK == 1 & & CoverCrop == "3Spp" & Treatment == "B"
+##### Sampling.Time == 45 
+##### T 45 no Sample
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-17" & Notes.2021.1$BLOCK == 1 & 
+               
+               Notes.2021.1$CoverCrop == "3Spp" & Notes.2021.1$Treatment == "B" & 
+               
+               Notes.2021.1$Sampling.Time == 45, ]
+
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-17" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-17" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B", "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-17" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-17" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B", "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+##### Remove T45 ##########
+
+Data.Remove.2021.T <- rbind(Data.Remove.2021,
+                            
+                            Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-17" & Data.2021.2$BLOCK == 1 & 
+                                          
+                                          Data.2021.2$CoverCrop == "3Spp" & Data.2021.2$Treatment == "B" &
+                                          
+                                          Data.2021.2$Sampling.Time == 45,] ) ;
+
+
+
+Data.Remove.2021 <- Data.Remove.2021.T ;
+
+rm(Data.Remove.2021.T) ;
+
+Data.Remove.2021
+
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-17",]
+
+##### Sampling.Date == "2021-09-17" & $BLOCK == 1 & & CoverCrop == "Trit" & Treatment == "C"
+##### Sampling.Time == 45
+
+
+Notes.2021.1[Notes.2021.1$Sampling.Date == "2021-09-17" & Notes.2021.1$BLOCK == 1 & 
+               
+               Notes.2021.1$CoverCrop == "Trit" & Notes.2021.1$Treatment == "C" & 
+               
+               Notes.2021.1$Sampling.Time == 45, ]
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-17" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-17" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C", "CO2.mg.m3"] ,
+      
+      main = "CO2",
+      
+      col = "blue") ;
+
+
+plot( x = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-17" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" , "Sampling.Time"] ,
+      
+      y = Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-17" & Data.2021.2$BLOCK == 1 & 
+                        
+                        Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C", "N2O.mg.m3"] ,
+      
+      main = "N2O",
+      
+      col = "blue") ;
+
+
+##### Remove T45 ##########
+
+Data.Remove.2021.T <- rbind(Data.Remove.2021,
+                            
+                            Data.2021.2[Data.2021.2$Sampling.Date == "2021-09-17" & Data.2021.2$BLOCK == 1 & 
+                                          
+                                          Data.2021.2$CoverCrop == "Trit" & Data.2021.2$Treatment == "C" &
+                                          
+                                          Data.2021.2$Sampling.Time == 45, ]) ;
+
+
+Data.Remove.2021 <- Data.Remove.2021.T ;
+
+rm(Data.Remove.2021.T) ;
+
+Data.Remove.2021
+
+
+##############################################################################################################
+#                           Check Notes and Removals
+###############################################################################################################
+
+HMR.Data.2021 <- Data.2021.2[!Data.2021.2$ID %in% Data.Remove.2021$ID ,]
+
+
+HMR.Data.2021[which(HMR.Data.2021$Field.Notes == "YES"),] 
+
+str(HMR.Data.2021)
 
 
 
