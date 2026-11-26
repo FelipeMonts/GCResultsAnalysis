@@ -1171,8 +1171,6 @@ B3.ID <- Data.2022[Data.2022$Sampling.Date == "2022-07-07" & Data.2022$BLOCK == 
 
 B4.ID <- Data.2022[Data.2022$Sampling.Date == "2022-07-07" & Data.2022$BLOCK == 4 , "ID" ] ;
 
-rm(B3.ID , B4.ID )
-
 
 ####### B3 into B4 #####
 
@@ -1183,7 +1181,7 @@ Data.2022[Data.2022$ID %in% B3.ID ,  "BLOCK"] <- 4 ;
 Data.2022[Data.2022$ID %in% B4.ID ,  "BLOCK"] <- 3 ;
 
 
-
+rm(B3.ID , B4.ID )
 
 Notes.2022[ Notes.2022$Sampling.Date == "2022-07-07" & Notes.2022$BLOCK == 3 ,]
 
@@ -1858,3 +1856,66 @@ Notes.2022[Notes.2022$Sampling.Date == "2022-10-05" ,]
 ###### Sampling.Time == Sampled the next day
 
 ########## Leave as is #######
+
+
+browser()
+
+##############################################################################################################
+#                           Check Notes and Removals
+###############################################################################################################
+
+Data.Remove.2022
+
+HMR.Data.2022 <- Data.2022[!Data.2022$ID %in% Data.Remove.2022$ID ,] ;
+
+
+HMR.Data.2022[which(HMR.Data.2022$Field.Notes == "YES"),] 
+
+str(HMR.Data.2022)
+
+
+
+###############################################################################################################
+#                           Data with GC notes 
+###############################################################################################################
+###### Select only necessary columns: Sampling.Date , Treatment , BLOCK , CoverCrop , Sampling.Time
+# 
+# GC.Notes, Note.GC , CO2.mg.m3, N2O.mg.m3  
+
+str(Data.2022.1)
+
+Data.2022.GC.1 <- Data.2022.1[ , c( "ID" , "Sampling.Date" , "BLOCK" , "CoverCrop" ,"Treatment" , "Sampling.Time" , 
+                               
+                               "GC.Notes", "Note.GC" , "CO2.mg.m3" ,"N2O.mg.m3" )] ;
+
+str(Data.2022.GC.1)
+
+
+
+###############################################################################################################
+#                           Remove data that was already removed using field notes
+###############################################################################################################
+
+Data.Remove.2022
+
+Data.2022.GC <- Data.2022.GC.1[!Data.2022.GC.1$ID %in% Data.Remove.2022$ID ,] ;
+
+
+str(Data.2022.GC)
+
+
+###############################################################################################################
+#                          get data with GC notes 
+###############################################################################################################
+
+Data.2022.GC.Notes <- Data.2022.GC[Data.2022.GC$GC.Notes == "YES" , ] ;
+
+Data.2022.GC.Notes <- Data.2022.GC.Notes[order(Data.2022.GC.Notes$Sampling.Date , Data.2022.GC.Notes$BLOCK ,
+                                               
+                                               Data.2022.GC.Notes$CoverCrop , Data.2022.GC.Notes$Treatment , 
+                                               
+                                               Data.2022.GC.Notes$Sampling.Time) ,]
+
+unique(Notes.2022$Sampling.Date)
+
+
