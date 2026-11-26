@@ -1644,7 +1644,217 @@ Data.2022[Data.2022$ID %in% BA.ID , "Treatment"] <- "C" ;
 
 Data.2022[Data.2022$ID %in% BC.ID , "Treatment"] <- "A" ;
 
+rm(BA.ID , BC.ID)
 
 
 
 
+unique(Notes.2022$Sampling.Date)
+
+Notes.2022[Notes.2022$Sampling.Date == "2022-08-19" ,]
+
+###### Sampling.Date == "2022-08-19" & BLOCK == 2 & $CoverCrop == "Trit" & Treatment == "B"
+###### Sampling.Time == 45 
+###### Soil wet only in the first 1 to 2 inches in all blocks - 
+###### Sampled Day Before 08/18/22 - T45 needle failed. Sample was Lost
+
+Notes.2022[Notes.2022$Sampling.Date == "2022-08-19" & Notes.2022$BLOCK == 2 &  
+             
+             Notes.2022$CoverCrop == "Trit" & Notes.2022$Treatment == "B" &
+             
+             Notes.2022$Sampling.Time == 45 , ] 
+
+
+
+plot( x = Data.2022[Data.2022$Sampling.Date == "2022-08-19" & Data.2022$BLOCK == 2 &
+                      
+                      Data.2022$CoverCrop == "Trit" & Data.2022$Treatment == "B" , "Sampling.Time"],
+      
+      
+      y = Data.2022[Data.2022$Sampling.Date == "2022-08-19" & Data.2022$BLOCK == 2 &
+                      
+                      Data.2022$CoverCrop == "Trit" & Data.2022$Treatment == "B" , "CO2.mg.m3"],
+      
+      main = "CO2" ,
+      
+      col = "blue") ;
+
+
+plot( x = Data.2022[Data.2022$Sampling.Date == "2022-08-19" & Data.2022$BLOCK == 2 &
+                      
+                      Data.2022$CoverCrop == "Trit" & Data.2022$Treatment == "B" , "Sampling.Time"],
+      
+      
+      y = Data.2022[Data.2022$Sampling.Date == "2022-08-19" & Data.2022$BLOCK == 2 &
+                      
+                      Data.2022$CoverCrop == "Trit" & Data.2022$Treatment == "B" , "N2O.mg.m3"],
+      
+      main = "N2O" ,
+      
+      col = "blue") ;
+
+
+##########  T45 is bad, Remove ########
+
+Data.Remove.2022.T <- rbind(Data.Remove.2022 , 
+                            
+                            Data.2022[Data.2022$Sampling.Date == "2022-08-19" & Data.2022$BLOCK == 2 &
+                                        
+                                        Data.2022$CoverCrop == "Trit" & Data.2022$Treatment == "B" &
+                                        
+                                        Data.2022$Sampling.Time == 45 , ]) ;
+
+
+Data.Remove.2022 <- Data.Remove.2022.T ;
+
+rm(Data.Remove.2022.T) ;
+
+Data.Remove.2022
+
+
+
+
+
+
+
+unique(Notes.2022$Sampling.Date)
+
+Notes.2022[Notes.2022$Sampling.Date == "2022-09-01" ,]
+
+###### Sampling.Date == "2022-09-01" & BLOCK == 2 and 4 
+###### Sampled next Day
+
+
+##### Leave without change #####
+
+
+
+
+
+unique(Notes.2022$Sampling.Date)
+
+Notes.2022[Notes.2022$Sampling.Date == "2022-09-10" ,]
+
+###### Sampling.Date == "2022-09-10" & BLOCK == 2 & $CoverCrop == "Clover" & Treatment == "C"
+###### Sampling.Time == all
+###### Notice leak between the frame and the chamber
+
+
+Notes.2022[Notes.2022$Sampling.Date == "2022-09-10" & Notes.2022$BLOCK == 2 &  
+             
+             Notes.2022$CoverCrop == "Clover" & Notes.2022$Treatment == "C" , ]
+
+
+
+plot( x = Data.2022[Data.2022$Sampling.Date == "2022-09-10" & Data.2022$BLOCK == 2 &
+                      
+                      Data.2022$CoverCrop == "Clover" & Data.2022$Treatment == "C" , "Sampling.Time"],
+      
+      
+      y = Data.2022[Data.2022$Sampling.Date == "2022-09-10" & Data.2022$BLOCK == 2 &
+                      
+                      Data.2022$CoverCrop == "Clover" & Data.2022$Treatment == "C" , "CO2.mg.m3"],
+      
+      main = "CO2" ,
+      
+      col = "blue") ;
+
+
+plot( x = Data.2022[Data.2022$Sampling.Date == "2022-09-10" & Data.2022$BLOCK == 2 &
+                      
+                      Data.2022$CoverCrop == "Clover" & Data.2022$Treatment == "C" , "Sampling.Time"],
+      
+      
+      y = Data.2022[Data.2022$Sampling.Date == "2022-09-10" & Data.2022$BLOCK == 2 &
+                      
+                      Data.2022$CoverCrop == "Clover" & Data.2022$Treatment == "C" , "N2O.mg.m3"],
+      
+      main = "N2O" ,
+      
+      col = "blue") ;
+
+
+####### Data is very bad. Remove data ########
+
+
+Data.Remove.2022.T <- rbind(Data.Remove.2022 , 
+                            
+                            Data.2022[Data.2022$Sampling.Date == "2022-09-10" & Data.2022$BLOCK == 2 &
+                                        
+                                        Data.2022$CoverCrop == "Clover" & Data.2022$Treatment == "C" , ] ) ;
+
+
+Data.Remove.2022 <- Data.Remove.2022.T ;
+
+rm(Data.Remove.2022.T) ;
+
+Data.Remove.2022
+
+
+
+
+unique(Notes.2022$Sampling.Date)
+
+Notes.2022[Notes.2022$Sampling.Date == "2022-09-27" ,]
+
+tail(Notes.2022[Notes.2022$Sampling.Date == "2022-09-27" ,] , 30)
+
+###### Sampling.Date == "2022-09-27" & BLOCK == 3 & $CoverCrop == "Trit" & Treatment == "C"
+###### Sampling.Time == 30 
+###### T2 Solenoid is Failing 
+
+Notes.2022[Notes.2022$Sampling.Date == "2022-09-27" & Notes.2022$BLOCK == 3 &  
+             
+             Notes.2022$CoverCrop == "Trit" & Notes.2022$Treatment == "C" , ]
+
+
+plot( x = Data.2022[Data.2022$Sampling.Date == "2022-09-27" & Data.2022$BLOCK == 3 &
+                      
+                      Data.2022$CoverCrop == "Trit" & Data.2022$Treatment == "C" , "Sampling.Time"],
+      
+      
+      y = Data.2022[Data.2022$Sampling.Date == "2022-09-27" & Data.2022$BLOCK == 3 &
+                      
+                      Data.2022$CoverCrop == "Trit" & Data.2022$Treatment == "C" , "CO2.mg.m3"],
+      
+      main = "CO2" ,
+      
+      col = "blue") ;
+
+
+plot( x = Data.2022[Data.2022$Sampling.Date == "2022-09-27" & Data.2022$BLOCK == 3 &
+                      
+                      Data.2022$CoverCrop == "Trit" & Data.2022$Treatment == "C" , "Sampling.Time"],
+      
+      
+      y = Data.2022[Data.2022$Sampling.Date == "2022-09-27" & Data.2022$BLOCK == 3 &
+                      
+                      Data.2022$CoverCrop == "Trit" & Data.2022$Treatment == "C" , "N2O.mg.m3"],
+      
+      main = "N2O" ,
+      
+      col = "blue") ;
+
+
+######## Data is Fine, Leave and remove note #############
+
+
+Data.2022[Data.2022$Sampling.Date == "2022-09-27" & Data.2022$BLOCK == 3 &
+            
+            Data.2022$CoverCrop == "Trit" & Data.2022$Treatment == "C" &
+            
+            Data.2022$Sampling.Time == 30 , 
+          
+          c( "Field.Notes" , "Note.Field") ] <- c( "NO" , NA) ;
+  
+  
+
+
+unique(Notes.2022$Sampling.Date)
+
+Notes.2022[Notes.2022$Sampling.Date == "2022-10-05" ,]
+
+###### Sampling.Date == "2022-10-05" & BLOCK == 2 and 4
+###### Sampling.Time == Sampled the next day
+
+########## Leave as is #######
