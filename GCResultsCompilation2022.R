@@ -309,6 +309,18 @@ str(PeakArea.Results.All.2)
 
 PeakArea.Results.All <- PeakArea.Results.All.2 ;
 
+tail(PeakArea.Results.All)
+
+browser()
+
+
+
+###############################################################################################################
+#
+#        Write the data out to a csv file
+#
+###############################################################################################################
+
 
 # Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
 # 

@@ -70,7 +70,15 @@ setwd(paste0( "C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\C
 #### Read data  #####
 
 
-PeakArea.results.2022 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults_2022_2026_11_04_09_15_58.csv" ) , header = T) ;
+PeakArea.results.2022 <- read.csv(file = paste0("FluxDataAnalysisResults\\GCcompiledResults_2022_2026_11_25_18_51_50.csv" ) , header = T) ;
+
+tail(PeakArea.results.2022)
+
+PeakArea.results.2022[PeakArea.results.2022$Sampling.Date == "2022-07-07" & 
+                        
+                        PeakArea.results.2022$File == "SummaryGCN2O_20220707_B2_20261022.xlsx" , ]
+
+tail(PeakArea.results.2022[PeakArea.results.2022$Sampling.Date == "2022-07-07" , ])
 
 ###############################################################################################################
 #                           
@@ -185,16 +193,15 @@ str(GC.Data.NoSTD.2022)
 
 unique(GC.Data.NoSTD.2022$Sample.Name)
 
-GC.Data.NoSTD.2022$Treatment<-c("NONE");
+GC.Data.NoSTD.2022$Treatment <- c("NONE");
 
+GC.Data.NoSTD.2022[grep("AT",GC.Data.NoSTD.2022$Sample.Name , ignore.case = T), c("Treatment")] <- c("A");
 
-GC.Data.NoSTD.2022[grep("AT",GC.Data.NoSTD.2022$Sample.Name , ignore.case = T), c("Treatment")]<-c("A");
+GC.Data.NoSTD.2022[grep("BT",GC.Data.NoSTD.2022$Sample.Name , ignore.case = T), c("Treatment")] <- c("B");
 
-GC.Data.NoSTD.2022[grep("BT",GC.Data.NoSTD.2022$Sample.Name , ignore.case = T), c("Treatment")]<-c("B");
+GC.Data.NoSTD.2022[grep("CT",GC.Data.NoSTD.2022$Sample.Name , ignore.case = T) , c("Treatment")] <- c("C");
 
-GC.Data.NoSTD.2022[grep("CT",GC.Data.NoSTD.2022$Sample.Name , ignore.case = T) , c("Treatment")]<-c("C");
-
-GC.Data.NoSTD.2022[grep("DT",GC.Data.NoSTD.2022$Sample.Name , ignore.case = T) , c("Treatment")]<-c("D");
+GC.Data.NoSTD.2022[grep("DT",GC.Data.NoSTD.2022$Sample.Name , ignore.case = T) , c("Treatment")] <- c("D");
 
 ### Check if there was any treatment left with "NONE" label
 
@@ -781,6 +788,8 @@ GC.Data.NoSTD.2022$Plot <- factor(GC.Data.NoSTD.2022$Plot) ;
 
 GC.Data.NoSTD.2022$Location <- factor(GC.Data.NoSTD.2022$Location) ;
 
+GC.Data.NoSTD.2022[GC.Data.NoSTD.2022$Sampling.Date == "2022-07-07" & GC.Data.NoSTD.2022$BLOCK == 2 ,]
+
 
 browser()
 
@@ -1215,6 +1224,7 @@ GC.Data.NoSTD.2022[ GC.Data.NoSTD.2022$Sampling.Date == paste0("2022","-07-07") 
                     "Note" ] <- "T15 is T45 and T45 is T15" ;
 
 
+browser()
 
 ### Sampling.Date == 2022-07-07  ; Sample.Name == B3 ;
 
@@ -2449,7 +2459,7 @@ str(GC.Data.NoSTD.2022)
 # Working.Date , ".csv"), row.names = F )
 # 
 # 
-# read.csv(file = paste0("FluxDataAnalysisResults\\GC_data_Curated_20222026_11_17_16_52_59.csv" ))
+# read.csv(file = paste0("FluxDataAnalysisResults\\GC_data_Curated_20222026_11_25_19_07_54.csv" ))
 
 
 
