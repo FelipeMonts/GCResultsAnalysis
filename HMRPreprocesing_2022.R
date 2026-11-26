@@ -1916,6 +1916,295 @@ Data.2022.GC.Notes <- Data.2022.GC.Notes[order(Data.2022.GC.Notes$Sampling.Date 
                                                
                                                Data.2022.GC.Notes$Sampling.Time) ,]
 
-unique(Notes.2022$Sampling.Date)
+unique(Data.2022.GC.Notes$Sampling.Date)
 
+###############################################################################################################
+# "2022-06-15" "2022-06-29" "2022-09-27"
+###############################################################################################################
+
+Data.2022.GC.Notes[Data.2022.GC.Notes$Sampling.Date == "2022-06-15" ,]
+
+tail(Data.2022.GC.Notes[Data.2022.GC.Notes$Sampling.Date == "2022-06-15" ,] , 20)
+
+###### Sampling.Date == "2022-06-15" & BLOCK == 2 
+###### B2 was not processed
+
+###### Sampling.Date == "2022-09-10" & BLOCK == 4 
+###### B4 was already processed on 08 15 22
+
+###### Nothing to change, leave B2 data as is, Remove notes ########
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-15" & Data.2022.GC$BLOCK == 2  , 
+             
+             "GC.Notes"] <- "NO" ;
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-15" & Data.2022.GC$BLOCK == 2  , 
+             
+             "Note.GC"] <- NA ;
+
+##### check ######
+
+
+###### Nothing to change, leave B4 data as is, Remove notes ########
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-15" & Data.2022.GC$BLOCK == 4  ,]
+
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-15" & Data.2022.GC$BLOCK == 4  , 
+             
+             "GC.Notes"] <- "NO" ;
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-15" & Data.2022.GC$BLOCK == 4  , 
+             
+             "Note.GC"] <- NA ;
+
+##### check ######
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-15" & Data.2022.GC$BLOCK == 4  ,]
+
+
+
+
+
+unique(Data.2022.GC.Notes$Sampling.Date)
+
+Data.2022.GC.Notes[Data.2022.GC.Notes$Sampling.Date == "2022-06-29" ,]
+
+###### Sampling.Date == "2022-06-29" & BLOCK == 2 & CoverCrop == 3Spp & Treatment == B
+###### The vials on Block 2, 3-SppN treatment B were switched with the vials of Block 2, 
+###### 3SppN treatment C2-3SppN-B <-> 2-3SppN-C
+
+Data.2022.GC.Notes[Data.2022.GC.Notes$Sampling.Date == "2022-06-29" & Data.2022.GC.Notes$BLOCK == 2 &
+               
+               Data.2022.GC.Notes$CoverCrop == "3Spp" & Data.2022.GC.Notes$Treatment == "B" ,]
+
+
+
+####### Interchange Treatment B for Treatment C and Treatment C for Treatment B ######
+
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 2 &
+               
+               Data.2022.GC$CoverCrop == "3Spp" & Data.2022.GC$Treatment == "B" ,] 
+
+
+B.ID <- Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 2 &
+                      
+                      Data.2022.GC$CoverCrop == "3Spp" & Data.2022.GC$Treatment == "B" , "ID"] ; 
+
+
+C.ID <- Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 2 &
+                      
+                      Data.2022.GC$CoverCrop == "3Spp" & Data.2022.GC$Treatment == "C" , "ID"] ; 
+
+
+Data.2022.GC[Data.2022.GC$ID %in% B.ID , "Treatment"] <- "C" ;
+
+
+Data.2022.GC[Data.2022.GC$ID %in% C.ID , "Treatment"] <- "B" ;
+
+############# Remove Note ########################
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 2 &
+               
+               Data.2022.GC$CoverCrop == "3Spp" & Data.2022.GC$Treatment == "B" , 
+             
+             "GC.Notes" ] <- "NO" ;
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 2 &
+               
+               Data.2022.GC$CoverCrop == "3Spp" & Data.2022.GC$Treatment == "B" , 
+             
+             "Note.GC" ] <- NA ;
+
+
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 2 &
+               
+               Data.2022.GC$CoverCrop == "3Spp" & Data.2022.GC$Treatment == "C" , 
+             
+             "GC.Notes" ] <- "NO" ;
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 2 &
+               
+               Data.2022.GC$CoverCrop == "3Spp" & Data.2022.GC$Treatment == "C" , 
+             
+             "Note.GC" ] <- NA ;
+
+
+
+
+
+Data.2022.GC.Notes[Data.2022.GC.Notes$Sampling.Date == "2022-06-29" ,]
+
+###### Sampling.Date == "2022-06-29" & BLOCK == 2 & CoverCrop == Trit & Treatment == B
+###### The sequence was interrupted because of a potential power out. 
+# It was interrupted at vial 12.Sample B3TritBT45 was lost when the GC was aborted. 
+# The complete sequence was restarted and therefore the second set of results 
+# samples through 12 B3TritBT45 should be discarded.
+
+
+Data.2022.GC.Notes[Data.2022.GC.Notes$Sampling.Date == "2022-06-29" & 
+                     
+                     Data.2022.GC.Notes$BLOCK == "3" & 
+                     
+                     Data.2022.GC.Notes$CoverCrop == "Trit" & 
+                     
+                     Data.2022.GC.Notes$Treatment == "B" , ]
+
+
+
+
+plot( x = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 3 &
+                      
+                      Data.2022.GC$CoverCrop == "Trit" & Data.2022.GC$Treatment == "B" , "Sampling.Time"],
+      
+      
+      y = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 3 &
+                         
+                         Data.2022.GC$CoverCrop == "Trit" & Data.2022.GC$Treatment == "B" , "CO2.mg.m3"],
+      
+      main = "CO2" ,
+      
+      col = "blue") ;
+
+text( x = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 3 &
+                         
+                         Data.2022.GC$CoverCrop == "Trit" & Data.2022.GC$Treatment == "B" , "Sampling.Time"],
+      
+      
+      y = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 3 &
+                         
+                         Data.2022.GC$CoverCrop == "Trit" & Data.2022.GC$Treatment == "B" , "CO2.mg.m3"],
+      
+      labels = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 3 &
+                              
+                              Data.2022.GC$CoverCrop == "Trit" & Data.2022.GC$Treatment == "B" , "ID"]) ;
+
+######### First series IDs c( 721 , 722 , 723 , 732)  #####################
+
+######### Second series IDs c( 728 , 730 , 731)  #####################
+
+
+plot( x = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 3 &
+                         
+                         Data.2022.GC$CoverCrop == "Trit" & Data.2022.GC$Treatment == "B" , "Sampling.Time"],
+      
+      
+      y = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 3 &
+                         
+                         Data.2022.GC$CoverCrop == "Trit" & Data.2022.GC$Treatment == "B" , "N2O.mg.m3"],
+      
+      main = "N2O" ,
+      
+      col = "blue") ;
+
+text( x = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 3 &
+                         
+                         Data.2022.GC$CoverCrop == "Trit" & Data.2022.GC$Treatment == "B" , "Sampling.Time"],
+      
+      
+      y = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 3 &
+                         
+                         Data.2022.GC$CoverCrop == "Trit" & Data.2022.GC$Treatment == "B" , "N2O.mg.m3"],
+      
+      labels = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 3 &
+                              
+                              Data.2022.GC$CoverCrop == "Trit" & Data.2022.GC$Treatment == "B" , "ID"]) ;
+
+
+################ Remove Second Series , IDs c( 728 , 730 , 731) #########################
+
+Second.Series.ID <- c( 728 , 730 , 731 );
+
+################ Initialize  data frame of data to be removed Data.Remove.GC.2022 #########
+
+Data.Remove.GC.2022 <- Data.2022.GC[Data.2022.GC$ID %in% Second.Series.ID , ] ;
+
+
+
+###############  Continue ##############
+
+unique(Data.2022.GC.Notes$Sampling.Date)
+
+Data.2022.GC.Notes[Data.2022.GC.Notes$Sampling.Date == "2022-09-27" ,]
+
+str(Data.2022.GC.Notes[Data.2022.GC.Notes$Sampling.Date == "2022-09-27" ,])
+
+###### Sampling.Date == "2022-09-27" & BLOCK == 1 and 2 
+###### Air cylinder was at 0 PSI!!! Changed the air cylinder.
+
+
+Data.2022.GC.Notes[Data.2022.GC.Notes$Sampling.Date == "2022-09-27" & 
+                     
+                     (Data.2022.GC.Notes$BLOCK == 1 | Data.2022.GC.Notes$BLOCK == 2) , ]
+
+str(Data.2022.GC.Notes[Data.2022.GC.Notes$Sampling.Date == "2022-09-27" & 
+                         
+                         (Data.2022.GC.Notes$BLOCK == 1 | Data.2022.GC.Notes$BLOCK == 2) , ])
+
+
+################## Check Data ##########################
+
+
+
+plot( x = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-09-27" & 
+                         
+                         (Data.2022.GC$BLOCK == 1 | Data.2022.GC$BLOCK == 2) , "ID" ],
+                         
+
+      y = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-09-27" & 
+                         
+                         (Data.2022.GC$BLOCK == 1 | Data.2022.GC$BLOCK == 2) , "CO2.mg.m3"],
+      
+      main = "CO2" ,
+      
+      col = "blue") ;
+
+
+plot( x = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-09-27" & 
+                         
+                         (Data.2022.GC$BLOCK == 1 | Data.2022.GC$BLOCK == 2) , "ID" ],
+      
+      
+      y = Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-09-27" & 
+                         
+                         (Data.2022.GC$BLOCK == 1 | Data.2022.GC$BLOCK == 2) , "N2O.mg.m3"],
+      
+      main = "N2O" ,
+      
+      col = "blue") ;
+
+
+################ Data is fine . Remove the note ###################################
+
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-09-27" & 
+               
+               (Data.2022.GC$BLOCK == 1 | Data.2022.GC$BLOCK == 2) , "GC.Notes"] <- "NO" ;
+
+Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-09-27" & 
+               
+               (Data.2022.GC$BLOCK == 1 | Data.2022.GC$BLOCK == 2) , "Note.GC"] <- NA ;
+
+
+unique(Data.2022.GC.Notes$Sampling.Date)
+
+
+##############################################################################################################
+#                           Check Notes and Removals
+###############################################################################################################
+
+Data.Remove.GC.2022
+
+str(Data.Remove.GC.2022)
+
+str(HMR.Data.2022)
+
+HMR.Data.2022.All <- HMR.Data.2022[!HMR.Data.2022$ID %in% Data.Remove.GC.2022$ID ,] ;
+
+
+HMR.Data.2022.All[which(HMR.Data.2022.All$GC.Notes == "YES"),] 
+
+str(HMR.Data.2022.All)
 
