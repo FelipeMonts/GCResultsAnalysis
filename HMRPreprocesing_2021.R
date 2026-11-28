@@ -2880,221 +2880,25 @@ str(HMR.Data.2021)
 
 
 
-
-##############################################################################################################
-#                           Format concentration data for HMR
 ###############################################################################################################
-
-
-
-Gas.Series <- data.frame(GC.Data.NoSTD[, c( "Series") ], Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Volume" , c("VALUE")],
-                         
-                         Chamber.Dimensions[Chamber.Dimensions$DIMENSION == "Surface.Area" , c("VALUE")], 
-                         
-                         GC.Data.NoSTD[, c( "Sampling.Time" , paste0(Gas,".ppm")) ]) ;
-
-names(Gas.Series) <- c("Series" , "Volume.L" , "Surface.Area.m2" , "Sampling.Time" , paste0(Gas,".ppm") );
-
-str(Gas.Series)
-
-head(Gas.Series)
-
-tail(Gas.Series)
-
-
-str(Gas.Series)
-
-head(Gas.Series)   ### Need to order the series 
-
-Gas.Series.HMR <- Gas.Series[order(Gas.Series$Series,Gas.Series$"Sampling.Time" ),]
-
-str(Gas.Series.HMR)
-
-head(Gas.Series.HMR)
-
-tail(Gas.Series.HMR,30)
-
-dim(unique(Gas.Series.HMR))
-
-length(unique(Gas.Series.HMR[,"Series"]))
-
-which(duplicated(Gas.Series.HMR))
-
-Gas.Series.HMR[233:391,]
-
-
-
-write.table(x = Gas.Series.HMR , sep = ";", dec = "." , 
-            
-            file = paste0(Gas,"_" , Year , ".Series.csv"), row.names = F)  ;
-
-
-
-###############################################################################################################
-#   Calculate the Variance of the ambient concentration measurementsto estimate pfvar, 
-#   the assumed variance of replicate measurements of the ambient trace gas concentration
-#   at the chamber site in case of no gas emission used for prefiltering of data series before analysis
-###############################################################################################################
-
-######### Variance of the ambient concentration measurements #############
-
-str(GC.Data.NoSTD)
-
-
-GC.Data.NoSTD$Sampling.Day.F <- as.factor(GC.Data.NoSTD$Sampling.Day );
-
-
-bwplot(as.formula(paste0(Gas,".ppm", " ~ ", "Sampling.Day.F" )) , 
-       
-       data = GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, ] )
-
-# Ambient data concentration on sampling date 20210715 is an outlier
-# and should not be included in the calculation of the variance  
-
-# Ambient data concentration on sampling date 20220623 is an outlier
-# and should not be included in the calculation of the variance  
-
-# sigma02.1 <- var( GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0, c(paste0(Gas,".ppm"))])
-# 
-# sigma02 <- var(GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0 & GC.Data.NoSTD$Sampling.Day.F != "20210715",
-# 
-#                                 c(paste0(Gas,".ppm"))]) ;
-# 
-# sigma02.n <- length(GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0 & GC.Data.NoSTD$Sampling.Day.F != "20210715",
-# 
-#                                   c(paste0(Gas,".ppm"))]) ;
-
-
-sigma02 <- var(GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0 & GC.Data.NoSTD$Sampling.Day.F != "20220623",
-
-                             c(paste0(Gas,".ppm"))]) ;
-
-sigma02.n <- length(GC.Data.NoSTD[GC.Data.NoSTD$Sampling.Time == 0 & GC.Data.NoSTD$Sampling.Day.F != "20220623",
-
-                               c(paste0(Gas,".ppm"))]) ;
-
-
-
-assign(paste(Year, Gas,"sigma02", sep = "." ), sigma02 ) ;
-
-
-# Variance for Ambient data concentration year 2021 2021.N2O.sigma02 = 0.006041534 sigma02.n = 700
-# Variance for Ambient data concentration year 2022 2022.N2O.sigma02 = 0.01460439, sigma02.n = 442
-
-
-####### Pooled Variance 2021 & 2022 ##############
-
-Sigma02.all <- (((700-1) * 0.006041534) + ( (442-1) * 0.01460439 )) / (700 + 442 - 2) ;
-
-###############################################################################################################
-#                          Calculate flux with the HMR package
-###############################################################################################################
-
-read.table(file = paste0(Gas,"_" , Year , ".Series.csv"), header = T, sep = ";")
-
-
-Gas.HRM.Results <- HMR(filename = paste0(Gas,"_" , Year , ".Series.csv") , sep = ";" , dec = "." , SatPct = NA,
-                       SatTimeMin = NA, pfvar = Sigma02.all, pfalpha = 0.05,  LR.always = T , FollowHMR = T,
-                       IfNoValidHMR = 'LR', IfNoFlux = 'No flux',  IfNoSignal = 'No flux') ;
-
-str(Gas.HRM.Results)
-
-
-str(Gas.HRM.Results$Series)
-
-
-######## Results that have errors  #########
-
-str(Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" ,]) ;
-
-
-Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")] ;
-
-
-###############################################################################################################
-#                   Calculate flux of records with Warning "Data error" 
-#                   using manual option of the  HMR package
-###############################################################################################################
-
-Gas.HRM.Results.Error <- Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")]  ;
-
-Gas.Series.HMR.Error <- unique(Gas.Series.HMR[Gas.Series.HMR$Series %in% Gas.HRM.Results.Error, ]) ;
-
-str(Gas.Series.HMR.Error)
-
-unique(Gas.Series.HMR.Error$Series)
-
-length(unique(Gas.Series.HMR.Error$Series))
-
-
-
-write.table(x = Gas.Series.HMR.Error , sep = ";", dec = "." , 
-            
-            file = paste0(Gas,"_" , Year , "_Series_Error.csv"), row.names = F)  ;
-
-read.table(file = paste0(Gas,"_" , Year , "_Series_Error.csv"), header = T, sep = ";")
-
-
-
-
-Gas.HRM.Results.Error <- HMR(filename = paste0(Gas,"_" , Year , "_Series_Error.csv") , sep = ";" , dec = "." , SatPct = NA,
-                             SatTimeMin = NA, pfvar = Sigma02.all, pfalpha = 0.05,  LR.always = T , FollowHMR = F,
-                             IfNoValidHMR = 'LR', IfNoFlux = 'No flux',  IfNoSignal = 'No flux') ;
-
-str(Gas.HRM.Results)
-
-#series that need revision:
+#                           
+#                               Writing HMR.Data.2021
 #
-
-
-
-
-
-
-
-
 ###############################################################################################################
-#
-#  Add the fluxes to complete the database for analysis
-#    
-###############################################################################################################
-str(GC.Data.NoSTD)
-
-str(Gas.HRM.Results)
-
-GC.Data.NoSTD$Series
-
-Flux.Data <- merge(GC.Data.NoSTD, Gas.HRM.Results, by = "Series") ;
-
-str(Flux.Data)
-
-######## Test for the merge operation ######
-
-str(Flux.Data[Flux.Data$Warning== "Data error" ,])
-
-Flux.Data[Flux.Data$Warning == "Data error" , c("Series")]
-
-str(Gas.HRM.Results)
-
-unique(Flux.Data[Flux.Data$Warning == "Data error" , c("Series")])
-
-unique(Flux.Data[!Flux.Data$Warning == "Data error" , c("Series")])
-
-Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")]
-
-unique(Gas.HRM.Results[Gas.HRM.Results$Warning == "Data error" , c("Series")])
-
-unique(Gas.HRM.Results[!Gas.HRM.Results$Warning == "Data error" , c("Series")])
-
-Flux.Data[Flux.Data$Series == "20220901_3_Trit_C" , c("f0")]
-
-Gas.HRM.Results[Gas.HRM.Results$Series ==  "20220901_3_Trit_C" , c("f0")]
 
 
-Gas.HRM.Results[is.na(Gas.HRM.Results$Series),]
-
-Flux.Data[is.na(Flux.Data$Series),]
 
 
-save.image(file = paste0(Gas,"_HMR_Analysis_" , Year, ".RData"))
+# Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+# 
+# write.csv(x = HMR.Data.2021, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+# 
+# "Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+# 
+# "DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\HMR.Data.2021_",
+# 
+# Working.Date , ".csv"), row.names = F )
+# 
+# 
+# read.csv(file = paste0("FluxDataAnalysisResults\\HMR.Data.2021_2026_11_26_17_17_56.csv" ))
 

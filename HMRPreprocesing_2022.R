@@ -2001,7 +2001,6 @@ Notes.2022[Notes.2022$Sampling.Date == "2022-10-05" ,]
 ########## Leave as is #######
 
 
-browser()
 
 ##############################################################################################################
 #                           Check Notes and Removals
@@ -2148,6 +2147,9 @@ Data.2022.GC[Data.2022.GC$ID %in% B.ID , "Treatment"] <- "C" ;
 
 Data.2022.GC[Data.2022.GC$ID %in% C.ID , "Treatment"] <- "B" ;
 
+
+rm(B.ID , C.ID )
+
 ############# Remove Note ########################
 
 Data.2022.GC[Data.2022.GC$Sampling.Date == "2022-06-29" & Data.2022.GC$BLOCK == 2 &
@@ -2269,6 +2271,7 @@ Second.Series.ID <- c( 728 , 730 , 731 );
 Data.Remove.GC.2022 <- Data.2022.GC[Data.2022.GC$ID %in% Second.Series.ID , ] ;
 
 
+rm(Second.Series.ID)
 
 ###############################################################################################################
 
@@ -2359,5 +2362,29 @@ HMR.Data.2022.All[which(HMR.Data.2022.All$GC.Notes == "YES"),]
 HMR.Data.2022.All[which(HMR.Data.2022.All$Field.Notes == "YES"),]
 
 str(HMR.Data.2022.All)
+
+
+###############################################################################################################
+#                           
+#                               Writing HMR.Data.2022
+#
+###############################################################################################################
+
+
+
+
+Working.Date <- format(Sys.time() , "%Y_%m_%d_%H_%M_%S") ;
+
+write.csv(x = HMR.Data.2022.All, file = paste0("C:\\Users\\frm10\\OneDrive - The Pennsylvania State University\\",
+
+"Current_Projects\\CCC Based Experiments\\StrategicTillage_NitrogenLosses_OrganicCoverCrops\\" ,
+
+"DataAnalysis\\RCode\\GCResultsAnalysis\\FluxDataAnalysisResults\\HMR.Data.2022_",
+
+Working.Date , ".csv"), row.names = F )
+
+
+read.csv(file = paste0("FluxDataAnalysisResults\\HMR.Data.2022_2026_11_26_17_27_06..csv" ))
+
 
 
